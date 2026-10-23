@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Community Voice AI — Write a Letter</title>
+  <meta name="description" content="Turn a real community problem into a polite, formal letter. Built by Nigerian secondary school students.">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="index.html" aria-label="Community Voice AI home">
+        <img src="assets/logo.svg" alt="" width="44" height="44">
+        <span class="brand-name">COMMUNITY <span>VOICE</span> AI</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="index.html" aria-current="page">Write a Letter</a>
+        <a href="sign-language.html">Nigerian Sign Language</a>
+        <a href="how-it-works.html">How It Works</a>
+      </nav>
+      <button type="button" class="text-toggle" aria-pressed="false" data-text-toggle>A+ Larger text</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>COMMUNITY <span>VOICE</span> AI</h1>
+      <p>Young people see real problems: no clean water, a broken road, a dark street. Say it in your own words, pick who it is for and the tone. The AI drafts a formal letter that appears in a box you can edit, because you are the author.</p>
+      <span class="tagline">Type and communicate a letter on effect in your community</span>
+    </div>
+  </section>
+
+  <main id="main">
+    <div class="container grid">
+
+      <!-- LEFT: the form -->
+      <section class="card" aria-labelledby="form-title">
+        <h2 id="form-title">Tell us the problem</h2>
+        <p class="sub">No sign-up. Nothing is saved. Do not type names or phone numbers.</p>
+
+        <form id="cv-form" novalidate>
+          <div class="field">
+            <label for="problemType">Problem type</label>
+            <select id="problemType" name="problemType" required>
+              <option value="">Choose a problem type</option>
+              <option>Water</option>
+              <option>Roads</option>
+              <option>Electricity / Streetlights</option>
+              <option>Waste and Drainage</option>
+              <option>Flooding</option>
+              <option>Environment and Pollution</option>
+              <option>School Facilities</option>
+              <option>Health Facility</option>
+              <option>Security</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="row-2">
+            <div class="field">
+              <label for="state">Where: State</label>
+              <select id="state" name="state" required>
+                <option value="">Choose your state</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="area">Where: Area or community</label>
+              <input type="text" id="area" name="area" maxlength="80" required placeholder="e.g. Rumuokoro or Ota" aria-describedby="area-hint">
+              <span class="hint" id="area-hint">Area only. Do not type your house address.</span>
+            </div>
+          </div>
+
+          <div class="row-2">
+            <div class="field">
+              <label for="duration">How long?</label>
+              <select id="duration" name="duration" required>
+                <option value="">Choose</option>
+                <option>Less than a week</option>
+                <option>1 to 4 weeks</option>
+                <option>1 to 6 months</option>
+                <option>More than 6 months</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="affected">Who is affected?</label>
+              <select id="affected" name="affected" required>
+                <option value="">Choose</option>
+                <option>A few households</option>
+                <option>A whole street</option>
+                <option>A whole community</option>
+                <option>A school</option>
+                <option>Children / elderly / people with disabilities</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row-2">
+            <div class="field">
+              <label for="recipient">Who is the letter for?</label>
+              <select id="recipient" name="recipient" required>
+                <option value="">Choose</option>
+                <option>Local Government Chairman</option>
+                <option>State Ministry or Agency</option>
+                <option>Federal Agency</option>
+                <option>School Principal</option>
+                <option>Community Development Association (CDA)</option>
+                <option>Traditional Ruler</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="tone">Tone</label>
+              <select id="tone" name="tone" required>
+                <option value="">Choose</option>
+                <option>Polite request</option>
+                <option>Firm and urgent</option>
+                <option>Follow-up (we wrote before)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="description">Describe the problem</label>
+            <textarea id="description" name="description" maxlength="1000" required
+              placeholder="Write it how you would say it. English or Pidgin is fine. Example: Our street light don spoil since March, e dey very dark at night and people fear to waka."
+              aria-describedby="desc-count desc-hint"></textarea>
+            <span class="hint" id="desc-hint">Say what is wrong and how it affects people. No names of people.</span>
+            <div class="counter" id="desc-count" aria-live="polite">0 / 1000</div>
+          </div>
+
+          <div id="form-error" class="error-box hidden" role="alert"></div>
+
+          <button type="submit" class="btn btn-gold btn-block" id="submit-btn">Write My Letter</button>
+        </form>
+      </section>
+
+      <!-- RIGHT: the output -->
+      <section class="card" aria-labelledby="out-title">
+        <h2 id="out-title">Your letter</h2>
+        <div id="out-region" aria-live="polite">
+          <div id="out-empty" class="output-empty">
+            <div class="big" aria-hidden="true">✉️</div>
+            <p>Fill in the form and press <strong>Write My Letter</strong>. Your draft will appear here for you to read and edit.</p>
+          </div>
+
+          <div id="out-loading" class="loading hidden" role="status">
+            <div class="spinner" aria-hidden="true"></div>
+            <span>Writing your letter… please wait.</span>
+          </div>
+
+          <div id="out-error" class="error-box hidden" role="alert"></div>
+
+          <div id="out-result" class="hidden">
+            <div class="urgency-row">
+              <span id="pill" class="pill"><span class="dot" aria-hidden="true"></span><span id="pill-text"></span></span>
+              <span id="urgency-reason" class="urgency-reason"></span>
+            </div>
+            <div id="safety" class="safety hidden" role="alert"></div>
+
+            <div class="author-note">Read and edit before sending. You are the author.</div>
+
+            <label for="letter" class="section-title" style="display:block">Letter (you can edit every word)</label>
+            <textarea id="letter" spellcheck="true"></textarea>
+
+            <div class="actions">
+              <button type="button" class="btn btn-purple" id="copy-btn">Copy Letter</button>
+              <button type="button" class="btn btn-outline" id="download-btn">Download .txt</button>
+              <button type="button" class="btn btn-outline" id="print-btn">Print</button>
+              <button type="button" class="btn btn-outline" id="reset-btn">Start Again</button>
+            </div>
+            <p class="status" id="action-status" role="status"></p>
+
+            <h3 class="section-title">What you can do yourselves</h3>
+            <ul class="steps" id="steps"></ul>
+
+            <h3 class="section-title">Where to send it</h3>
+            <div class="office-box" id="office"></div>
+
+            <details class="sent">
+              <summary>See exactly what was sent to the AI</summary>
+              <pre id="sent-text"></pre>
+            </details>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <div id="print-area" aria-hidden="true"></div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p><strong>Community Voice AI</strong> — built by Nigerian secondary school students.</p>
+      <p>Government links are official .gov.ng websites. Last verified: <span data-last-verified></span>.</p>
+      <p>In an emergency, call <strong>112</strong>.</p>
+    </div>
+  </footer>
+
+  <script src="js/directory.js"></script>
+  <script src="js/privacy.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

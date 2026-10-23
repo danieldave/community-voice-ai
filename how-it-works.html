@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How It Works — Community Voice AI</title>
+  <meta name="description" content="How Community Voice AI writes your letter, keeps your details private, and chooses official offices.">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="index.html" aria-label="Community Voice AI home">
+        <img src="assets/logo.svg" alt="" width="44" height="44">
+        <span class="brand-name">COMMUNITY <span>VOICE</span> AI</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="index.html">Write a Letter</a>
+        <a href="sign-language.html">Nigerian Sign Language</a>
+        <a href="how-it-works.html" aria-current="page">How It Works</a>
+      </nav>
+      <button type="button" class="text-toggle" aria-pressed="false" data-text-toggle>A+ Larger text</button>
+    </div>
+  </header>
+
+  <section class="page-head">
+    <div class="container">
+      <h1>How It Works</h1>
+      <p>Simple steps, no sign-up, and your personal details never reach the AI.</p>
+    </div>
+  </section>
+
+  <main id="main">
+    <div class="container prose">
+
+      <h2>The steps</h2>
+      <ol class="flow">
+        <li><strong>You fill the form.</strong> Pick the problem, your state and area, how long it has lasted, who is affected, who the letter is for, and the tone. Then describe it in your own words — English or Pidgin.</li>
+        <li><strong>The privacy filter cleans your text.</strong> Before anything leaves your phone, it removes phone numbers, emails, long ID or account numbers, and any name written after “my name is”.</li>
+        <li><strong>Your choices are joined into one prompt.</strong> Our server checks every choice, runs the privacy filter a second time, and sends the prompt to the AI.</li>
+        <li><strong>The AI returns a report as JSON.</strong> It contains the letter, an urgency level, safe steps your community can take, and the type of office to send it to.</li>
+        <li><strong>A conditional colours the urgency pill.</strong> High = <strong>red “Urgent”</strong>, medium = <strong>amber “Important”</strong>, low = <strong>green “Can wait”</strong>. The words always show with the colour.</li>
+        <li><strong>You review and edit.</strong> The letter appears in a box you can change. Copy it, download it, or print it. You are the author.</li>
+      </ol>
+
+      <h2>Your privacy</h2>
+      <ul>
+        <li>No sign-up, no database, no cookies. Nothing you type is saved on our server.</li>
+        <li>The filter runs in your browser first, and again on our server as a backup.</li>
+        <li>After each letter, open <strong>“See exactly what was sent to the AI”</strong> to check the cleaned text yourself.</li>
+      </ul>
+
+      <section class="card tester" aria-labelledby="tester-title">
+        <h2 id="tester-title" style="margin-top:0">Try the privacy filter</h2>
+        <p class="sub">Type anything below. Nothing is sent anywhere — this runs only on your device.</p>
+        <label for="try-in" style="font-weight:800;color:var(--indigo)">Your text</label>
+        <textarea id="try-in">My name is Tunde Bello. Call me on 08031234567 or tunde@example.com. My account is 0123456789.</textarea>
+        <p style="font-weight:800;color:var(--indigo);margin-bottom:4px">What the AI would receive</p>
+        <pre id="try-out" aria-live="polite"></pre>
+      </section>
+
+      <h2>Our guardrails</h2>
+      <ul>
+        <li>No names of people, and no blame or insults. The letter reports the problem, not a person.</li>
+        <li>A polite, respectful tone to officials — even when you choose “Firm and urgent”.</li>
+        <li>It suggests the <em>kind</em> of office to write to, never a made-up person.</li>
+        <li>It does not invent numbers, laws or facts. It only uses what you told it.</li>
+        <li>If there is danger to life, it reminds you to call <strong>112</strong> first.</li>
+        <li>Safe self-help steps only: it will never tell you to touch wires, enter floodwater or confront anyone.</li>
+      </ul>
+
+      <h2>Official websites we link to</h2>
+      <p>We only link to official <strong>.gov.ng</strong> websites that we have checked. If we could not confirm a website, we leave it out instead of guessing. Last verified: <span data-last-verified></span>.</p>
+      <div class="table-wrap">
+        <table class="links">
+          <thead><tr><th scope="col">Office</th><th scope="col">Website</th></tr></thead>
+          <tbody id="link-table"></tbody>
+        </table>
+      </div>
+
+      <h2>Who this is for</h2>
+      <ul>
+        <li>Students and young people who want to raise a real concern formally but are not confident writing formal letters.</li>
+        <li>Deaf and hard-of-hearing people, and people with speech impairments — nothing on this site needs sound.</li>
+        <li>Anyone who wants to practise formal communication.</li>
+      </ul>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p><strong>Community Voice AI</strong> — built by Nigerian secondary school students.</p>
+      <p>Government links are official .gov.ng websites. Last verified: <span data-last-verified></span>.</p>
+      <p>In an emergency, call <strong>112</strong>.</p>
+    </div>
+  </footer>
+
+  <script src="js/directory.js"></script>
+  <script src="js/privacy.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    (function () {
+      var input = document.getElementById("try-in");
+      var output = document.getElementById("try-out");
+      function run() { output.textContent = window.cvClean(input.value); }
+      input.addEventListener("input", run); run();
+
+      var tbody = document.getElementById("link-table");
+      function addRow(name, url) {
+        var tr = document.createElement("tr");
+        var td1 = document.createElement("td"); td1.textContent = name;
+        var td2 = document.createElement("td");
+        var a = document.createElement("a"); a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer";
+        a.textContent = url.replace("https://", ""); td2.appendChild(a);
+        tr.appendChild(td1); tr.appendChild(td2); tbody.appendChild(tr);
+      }
+      var D = window.CV_DIRECTORY;
+      D.OFFICES.forEach(function (o) { if (o.url) addRow(o.name, o.url); });
+      Object.keys(D.STATES).forEach(function (s) {
+        if (D.STATES[s]) addRow(s === "FCT (Abuja)" ? "Federal Capital Territory Administration" : s + " State Government", D.STATES[s]);
+      });
+      addRow(D.FEDERAL_PORTAL.name, D.FEDERAL_PORTAL.url);
+    })();
+  </script>
+</body>
+</html>

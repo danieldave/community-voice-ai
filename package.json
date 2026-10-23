@@ -1,0 +1,12 @@
+{
+  "name": "community-voice-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Community Voice AI - turn a community problem into a formal letter. Built by Nigerian secondary school students.",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
