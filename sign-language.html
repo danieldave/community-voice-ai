@@ -3,8 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nigerian Sign Language — Community Voice AI</title>
-  <meta name="description" content="Learn Nigerian Sign Language words for talking about community problems.">
+  <title>Sign Language — Community Voice AI</title>
+  <meta name="description" content="Learn American Sign Language (ASL) words and fingerspelling for talking about community problems, with notes for Nigerian Sign Language users.">
+  <meta name="theme-color" content="#1f1a4d">
+  <script>(function(){var t;try{t=localStorage.getItem("cv-theme")}catch(e){}if(!t)t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t)})();</script>
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,57 +19,80 @@
   <header class="site-header">
     <div class="container header-row">
       <a class="brand" href="index.html" aria-label="Community Voice AI home">
-        <img src="assets/logo.svg" alt="" width="44" height="44">
+        <img src="assets/logo.svg" alt="" width="42" height="42">
         <span class="brand-name">COMMUNITY <span>VOICE</span> AI</span>
       </a>
       <nav class="nav" aria-label="Main">
-        <a href="index.html">Write a Letter</a>
-        <a href="sign-language.html" aria-current="page">Nigerian Sign Language</a>
-        <a href="how-it-works.html">How It Works</a>
+        <a href="index.html">✍️ Write a Letter</a>
+        <a href="sign-language.html" aria-current="page">🤟 Sign Language</a>
+        <a href="how-it-works.html">💡 How It Works</a>
       </nav>
-      <button type="button" class="text-toggle" aria-pressed="false" data-text-toggle>A+ Larger text</button>
+      <div class="tools">
+        <button type="button" class="icon-btn" data-theme-toggle aria-pressed="false">🌙 Night</button>
+        <button type="button" class="icon-btn" data-text-toggle aria-pressed="false">A+ Text</button>
+      </div>
     </div>
   </header>
 
   <section class="page-head">
+    <div class="blob b1" aria-hidden="true"></div>
+    <div class="blob b2" aria-hidden="true"></div>
     <div class="container">
-      <h1>Nigerian Sign Language (NSL)</h1>
-      <p>Words that help Deaf and hearing people talk together about problems in our community. Everyone deserves a voice.</p>
+      <h1>🤟 Learn to Sign</h1>
+      <p>American Sign Language (ASL) words and fingerspelling for talking about problems in our community, so Deaf and hearing people can talk together. Everyone deserves a voice.</p>
     </div>
   </section>
 
   <main id="main">
     <div class="container">
-      <p class="notice">Nigerian Sign Language differs from American Sign Language. Learn from Deaf teachers in your area.</p>
+      <p class="notice">📘 <strong>These signs are American Sign Language (ASL).</strong> Nigerian Sign Language (NSL) grew from ASL. Andrew Foster brought it to Nigeria's first Deaf school in Ibadan in 1960, so many signs are the same. But NSL has grown in its own way, and some Nigerian signs are different. Always learn from Deaf teachers in your area.</p>
 
-      <div class="prose">
-        <h2>How we make this page accurate</h2>
-        <p>We do not draw or make up signs. Every sign on this page is added only after a qualified Nigerian Sign Language signer or Deaf teacher has recorded or checked it. Where we do not have a checked video yet, you will see <strong>“Video coming soon”</strong>.</p>
-        <p>Every video also has a written description, so no one needs sound to use this page.</p>
+      <div class="tabs" role="tablist" aria-label="Sign sections">
+        <button class="tab" role="tab" aria-selected="true" aria-controls="panel-words" id="tab-words">💬 Words</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-abc" id="tab-abc">🔤 Alphabet A–Z</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-spell" id="tab-spell">✋ Fingerspell a word</button>
       </div>
 
-      <h2 class="section-title" style="font-size:1.3rem;margin-top:28px">Greetings</h2>
-      <div class="sign-grid words" id="signs-greetings"></div>
+      <section id="panel-words" data-panel role="tabpanel" aria-labelledby="tab-words">
+        <h2 class="h2">👋 Greetings</h2>
+        <p>Tap a card to flip it and see how to make the sign.</p>
+        <div class="sign-grid words" id="signs-greetings"></div>
 
-      <h2 class="section-title" style="font-size:1.3rem;margin-top:28px">Community words</h2>
-      <div class="sign-grid words" id="signs-community"></div>
+        <h2 class="h2">🏘️ Community words</h2>
+        <div class="sign-grid words" id="signs-community"></div>
+      </section>
 
-      <h2 class="section-title" style="font-size:1.3rem;margin-top:28px">Fingerspelling alphabet A to Z</h2>
-      <p>Use fingerspelling for names of places when there is no sign for them.</p>
-      <div class="sign-grid" id="signs-alphabet"></div>
+      <section id="panel-abc" data-panel role="tabpanel" aria-labelledby="tab-abc" class="hidden">
+        <h2 class="h2">🔤 ASL fingerspelling alphabet</h2>
+        <p>Use fingerspelling for names of places when there is no sign for them. Hold your hand up near your shoulder, palm facing the person you are talking to.</p>
+        <div class="sign-grid" id="signs-alphabet"></div>
+      </section>
+
+      <section id="panel-spell" data-panel role="tabpanel" aria-labelledby="tab-spell" class="hidden">
+        <h2 class="h2">✋ Fingerspell a word</h2>
+        <div class="card speller">
+          <label for="spell-input" style="font-weight:800;color:var(--heading)">Type a word, such as the name of your area</label>
+          <div class="speller-row">
+            <input type="text" id="spell-input" maxlength="24" value="OTA" autocomplete="off">
+            <button type="button" class="btn btn-gold" id="spell-play">▶ Play slowly</button>
+          </div>
+          <div class="spell-out" id="spell-out" aria-live="polite"></div>
+        </div>
+      </section>
 
       <div class="prose">
-        <h2>Help us grow this page</h2>
-        <p>Are you a Deaf signer, an NSL interpreter, or a teacher at a school for the Deaf? We would love you to record a few signs with us. Your local association of the Deaf or a school for the Deaf near you is a good place to find NSL teachers.</p>
+        <h2>🎥 Want to see the signs moving?</h2>
+        <p>Videos help a lot. You can watch the ASL alphabet on <a href="https://lifeprint.com/asl101/pages-signs/a/abcs.htm" target="_blank" rel="noopener noreferrer">Lifeprint ASL University</a>. Some word cards also have a “Watch on Lifeprint” link.</p>
+        <h2>🙌 Help us make this page Nigerian</h2>
+        <p>Are you a Deaf signer, an NSL interpreter, or a teacher at a school for the Deaf? Help us check each sign and mark where Nigerian signs are different. We would love to record short videos with you.</p>
       </div>
     </div>
   </main>
 
   <footer class="site-footer">
     <div class="container">
-      <p><strong>Community Voice AI</strong> — built by Nigerian secondary school students.</p>
-      <p>Government links are official .gov.ng websites. Last verified: <span data-last-verified></span>.</p>
-      <p>In an emergency, call <strong>112</strong>.</p>
+      <p class="credit">Built with AI by <span>Yewa College Bytebusters</span> (Generative AI Team &amp; Special Student)</p>
+      <p class="small">Government links are official .gov.ng websites. Last verified: <span data-last-verified></span>. In an emergency, call <strong>112</strong>.</p>
     </div>
   </footer>
 

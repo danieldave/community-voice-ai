@@ -4,7 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Community Voice AI — Write a Letter</title>
-  <meta name="description" content="Turn a real community problem into a polite, formal letter. Built by Nigerian secondary school students.">
+  <meta name="description" content="Turn a real community problem into a polite, formal letter. Built with AI by Yewa College Bytebusters.">
+  <meta name="theme-color" content="#1f1a4d">
+  <script>(function(){var t;try{t=localStorage.getItem("cv-theme")}catch(e){}if(!t)t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t)})();</script>
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,23 +19,35 @@
   <header class="site-header">
     <div class="container header-row">
       <a class="brand" href="index.html" aria-label="Community Voice AI home">
-        <img src="assets/logo.svg" alt="" width="44" height="44">
+        <img src="assets/logo.svg" alt="" width="42" height="42">
         <span class="brand-name">COMMUNITY <span>VOICE</span> AI</span>
       </a>
       <nav class="nav" aria-label="Main">
-        <a href="index.html" aria-current="page">Write a Letter</a>
-        <a href="sign-language.html">Nigerian Sign Language</a>
-        <a href="how-it-works.html">How It Works</a>
+        <a href="index.html" aria-current="page">✍️ Write a Letter</a>
+        <a href="sign-language.html">🤟 Sign Language</a>
+        <a href="how-it-works.html">💡 How It Works</a>
       </nav>
-      <button type="button" class="text-toggle" aria-pressed="false" data-text-toggle>A+ Larger text</button>
+      <div class="tools">
+        <button type="button" class="icon-btn" data-theme-toggle aria-pressed="false">🌙 Night</button>
+        <button type="button" class="icon-btn" data-text-toggle aria-pressed="false">A+ Text</button>
+      </div>
     </div>
   </header>
 
   <section class="hero">
+    <div class="blob b1" aria-hidden="true"></div>
+    <div class="blob b2" aria-hidden="true"></div>
+    <div class="blob b3" aria-hidden="true"></div>
     <div class="container">
       <h1>COMMUNITY <span>VOICE</span> AI</h1>
       <p>Young people see real problems: no clean water, a broken road, a dark street. Say it in your own words, pick who it is for and the tone. The AI drafts a formal letter that appears in a box you can edit, because you are the author.</p>
-      <span class="tagline">Type and communicate a letter on effect in your community</span>
+      <span class="tagline">📣 Type and communicate a letter on effect in your community</span>
+      <div class="features">
+        <div class="feature"><span class="ico" aria-hidden="true">🔒</span><b>Private</b><span>No sign-up. Phone numbers and names are removed.</span></div>
+        <div class="feature"><span class="ico" aria-hidden="true">🗣️</span><b>Your words</b><span>English or Pidgin — we make it formal.</span></div>
+        <div class="feature"><span class="ico" aria-hidden="true">🤟</span><b>For everyone</b><span>Works fully without sound.</span></div>
+        <div class="feature"><span class="ico" aria-hidden="true">🏛️</span><b>Real offices</b><span>Only checked .gov.ng websites.</span></div>
+      </div>
     </div>
   </section>
 
@@ -42,24 +56,37 @@
 
       <!-- LEFT: the form -->
       <section class="card" aria-labelledby="form-title">
-        <h2 id="form-title">Tell us the problem</h2>
+        <h2 id="form-title">📝 Tell us the problem</h2>
         <p class="sub">No sign-up. Nothing is saved. Do not type names or phone numbers.</p>
+
+        <div class="progress-wrap">
+          <div class="progress-label"><span>Your progress</span><span id="progress-text">0 of 8 done</span></div>
+          <div class="progress" role="progressbar" aria-label="Form progress" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0" id="progress"><div></div></div>
+        </div>
+
+        <div class="examples">
+          <span class="label">Not sure how to start? Try an example:</span>
+          <button type="button" class="chip c1" data-example="water">💧 No water</button>
+          <button type="button" class="chip c2" data-example="light">💡 Dark street</button>
+          <button type="button" class="chip c3" data-example="road">🛣️ Bad road</button>
+          <button type="button" class="chip c4" data-example="waste">🗑️ Blocked drain</button>
+        </div>
 
         <form id="cv-form" novalidate>
           <div class="field">
             <label for="problemType">Problem type</label>
             <select id="problemType" name="problemType" required>
               <option value="">Choose a problem type</option>
-              <option>Water</option>
-              <option>Roads</option>
-              <option>Electricity / Streetlights</option>
-              <option>Waste and Drainage</option>
-              <option>Flooding</option>
-              <option>Environment and Pollution</option>
-              <option>School Facilities</option>
-              <option>Health Facility</option>
-              <option>Security</option>
-              <option>Other</option>
+              <option value="Water">💧 Water</option>
+              <option value="Roads">🛣️ Roads</option>
+              <option value="Electricity / Streetlights">💡 Electricity / Streetlights</option>
+              <option value="Waste and Drainage">🗑️ Waste and Drainage</option>
+              <option value="Flooding">🌊 Flooding</option>
+              <option value="Environment and Pollution">🌳 Environment and Pollution</option>
+              <option value="School Facilities">🏫 School Facilities</option>
+              <option value="Health Facility">🏥 Health Facility</option>
+              <option value="Security">🛡️ Security</option>
+              <option value="Other">📌 Other</option>
             </select>
           </div>
 
@@ -82,21 +109,21 @@
               <label for="duration">How long?</label>
               <select id="duration" name="duration" required>
                 <option value="">Choose</option>
-                <option>Less than a week</option>
-                <option>1 to 4 weeks</option>
-                <option>1 to 6 months</option>
-                <option>More than 6 months</option>
+                <option value="Less than a week">⏱️ Less than a week</option>
+                <option value="1 to 4 weeks">📅 1 to 4 weeks</option>
+                <option value="1 to 6 months">🗓️ 1 to 6 months</option>
+                <option value="More than 6 months">⌛ More than 6 months</option>
               </select>
             </div>
             <div class="field">
               <label for="affected">Who is affected?</label>
               <select id="affected" name="affected" required>
                 <option value="">Choose</option>
-                <option>A few households</option>
-                <option>A whole street</option>
-                <option>A whole community</option>
-                <option>A school</option>
-                <option>Children / elderly / people with disabilities</option>
+                <option value="A few households">🏠 A few households</option>
+                <option value="A whole street">🏘️ A whole street</option>
+                <option value="A whole community">🌍 A whole community</option>
+                <option value="A school">🏫 A school</option>
+                <option value="Children / elderly / people with disabilities">🧒 Children / elderly / people with disabilities</option>
               </select>
             </div>
           </div>
@@ -106,21 +133,21 @@
               <label for="recipient">Who is the letter for?</label>
               <select id="recipient" name="recipient" required>
                 <option value="">Choose</option>
-                <option>Local Government Chairman</option>
-                <option>State Ministry or Agency</option>
-                <option>Federal Agency</option>
-                <option>School Principal</option>
-                <option>Community Development Association (CDA)</option>
-                <option>Traditional Ruler</option>
+                <option value="Local Government Chairman">Local Government Chairman</option>
+                <option value="State Ministry or Agency">State Ministry or Agency</option>
+                <option value="Federal Agency">Federal Agency</option>
+                <option value="School Principal">School Principal</option>
+                <option value="Community Development Association (CDA)">Community Development Association (CDA)</option>
+                <option value="Traditional Ruler">Traditional Ruler</option>
               </select>
             </div>
             <div class="field">
               <label for="tone">Tone</label>
               <select id="tone" name="tone" required>
                 <option value="">Choose</option>
-                <option>Polite request</option>
-                <option>Firm and urgent</option>
-                <option>Follow-up (we wrote before)</option>
+                <option value="Polite request">🙂 Polite request</option>
+                <option value="Firm and urgent">⚡ Firm and urgent</option>
+                <option value="Follow-up (we wrote before)">🔁 Follow-up (we wrote before)</option>
               </select>
             </div>
           </div>
@@ -136,13 +163,13 @@
 
           <div id="form-error" class="error-box hidden" role="alert"></div>
 
-          <button type="submit" class="btn btn-gold btn-block" id="submit-btn">Write My Letter</button>
+          <button type="submit" class="btn btn-gold btn-block" id="submit-btn">✨ Write My Letter</button>
         </form>
       </section>
 
       <!-- RIGHT: the output -->
       <section class="card" aria-labelledby="out-title">
-        <h2 id="out-title">Your letter</h2>
+        <h2 id="out-title">✉️ Your letter</h2>
         <div id="out-region" aria-live="polite">
           <div id="out-empty" class="output-empty">
             <div class="big" aria-hidden="true">✉️</div>
@@ -150,8 +177,11 @@
           </div>
 
           <div id="out-loading" class="loading hidden" role="status">
-            <div class="spinner" aria-hidden="true"></div>
-            <span>Writing your letter… please wait.</span>
+            <div class="row"><div class="spinner" aria-hidden="true"></div><span>Writing your letter… please wait.</span></div>
+            <div class="skeleton" style="width:90%"></div>
+            <div class="skeleton" style="width:75%"></div>
+            <div class="skeleton" style="width:82%"></div>
+            <div class="skeleton" style="width:60%"></div>
           </div>
 
           <div id="out-error" class="error-box hidden" role="alert"></div>
@@ -163,27 +193,29 @@
             </div>
             <div id="safety" class="safety hidden" role="alert"></div>
 
-            <div class="author-note">Read and edit before sending. You are the author.</div>
+            <div class="author-note">✏️ Read and edit before sending. You are the author.</div>
 
-            <label for="letter" class="section-title" style="display:block">Letter (you can edit every word)</label>
+            <div class="letter-head">
+              <label for="letter">Letter (you can edit every word)</label>
+              <span class="letter-meta" id="letter-meta" aria-live="polite"></span>
+            </div>
             <textarea id="letter" spellcheck="true"></textarea>
 
             <div class="actions">
-              <button type="button" class="btn btn-purple" id="copy-btn">Copy Letter</button>
-              <button type="button" class="btn btn-outline" id="download-btn">Download .txt</button>
-              <button type="button" class="btn btn-outline" id="print-btn">Print</button>
-              <button type="button" class="btn btn-outline" id="reset-btn">Start Again</button>
+              <button type="button" class="btn btn-purple" id="copy-btn">📋 Copy</button>
+              <button type="button" class="btn btn-outline" id="download-btn">⬇️ Download</button>
+              <button type="button" class="btn btn-outline" id="print-btn">🖨️ Print</button>
+              <button type="button" class="btn btn-outline" id="reset-btn">🔄 Start Again</button>
             </div>
-            <p class="status" id="action-status" role="status"></p>
 
-            <h3 class="section-title">What you can do yourselves</h3>
+            <h3 class="section-title">🤝 What you can do yourselves</h3>
             <ul class="steps" id="steps"></ul>
 
-            <h3 class="section-title">Where to send it</h3>
+            <h3 class="section-title">🏛️ Where to send it</h3>
             <div class="office-box" id="office"></div>
 
             <details class="sent">
-              <summary>See exactly what was sent to the AI</summary>
+              <summary>🔍 See exactly what was sent to the AI</summary>
               <pre id="sent-text"></pre>
             </details>
           </div>
@@ -197,9 +229,8 @@
 
   <footer class="site-footer">
     <div class="container">
-      <p><strong>Community Voice AI</strong> — built by Nigerian secondary school students.</p>
-      <p>Government links are official .gov.ng websites. Last verified: <span data-last-verified></span>.</p>
-      <p>In an emergency, call <strong>112</strong>.</p>
+      <p class="credit">Built with AI by <span>Yewa College Bytebusters</span> (Generative AI Team &amp; Special Students)</p>
+      <p class="small">Government links are official .gov.ng websites. Last verified: <span data-last-verified></span>. In an emergency, call <strong>112</strong>.</p>
     </div>
   </footer>
 
