@@ -2,6 +2,19 @@
 
 Built by Nigerian secondary school students. Community Voice AI helps young people turn a real community problem (no clean water, a broken road, a dark street) into a polite, formal letter. The user picks who it is for and the tone, the AI drafts it, and the user edits it. **The user is always the author.**
 
+## New in version 2
+
+| Upgrade | What it does | Where |
+|---|---|---|
+| **Follow-up Tracker** | Press "I have sent this letter" to save the date, office and reference. After 14 days a banner reminds you, and one tap writes a polite follow-up that mentions the first letter | `letters.html`, `js/tracker.js` |
+| **Community copy** | The official letter stays in English; you also get a short copy in one of 16 Nigerian languages to read out at community meetings | `api/generate.js`, `js/app.js` |
+| **Photos (coming soon)** | The photo button is built but locked | `index.html` |
+| **Ready to scale** | Only our website can call the AI, 25 letters per hour per visitor, the same request twice costs nothing, 20-second timeout | `api/_lib/shared.js` |
+| **SEO, AEO, GEO** | Page addresses, social preview, FAQ with labels for answer engines, sitemap, robots.txt that welcomes AI search, `llms.txt` | all pages |
+| **Tests** | `npm test` runs 13 checks with no key and no cost | `tools/test.js` |
+
+`OPENAI_MODEL` is now optional (default `gpt-4o-mini`).
+
 ## What's inside
 
 | File | What it does |
@@ -16,6 +29,8 @@ Built by Nigerian secondary school students. Community Voice AI helps young peop
 | `js/signs.js` | Sign language content (fill in videos here) |
 | `js/common.js` | Larger-text button and "last verified" date |
 | `api/generate.js` | Server function that talks to OpenAI. The API key stays here, hidden. |
+| `js/tracker.js` | Follow-up Tracker: saves sent letters on the phone, counts days, prepares follow-ups |
+| `letters.html` | My Letters page |
 
 ---
 

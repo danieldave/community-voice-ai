@@ -1,0 +1,16 @@
+# Community Voice AI
+
+> Community Voice AI is a free web app built by students of the ByteBusters Coding Club, Yewa College, Ilaro (Odu'a Investment Foundation), Nigeria. It turns a real community problem described in everyday English or Pidgin (no water, bad roads, dark streets, flooding, blocked drains) into a polite, formal letter to a Local Government Council, State Ministry, Federal agency, CDA, school or traditional ruler.
+
+Key facts:
+- The user is always the author: the AI drafts, the user edits every word.
+- Personal details (names, phone numbers, emails) are removed before anything reaches the AI; letters are signed "A Concerned Resident".
+- Only checked official .gov.ng websites are suggested. In an emergency, call 112 first.
+- A short community copy is available in 16 Nigerian languages for reading at meetings.
+- A follow-up tracker reminds users after 14 days and drafts a polite follow-up letter.
+- A Nigerian Sign Language page was made with Deaf and Hard-of-Hearing students.
+
+## Pages
+- [Write a letter](https://community-voice-ai-ziry.vercel.app/)
+- [How it works, privacy and FAQ](https://community-voice-ai-ziry.vercel.app/how-it-works.html)
+- [Nigerian Sign Language](https://community-voice-ai-ziry.vercel.app/sign-language.html)

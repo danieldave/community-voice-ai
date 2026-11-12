@@ -4,6 +4,7 @@
  * Environment Variables (OPENAI_API_KEY) — never in the frontend or the repo.
  */
 const { clean } = require("../js/privacy.js");
+const S = require("./_lib/shared");      // fair-use limit, saved answers, website check, 17 languages, timeout
 
 // Allowed values (anything else is rejected).
 const PROBLEM_TYPES = ["Water", "Roads", "Electricity / Streetlights", "Waste and Drainage", "Flooding",
@@ -54,28 +55,20 @@ RULES:
 - urgency: "high" = danger to life or health; "medium" = serious daily hardship; "low" = inconvenience that can wait.
 - If the input is not a real community problem, or it is abusive, set "rejected": true and put a short, polite message in "message" asking the user to describe a real community concern; leave the other fields empty.
 
+COMMUNITY COPY: If the user message names a COMMUNITY LANGUAGE, also write "community_copy": the same message in that language, as a short, plain version (max 150 words) that a community leader can read aloud at a meeting so everyone understands what the letter asks for. It is NOT a formal letter: no address lines. Use everyday words people in that language actually speak. If no community language is named, "community_copy" is "".
+FOLLOW-UP: If the user message contains FIRST LETTER details, this is a follow-up letter. Politely mention the date the first letter was sent, who it was sent to and any reference given, say the problem is still not solved, and ask for an update and a timeline. Do not invent any other earlier contact.
+
 OUTPUT: Return ONLY valid JSON in exactly this shape:
-{"rejected": false, "message": "", "urgency": "high" | "medium" | "low", "urgency_reason": "one short sentence", "subject": "string", "letter": "full letter as plain text with \\n line breaks", "self_help_steps": ["string"], "office_type": "one value from the list", "safety_note": "string or empty"}`;
+{"rejected": false, "message": "", "urgency": "high" | "medium" | "low", "urgency_reason": "one short sentence", "subject": "string", "letter": "full letter as plain text with \\n line breaks", "self_help_steps": ["string"], "office_type": "one value from the list", "safety_note": "string or empty", "community_copy": "string or empty"}`;
 
 function pick(value, list) {
   return list.includes(value) ? value : null;
 }
 
 module.exports = async function handler(req, res) {
-  if (req.method !== "POST") {
-    res.setHeader("Allow", "POST");
-    return res.status(405).json({ error: "Please use POST." });
-  }
-
-  const apiKey = process.env.OPENAI_API_KEY;
-  const model = process.env.OPENAI_MODEL;
-  if (!apiKey || !model) {
-    return res.status(500).json({ error: "The server is not set up yet. On your computer: put OPENAI_API_KEY and OPENAI_MODEL in a .env file and restart npm start. On Vercel: add them in Environment Variables, then redeploy." });
-  }
-
-  let body = req.body;
-  if (typeof body === "string") { try { body = JSON.parse(body); } catch { body = {}; } }
-  body = body || {};
+  // Front door: right website, POST only, fair-use limit (25 letters per hour per visitor), key switched on
+  const body = await S.frontDoor(req, res, { limit: 25 });
+  if (!body) return;
 
   const input = {
     problemType: pick(body.problemType, PROBLEM_TYPES),
@@ -90,6 +83,12 @@ module.exports = async function handler(req, res) {
   };
 
   const missing = Object.entries(input).filter(([, v]) => !v).map(([k]) => k);
+  // Optional extras (v2): a copy in a community language, and details of the first letter for follow-ups
+  const communityLang = S.LANGUAGES[body.communityLang] && body.communityLang !== "en" ? body.communityLang : "";
+  const f = body.followUp && typeof body.followUp === "object" ? body.followUp : null;
+  const followUp = f && /^\d{4}-\d{2}-\d{2}$/.test(String(f.sentOn || "")) ? {
+    sentOn: String(f.sentOn), how: clean(String(f.how || "")).slice(0, 40), office: clean(String(f.office || "")).slice(0, 120), reference: clean(String(f.reference || "")).slice(0, 60)
+  } : null;
   if (missing.length) {
     return res.status(400).json({ error: "Some fields are missing or not valid: " + missing.join(", ") });
   }
@@ -102,32 +101,17 @@ How long: ${input.duration}
 Who is affected: ${input.affected}
 Letter is for: ${input.recipient}
 Tone: ${input.tone}
-Description (user's own words): ${input.description}`;
+Description (user's own words): ${input.description}${communityLang ? "\nCOMMUNITY LANGUAGE: " + S.LANGUAGES[communityLang] : ""}${followUp ? `\nFIRST LETTER: sent on ${followUp.sentOn}${followUp.office ? " to " + followUp.office : ""}${followUp.how ? " " + followUp.how : ""}${followUp.reference ? ", reference: " + followUp.reference : ""}` : ""}`;
+
+  // The same request twice (for example a double tap) is answered from memory, at no cost
+  const cacheKey = S.keyFor("letter", userPrompt);
+  const saved = S.cacheGet(cacheKey);
+  if (saved) return res.status(200).json({ ...saved, cached: true });
 
   try {
-    const r = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + apiKey },
-      body: JSON.stringify({
-        model,
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: userPrompt }
-        ]
-      })
-    });
-
-    if (!r.ok) {
-      const detail = await r.text();
-      console.error("OpenAI error", r.status, detail.slice(0, 500));
-      return res.status(502).json({ error: "The AI service did not answer correctly. Please try again in a moment." });
-    }
-
-    const data = await r.json();
     let out;
-    try { out = JSON.parse(data.choices[0].message.content); }
-    catch { return res.status(502).json({ error: "The AI reply could not be read. Please try again." }); }
+    try { out = await S.askOpenAI(SYSTEM_PROMPT, userPrompt, 1800); }
+    catch (e) { console.error("OpenAI:", e.message); return res.status(502).json({ error: "The AI service did not answer correctly. Please try again in a moment." }); }
 
     // Make the reply safe and predictable
     const result = {
@@ -140,8 +124,11 @@ Description (user's own words): ${input.description}`;
       self_help_steps: Array.isArray(out.self_help_steps) ? out.self_help_steps.slice(0, 4).map(String) : [],
       office_type: OFFICE_TYPES.includes(out.office_type) ? out.office_type : null,
       safety_note: String(out.safety_note || ""),
+      community_copy: communityLang ? clean(String(out.community_copy || "")).slice(0, 2000) : "",
+      community_lang: communityLang,
       sent_to_ai: userPrompt
     };
+    if (!result.rejected) S.cacheSet(cacheKey, result);
     return res.status(200).json(result);
   } catch (err) {
     const code = (err && err.cause && err.cause.code) || (err && err.code) || "";

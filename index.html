@@ -1,12 +1,23 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-NG">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Community Voice AI — Write a Letter</title>
-  <meta name="description" content="Turn a real community problem into a polite, formal letter. Built with AI by Yewa College Bytebusters.">
+  <title>Community Voice AI: write a formal complaint letter to government in Nigeria</title>
+  <meta name="description" content="Turn a community problem (water, roads, streetlights, flooding) into a polite formal letter to your Local Government, state or CDA. Free, private, made by students.">
   <meta name="theme-color" content="#1f1a4d">
   <script>(function(){var t;try{t=localStorage.getItem("cv-theme")}catch(e){}if(!t)t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t)})();</script>
+  <link rel="canonical" href="https://community-voice-ai-ziry.vercel.app/">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Community Voice AI">
+  <meta property="og:title" content="Community Voice AI: write a formal complaint letter to government in Nigeria">
+  <meta property="og:description" content="Turn a community problem (water, roads, streetlights, flooding) into a polite formal letter to your Local Government, state or CDA. Free, private, made by students.">
+  <meta property="og:url" content="https://community-voice-ai-ziry.vercel.app/">
+  <meta property="og:image" content="https://community-voice-ai-ziry.vercel.app/assets/og-image.png">
+  <meta property="og:locale" content="en_NG">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "EducationalOrganization", "@id": "https://community-voice-ai-ziry.vercel.app/#org", "name": "ByteBusters Coding Club, Yewa College, Ilaro", "address": {"@type": "PostalAddress", "addressLocality": "Ilaro", "addressRegion": "Ogun State", "addressCountry": "NG"}, "parentOrganization": {"@type": "Organization", "name": "Odu'a Investment Foundation"}}, {"@type": "WebApplication", "name": "Community Voice AI", "url": "https://community-voice-ai-ziry.vercel.app/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "NGN"}, "inLanguage": "en-NG", "description": "Turn a community problem (water, roads, streetlights, flooding) into a polite formal letter to your Local Government, state or CDA. Free, private, made by students.", "publisher": {"@id": "https://community-voice-ai-ziry.vercel.app/#org"}, "featureList": ["Formal letter from English or Pidgin", "Urgency check with 112 safety note", "Checked official .gov.ng offices", "Community copy in 16 Nigerian languages", "Follow-up tracker with 14-day reminder", "Nigerian Sign Language page"]}]}</script>
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,6 +35,7 @@
       </a>
       <nav class="nav" aria-label="Main">
         <a href="index.html" aria-current="page">✍️ Write a Letter</a>
+        <a href="letters.html">📬 My Letters</a>
         <a href="sign-language.html">🤟 Sign Language</a>
         <a href="how-it-works.html">💡 How It Works</a>
       </nav>
@@ -161,6 +173,23 @@
             <div class="counter" id="desc-count" aria-live="polite">0 / 1000</div>
           </div>
 
+          <div class="row-2">
+            <div class="field">
+              <label for="communityLang">Community copy language <span class="hint-inline">(optional)</span></label>
+              <select id="communityLang" name="communityLang" aria-describedby="lang-hint">
+                <option value="">No copy, English letter only</option>
+              </select>
+              <span class="hint" id="lang-hint">The official letter stays in English. You also get a short copy in this language to read out at community meetings.</span>
+            </div>
+            <div class="field">
+              <span class="label-like">Photos of the problem</span>
+              <label class="photo-lock" aria-disabled="true">📷 Add photos <em class="soon">Coming soon</em><input type="file" id="photos" accept="image/*" multiple disabled></label>
+              <span class="hint">Photo evidence is being built. For now, take photos and keep them with your copy of the letter.</span>
+            </div>
+          </div>
+
+          <div id="followup-note" class="followup-note hidden" role="status"></div>
+
           <div id="form-error" class="error-box hidden" role="alert"></div>
 
           <button type="submit" class="btn btn-gold btn-block" id="submit-btn">✨ Write My Letter</button>
@@ -208,6 +237,31 @@
               <button type="button" class="btn btn-outline" id="reset-btn">🔄 Start Again</button>
             </div>
 
+            <div id="community-wrap" class="community-wrap hidden">
+              <div class="letter-head"><label for="community-copy" id="community-label">Community copy</label><span class="letter-meta">for reading at meetings</span></div>
+              <textarea id="community-copy" spellcheck="false"></textarea>
+              <div class="actions"><button type="button" class="btn btn-outline" id="community-copy-btn">📋 Copy community copy</button>
+                <a class="btn btn-outline" id="community-wa" target="_blank" rel="noopener">💬 Share on WhatsApp</a></div>
+              <p class="small">AI translation: ask a fluent speaker to read it once before you share it.</p>
+            </div>
+
+            <section class="sent-box" aria-labelledby="sent-title">
+              <h3 class="section-title" id="sent-title">📬 Did you send it? Track it</h3>
+              <p class="small">Letters that are followed up get answered more often. Save the date you sent it, and we will remind you after 14 days and write the follow-up for you.</p>
+              <form id="sent-form" class="sent-form" novalidate>
+                <div class="row-2">
+                  <div class="field"><label for="sent-on">Date sent</label><input type="date" id="sent-on" required></div>
+                  <div class="field"><label for="sent-how">How</label><select id="sent-how"><option>by hand</option><option>by email</option><option>through the official website</option><option>by WhatsApp</option><option>through the CDA</option></select></div>
+                </div>
+                <div class="row-2">
+                  <div class="field"><label for="sent-office">Office it went to</label><input type="text" id="sent-office" maxlength="120"></div>
+                  <div class="field"><label for="sent-ref">Reference or receipt number <span class="hint-inline">(if any)</span></label><input type="text" id="sent-ref" maxlength="60"></div>
+                </div>
+                <button type="submit" class="btn btn-purple">📬 I have sent this letter</button>
+                <span class="small" id="sent-msg" aria-live="polite"></span>
+              </form>
+            </section>
+
             <h3 class="section-title">🤝 What you can do yourselves</h3>
             <ul class="steps" id="steps"></ul>
 
@@ -237,6 +291,7 @@
   <script src="js/directory.js"></script>
   <script src="js/privacy.js"></script>
   <script src="js/common.js"></script>
+  <script src="js/tracker.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

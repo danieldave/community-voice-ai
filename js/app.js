@@ -17,6 +17,19 @@
     stateSel.appendChild(o);
   });
 
+  // ---- Community copy languages (v2) ----
+  const langSel = $("communityLang");
+  Object.entries(window.CV_LANGS || {}).forEach(([code, name]) => {
+    const o = document.createElement("option"); o.value = code; o.textContent = name; langSel.appendChild(o);
+  });
+  try { const l = localStorage.getItem("cv-community-lang"); if (l) langSel.value = l; } catch (e) {}
+  langSel.addEventListener("change", () => { try { localStorage.setItem("cv-community-lang", langSel.value); } catch (e) {} });
+
+  // ---- Follow-up mode: opened from "My Letters" with ?followup=ID (v2) ----
+  let followUp = null, followUpId = null;
+  const fid = new URLSearchParams(location.search).get("followup");
+  const first = fid && window.CVTracker ? CVTracker.find(fid) : null;
+
   // ---- Fields, validation messages ----
   const FIELDS = [
     ["problemType", "Choose a problem type."],
@@ -47,6 +60,15 @@
     $("progress-text").textContent = done === FIELDS.length ? "All done — ready! 🎉" : done + " of 8 done";
   }
   FIELDS.forEach(([id]) => { $(id).addEventListener("input", update); $(id).addEventListener("change", update); });
+  if (first) {
+    Object.entries(first.form).forEach(([k, v]) => { if ($(k)) $(k).value = v; });
+    $("tone").value = "Follow-up (we wrote before)";
+    followUp = { sentOn: first.sentOn, how: first.how, office: first.office, reference: first.reference };
+    followUpId = first.id;
+    const note = $("followup-note");
+    note.textContent = "🔁 Follow-up for your letter sent on " + CVTracker.nice(first.sentOn) + (first.office ? " to " + first.office : "") + ". We filled in the same details. Change the description if anything is new, then press Write My Letter.";
+    note.classList.remove("hidden");
+  }
   update();
 
   // ---- Example quick-fills (state and area are left for the user) ----
@@ -166,11 +188,46 @@
     });
 
     renderOffice(data.office_type, state);
+    renderCommunity(data);
+    lastResult = data;
+    const off = data.office_type && DIR.findOffice(data.office_type);
+    if (!$("sent-office").value) $("sent-office").value = followUp && followUp.office ? followUp.office : (off ? off.name : "");
     $("sent-text").textContent = data.sent_to_ai || "";
     show("out-result");
     toast("Your letter is ready ✉️");
     $("out-title").scrollIntoView({ behavior: "smooth", block: "start" });
   }
+
+  let lastForm = null, lastResult = null;
+
+  // ---- Community copy (v2) ----
+  function renderCommunity(data) {
+    const wrap = $("community-wrap");
+    if (!data.community_copy) { wrap.classList.add("hidden"); return; }
+    const name = (window.CV_LANGS || {})[data.community_lang] || "Community";
+    $("community-label").textContent = "Community copy in " + name;
+    $("community-copy").value = data.community_copy;
+    $("community-wa").href = "https://wa.me/?text=" + encodeURIComponent(data.community_copy);
+    wrap.classList.remove("hidden");
+  }
+
+  // ---- "I have sent this letter" (v2) ----
+  $("sent-on").value = window.CVTracker ? CVTracker.today() : "";
+  $("sent-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (!lastForm || !window.CVTracker) return;
+    const sentOn = $("sent-on").value;
+    if (!sentOn) { $("sent-msg").textContent = "Choose the date you sent it."; return; }
+    if (followUpId) {                       // a follow-up: count it on the first letter and restart the 14-day clock
+      const old = CVTracker.find(followUpId);
+      CVTracker.update(followUpId, { followUps: ((old && old.followUps) || 0) + 1, lastFollowUp: sentOn, sentOn: sentOn, status: "waiting", letter: letterBox.value, how: $("sent-how").value, reference: clean($("sent-ref").value.trim()) || (old && old.reference) || "" });
+    } else {
+      CVTracker.add({ form: lastForm, subject: lastResult && lastResult.subject, letter: letterBox.value, sentOn: sentOn,
+        how: $("sent-how").value, office: clean($("sent-office").value.trim()), reference: clean($("sent-ref").value.trim()) });
+    }
+    $("sent-msg").innerHTML = "Saved. We will remind you after " + CVTracker.DUE_DAYS + " days. <a href=\"letters.html\">See My Letters →</a>";
+    toast("Letter saved to My Letters 📬");
+  });
 
   // ---- Submit ----
   const form = $("cv-form");
@@ -199,8 +256,12 @@
       affected: $("affected").value,
       recipient: $("recipient").value,
       tone: $("tone").value,
-      description: clean(desc.value.trim())
+      description: clean(desc.value.trim()),
+      communityLang: langSel.value || undefined,
+      followUp: followUp || undefined
     };
+    lastForm = { problemType: payload.problemType, state: payload.state, area: payload.area, duration: payload.duration,
+      affected: payload.affected, recipient: payload.recipient, tone: payload.tone, description: payload.description };
 
     btn.disabled = true; btn.textContent = "Writing…";
     show("out-loading");
@@ -244,7 +305,14 @@
     window.print();
   });
 
+  $("community-copy-btn").addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText($("community-copy").value); } catch (_) { $("community-copy").select(); document.execCommand("copy"); }
+    toast("Community copy copied 📋");
+  });
+
   $("reset-btn").addEventListener("click", () => {
+    followUp = null; followUpId = null; $("followup-note").classList.add("hidden");
+    if (location.search) history.replaceState(null, "", location.pathname);
     form.reset();
     FIELDS.forEach(([id]) => $(id).setAttribute("aria-invalid", "false"));
     letterBox.value = "";
