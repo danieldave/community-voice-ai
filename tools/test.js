@@ -57,5 +57,19 @@ const FORM = { problemType: 'Water', state: 'Ogun', area: 'Ilaro', duration: '1 
     assert.ok(fs.readFileSync(path.join(ROOT, 'llms.txt'), 'utf8').startsWith('# Community Voice AI'));
   });
   await ok('photo upload is built but locked (coming soon)', () => { const h = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8'); assert.ok(/id="photos"[^>]*disabled/.test(h) && h.includes('Coming soon')); });
+  await ok('civic guides: every problem, office and how-to has a page with a quick answer and schema; no phone numbers', () => {
+    const L = require('./library'); const sm = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
+    const types = [...fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8').matchAll(/<option value="([^"]+)">/g)].map(m => m[1]);
+    assert.ok(L.PROBLEMS.length >= 30);
+    L.PROBLEMS.forEach(p => {
+      assert.ok(types.includes(p[2]), p[0] + ' type must match the form: ' + p[2]);
+      assert.ok(!/\b0[789]\d{9}\b|\+234/.test(p.flat().join(' ')), p[0]);
+      const h = fs.readFileSync(path.join(ROOT, 'report', p[0], 'index.html'), 'utf8');
+      assert.ok(h.includes('Quick answer') && h.includes('"FAQPage"') && (h.match(/<h1/g) || []).length === 1 && (h.match(/rel="canonical"/g) || []).length === 1, p[0]);
+      assert.ok(sm.includes('/report/' + p[0] + '/'), p[0]);
+    });
+    L.OFFICES.forEach(o => assert.ok(fs.existsSync(path.join(ROOT, 'offices', o[0], 'index.html')), o[0]));
+    L.HOWTO.forEach(o => assert.ok(fs.existsSync(path.join(ROOT, 'how-to', o[0], 'index.html')), o[0]));
+  });
   console.log(`\nAll ${passed} checks passed.`);
 })().catch(e => { console.error('\n  ✗ FAILED:', e.message); process.exit(1); });

@@ -2,6 +2,8 @@
 
 Built by Nigerian secondary school students. Community Voice AI helps young people turn a real community problem (no clean water, a broken road, a dark street) into a polite, formal letter. The user picks who it is for and the tone, the AI drafts it, and the user edits it. **The user is always the author.**
 
+**New in version 3: the Civic Guide library.** `tools/library.js` holds 30 community problems, 11 offices and 8 how-to guides. `node tools/build.js` turns them into real pages: "Who do I report ___ to in Nigeria?" (`/report/`), "How to write a letter to ___" (`/offices/`) and step-by-step guides (`/how-to/`), each with the right kind of office, the evidence to collect and a sample opening. The guides never print phone numbers or names of office holders, because those change. To add a page: add an entry, run the build, then `node tools/test.js`. Search Console codes go in `tools/site.json`.
+
 ## New in version 2
 
 | Upgrade | What it does | Where |

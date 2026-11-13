@@ -320,4 +320,7 @@
     show("out-empty");
     $("problemType").focus();
   });
+  // A Civic Guide page can send the problem type: /?type=Roads
+  try { const sent = new URLSearchParams(location.search).get("type"); const box = $("problemType");
+    if (sent && box && [...box.options].some(o => o.value === sent)) { box.value = sent; box.dispatchEvent(new Event("change", { bubbles: true })); } } catch (e) {}
 })();
