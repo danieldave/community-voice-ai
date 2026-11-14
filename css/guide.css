@@ -20,3 +20,6 @@ h1{font-size:clamp(25px,4.2vw,38px);line-height:1.2;color:var(--indigo);margin:8
 .note{background:var(--gold-soft);border-radius:12px;padding:10px 14px}
 .updated{margin-top:26px;font-size:13.5px;color:var(--muted)}
 footer{background:var(--hdr);color:#e9e3fb;text-align:center;padding:24px 16px;font-size:14.5px}footer a{color:var(--gold)}
+
+.itotal{font-size:17px;margin:0}.itotal b{font-size:32px;color:var(--purple);margin-right:6px}.isel{display:grid;gap:4px;font-weight:700;margin:12px 0;max-width:320px}.isel select{font:inherit;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.ibar{display:grid;grid-template-columns:minmax(0,1fr) 40% 2.5em;gap:8px;align-items:center;margin:8px 0;font-size:15px}.ibar i{display:block;height:14px;border-radius:8px;background:var(--purple);justify-self:start}.ibar b{text-align:right}

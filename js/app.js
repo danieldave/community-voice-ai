@@ -275,6 +275,12 @@
       try { data = await r.json(); } catch (_) {}
       if (!r.ok) throw new Error(data.error || "We could not write your letter right now.");
       renderResult(data, payload.state);
+      // Optional and anonymous: count the STATE and PROBLEM TYPE only (never the letter, area or words)
+      const consent = document.getElementById("map-consent");
+      if (consent && consent.checked) {
+        fetch("/api/issues", { method: "POST", headers: { "Content-Type": "application/json" }, keepalive: true,
+          body: JSON.stringify({ state: payload.state, type: payload.problemType }) }).catch(() => {});
+      }
     } catch (err) {
       $("out-error").textContent = (err && err.message ? err.message : "Something went wrong.") + " Check your internet connection and try again.";
       show("out-error");

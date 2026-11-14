@@ -71,5 +71,38 @@ const FORM = { problemType: 'Water', state: 'Ogun', area: 'Ilaro', duration: '1 
     L.OFFICES.forEach(o => assert.ok(fs.existsSync(path.join(ROOT, 'offices', o[0], 'index.html')), o[0]));
     L.HOWTO.forEach(o => assert.ok(fs.existsSync(path.join(ROOT, 'how-to', o[0], 'index.html')), o[0]));
   });
+  console.log('\nIssue Map (api/issues.js)');
+  const iss = require('../api/issues');
+  const formStates = [...fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8').matchAll(/<option value="([^"]+)">/g)].map(m => m[1]);
+  await ok('its states and problem types match the letter form', async () => {
+    const dir = fs.readFileSync(path.join(ROOT, 'js', 'directory.js'), 'utf8'); iss.TYPES.forEach(t => assert.ok(formStates.includes(t), t)); iss.STATES.forEach(x => assert.ok(dir.includes('"' + x + '":'), x));
+  });
+  delete process.env.KV_REST_API_URL; delete process.env.KV_REST_API_TOKEN; delete process.env.UPSTASH_REDIS_REST_URL; delete process.env.UPSTASH_REDIS_REST_TOKEN;
+  await ok('without a database it says live:false and counts nothing', async () => {
+    assert.strictEqual((await call(iss, { method: 'GET' })).data.live, false);
+    const r = await call(iss, { body: { state: iss.STATES[0], type: iss.TYPES[0] } }); assert.strictEqual(r.data.counted, false);
+  });
+  await ok('made-up labels are refused (400)', async () => {
+    assert.strictEqual((await call(iss, { body: { state: 'Atlantis', type: iss.TYPES[0] } })).code, 400);
+    assert.strictEqual((await call(iss, { body: { state: iss.STATES[0], type: 'my street is Adeola Road' } })).code, 400);
+  });
+  await ok('a strange website is blocked (403)', async () => assert.strictEqual((await call(iss, { method: 'GET', origin: 'https://evil.example' })).code, 403));
+  process.env.KV_REST_API_URL = 'https://db.example'; process.env.KV_REST_API_TOKEN = 't';
+  const realFetch = global.fetch; let sent = null;
+  global.fetch = async (u, o) => { const c = JSON.parse(o.body); if (c[0][0] === 'HGETALL') { return { ok: true, json: async () => c.map((_, i) => ({ result: i ? [] : ['total', '9', 's:Ogun', '5', 's:Lagos', '2', 't:Water', '5', 'c:Ogun|Water', '5', 'c:Lagos|Water', '2'] })) }; } sent = c; return { ok: true, json: async () => c.map(() => ({ result: 1 })) }; };
+  await ok('only the state and type are written, nothing else', async () => {
+    const r = await call(iss, { body: { state: 'Ogun', type: 'Water', area: 'Ilaro', description: 'secret words' }, ip: '9.9.9.9' });
+    assert.strictEqual(r.data.counted, true); const flat = JSON.stringify(sent);
+    assert.ok(!flat.includes('Ilaro') && !flat.includes('secret')); assert.ok(sent.every(c => ['HINCRBY', 'EXPIRE'].includes(c[0])));
+  });
+  await ok('numbers under 3 are hidden when the map is read', async () => {
+    const d = (await call(iss, { method: 'GET' })).data; assert.strictEqual(d.live, true);
+    assert.deepStrictEqual(d.states.map(x => x.id), ['Ogun']); assert.strictEqual(d.cells.Ogun.Water, 5); assert.ok(!d.cells.Lagos);
+  });
+  global.fetch = realFetch;
+  await ok('the Issue Map page exists, is in the sitemap and has Dataset data', async () => {
+    const h = fs.readFileSync(path.join(ROOT, 'issues.html'), 'utf8'); const sm = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
+    assert.ok(sm.includes('/issues.html') && h.includes('"Dataset"') && (h.match(/<h1/g) || []).length === 1 && (h.match(/rel="canonical"/g) || []).length === 1);
+  });
   console.log(`\nAll ${passed} checks passed.`);
 })().catch(e => { console.error('\n  ✗ FAILED:', e.message); process.exit(1); });

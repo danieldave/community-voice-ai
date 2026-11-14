@@ -85,3 +85,6 @@ The list of office types appears in **two** places: `js/directory.js` (`OFFICES`
 
 ## Privacy
 No sign-up, no database, no cookies. The privacy filter removes phone numbers, emails, long ID/account numbers and names after "my name is" — first in the browser, then again on the server. Users can see exactly what was sent to the AI.
+
+## Issue Map
+`/issues.html` + `api/issues.js`: an opt-in tick box on the letter form adds only the **state and problem type** to monthly counters in the Upstash database. No letter text, no area. Counts under 3 are hidden. Without the database the page says it is not switched on.

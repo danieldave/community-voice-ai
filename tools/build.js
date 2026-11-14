@@ -18,8 +18,8 @@ const json = o => JSON.stringify(o).replace(/</g, '\\u003c');
 const short = s => s.length > 155 ? s.slice(0, 150).replace(/\s\S*$/, '') + '…' : s;
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 const an = w => /^[aeiou]/i.test(w) ? 'an' : 'a';
-const STATIC = ['/', '/letters.html', '/sign-language.html', '/how-it-works.html'];
-const pages = STATIC.map((loc, i) => ({ loc, pri: i ? '0.6' : '1.0' }));
+const STATIC = ['/', '/letters.html', '/sign-language.html', '/how-it-works.html', '/issues.html'];
+const pages = STATIC.filter(l => l !== '/issues.html').map((loc, i) => ({ loc, pri: i ? '0.6' : '1.0' }));
 const write = (rel, text) => { const f = path.join(ROOT, rel); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, text); };
 const VERIFY = (SITE.googleVerify ? `\n  <meta name="google-site-verification" content="${SITE.googleVerify}">` : '') + (SITE.bingVerify ? `\n  <meta name="msvalidate.01" content="${SITE.bingVerify}">` : '');
 const ORG = { '@type': 'EducationalOrganization', '@id': URL_ + '/#org', name: SITE.publisher, url: URL_ + '/' };
@@ -151,10 +151,57 @@ write('how-to/index.html', page({ rel: 'how-to/index.html', title: 'How to write
   schema: [faqSchema(L.HOWTO.map(h => [h[1], h[2]]))] }));
 pages.push({ loc: '/how-to/', pri: '0.8' });
 
+
+// ---------- /issues.html : the Community Issue Map ----------
+write('issues.html', page({
+  rel: 'issues.html', title: 'Community Issue Map: what Nigerians are reporting, by state | Community Voice AI',
+  description: 'An anonymous, opt-in count of the community problems people write letters about in Nigeria, by state and type: water, roads, electricity, flooding, schools and more.',
+  h1: 'Community Issue Map: what people are writing about', crumbs: [['Home', '/'], ['Issue Map', '/issues.html']],
+  body: `
+  <p class="answer-box"><b>How it works:</b> when someone writes a letter with Community Voice AI they can tick one box to add their problem to this map. We then count <b>only the state and the problem type</b>. We never receive the letter, the area or any words. Any number under 3 is hidden so nobody can be identified.</p>
+  <div id="map" aria-live="polite"><p>Loading the map…</p></div>
+  <h2>Why this matters</h2>
+  <p>One letter is easy to ignore. A pattern is not. These counts show councillors, journalists, schools and community groups which problems people near them are raising, so that they can ask for the right fix.</p>
+  <p class="note">You may quote these numbers with a link to this page. They show what <b>users of this app</b> chose to report, not every problem in the state.</p>
+  <h2>Have a problem to report?</h2>
+  <ul class="grid"><li><a href="/report/bad-road/"><b>Bad road</b><small>Who to write to and what to include</small></a></li><li><a href="/report/no-water/"><b>No water</b><small>Who to write to and what to include</small></a></li><li><a href="/report/no-electricity/"><b>Power outage</b><small>Who to write to and what to include</small></a></li><li><a href="/report/"><b>All problems</b><small>Find the right office</small></a></li></ul>
+  ${cta('')}
+  <script>
+  (function () {
+    var box = document.getElementById("map");
+    var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+    var bars = function (rows) { var max = Math.max.apply(null, rows.map(function (r) { return r.count; }).concat(1));
+      return rows.map(function (r) { return '<div class="ibar"><span>' + esc(r.id) + '</span><i style="width:' + Math.max(4, Math.round(r.count / max * 100)) + '%"></i><b>' + r.count + '</b></div>'; }).join(""); };
+    fetch("/api/issues").then(function (r) { return r.json(); }).then(function (d) {
+      if (!d.live) { box.innerHTML = '<p class="note">The Issue Map is not switched on yet.</p>'; return; }
+      if (!d.total) { box.innerHTML = '<p class="note">No problems have been added in the last ' + d.months + ' months. <a href="/">Write a letter</a> and tick the map box to be the first.</p>'; return; }
+      var opts = '<option value="">All states</option>' + d.states.map(function (s) { return '<option>' + esc(s.id) + '</option>'; }).join("");
+      box.innerHTML = '<p class="itotal"><b>' + d.total + '</b> problems added in the last ' + d.months + ' months</p>' +
+        '<label class="isel">See one state <select id="ist">' + opts + '</select></label><div id="ibody"></div>' +
+        '<p><button class="btn ghost" id="icsv" type="button">Download these numbers (CSV)</button></p>';
+      var sel = document.getElementById("ist"), body = document.getElementById("ibody");
+      function draw() {
+        var s = sel.value;
+        if (!s) { body.innerHTML = '<h2>Problem types</h2>' + bars(d.types) + '<h2>States with the most problems added</h2>' + bars(d.states); return; }
+        var c = d.cells[s] || {}, rows = Object.keys(c).map(function (t) { return { id: t, count: c[t] }; }).sort(function (a, b) { return b.count - a.count; });
+        body.innerHTML = '<h2>' + esc(s) + '</h2>' + (rows.length ? bars(rows) : '<p>Fewer than ' + d.minShown + ' problems of any one type, so nothing is shown yet.</p>');
+      }
+      sel.onchange = draw; draw();
+      document.getElementById("icsv").onclick = function () {
+        var lines = ["state,problem_type,count"]; Object.keys(d.cells).forEach(function (s) { Object.keys(d.cells[s]).forEach(function (t) { lines.push('"' + s + '","' + t + '",' + d.cells[s][t]); }); });
+        var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([lines.join("\\n")], { type: "text/csv" })); a.download = "community-issue-map.csv"; document.body.appendChild(a); a.click(); a.remove();
+      };
+    }).catch(function () { box.innerHTML = '<p class="note">The map could not load. Check your internet and try again.</p>'; });
+  })();
+  </script>`,
+  schema: [{ '@type': 'Dataset', name: 'Community Issue Map: problems reported by users of Community Voice AI', description: 'Anonymous counts of community problem types by Nigerian state, added by users who opted in. No letter text, area or personal data is stored. Counts under 3 are hidden.', url: URL_ + '/issues.html', isAccessibleForFree: true, creator: { '@id': URL_ + '/#org' }, license: 'https://creativecommons.org/licenses/by/4.0/' }]
+}));
+pages.push({ loc: '/issues.html', pri: '0.8' });
+
 // ---------- sitemap.xml, llms.txt, verification codes ----------
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.map(p => `  <url><loc>${URL_}${p.loc}</loc><lastmod>${TODAY}</lastmod><priority>${p.pri}</priority></url>`).join('\n')}\n</urlset>\n`);
 const llms = fs.readFileSync(path.join(ROOT, 'llms.txt'), 'utf8').split('\n## Who do I report to')[0].trimEnd();
-write('llms.txt', llms + `\n\n## Who do I report to? (one page per problem)\n${L.PROBLEMS.map(p => `- [Who do I report ${p[1]} to in Nigeria?](${URL_}/report/${p[0]}/): ${p[5]}`).join('\n')}\n\n## Offices\n${L.OFFICES.map(o => `- [${cap(o[1])}](${URL_}/offices/${o[0]}/): ${o[2]}`).join('\n')}\n\n## How-to guides\n${L.HOWTO.map(h => `- [${h[1]}](${URL_}/how-to/${h[0]}/): ${h[2]}`).join('\n')}\n`);
+write('llms.txt', llms + `\n\n## Data\n- [Community Issue Map](${URL_}/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)\n\n## Who do I report to? (one page per problem)\n${L.PROBLEMS.map(p => `- [Who do I report ${p[1]} to in Nigeria?](${URL_}/report/${p[0]}/): ${p[5]}`).join('\n')}\n\n## Offices\n${L.OFFICES.map(o => `- [${cap(o[1])}](${URL_}/offices/${o[0]}/): ${o[2]}`).join('\n')}\n\n## How-to guides\n${L.HOWTO.map(h => `- [${h[1]}](${URL_}/how-to/${h[0]}/): ${h[2]}`).join('\n')}\n`);
 ['index.html', 'letters.html', 'sign-language.html', 'how-it-works.html'].forEach(f => {
   let h = fs.readFileSync(path.join(ROOT, f), 'utf8').replace(/\n\s*<meta name="(google-site-verification|msvalidate\.01)"[^>]*>/g, '');
   if (VERIFY) h = h.replace(/(<link rel="canonical"[^>]*>)/, '$1' + VERIFY);

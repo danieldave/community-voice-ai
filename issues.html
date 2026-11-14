@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en-NG">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Community Issue Map: what Nigerians are reporting, by state</title>
+  <meta name="description" content="An anonymous, opt-in count of the community problems people write letters about in Nigeria, by state and type: water, roads, electricity, flooding, schools and more.">
+  <link rel="canonical" href="https://community-voice-ai-ziry.vercel.app/issues.html">
+  <meta name="google-site-verification" content="gRx6rQOAdy83jB7Xta6qp0gE61CorO4qy7RzTVvn-WY">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Community Voice AI">
+  <meta property="og:title" content="Community Issue Map: what Nigerians are reporting, by state">
+  <meta property="og:description" content="An anonymous, opt-in count of the community problems people write letters about in Nigeria, by state and type: water, roads, electricity, flooding, schools and more.">
+  <meta property="og:url" content="https://community-voice-ai-ziry.vercel.app/issues.html">
+  <meta property="og:image" content="https://community-voice-ai-ziry.vercel.app/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#1f1a4d">
+  <link rel="icon" href="/assets/logo.svg">
+  <link rel="stylesheet" href="/css/guide.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"EducationalOrganization","@id":"https://community-voice-ai-ziry.vercel.app/#org","name":"ByteBusters Coding Club, Yewa College, Ilaro","url":"https://community-voice-ai-ziry.vercel.app/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://community-voice-ai-ziry.vercel.app/"},{"@type":"ListItem","position":2,"name":"Issue Map","item":"https://community-voice-ai-ziry.vercel.app/issues.html"}]},{"@type":"Dataset","name":"Community Issue Map: problems reported by users of Community Voice AI","description":"Anonymous counts of community problem types by Nigerian state, added by users who opted in. No letter text, area or personal data is stored. Counts under 3 are hidden.","url":"https://community-voice-ai-ziry.vercel.app/issues.html","isAccessibleForFree":true,"creator":{"@id":"https://community-voice-ai-ziry.vercel.app/#org"},"license":"https://creativecommons.org/licenses/by/4.0/"}]}</script>
+</head>
+<body>
+<header class="bar"><a class="brand" href="/"><img src="/assets/logo.svg" alt="" width="36" height="36"><span>COMMUNITY <span>VOICE</span> AI</span></a></header>
+<nav class="gnav" aria-label="Main"><a href="/report/">Who do I report to?</a><a href="/offices/">Offices</a><a href="/how-to/">How-to guides</a><a href="/">Write a letter</a><a href="/letters.html">My letters</a></nav>
+<main class="guide">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> › Issue Map</nav>
+  <h1>Community Issue Map: what people are writing about</h1>
+
+  <p class="answer-box"><b>How it works:</b> when someone writes a letter with Community Voice AI they can tick one box to add their problem to this map. We then count <b>only the state and the problem type</b>. We never receive the letter, the area or any words. Any number under 3 is hidden so nobody can be identified.</p>
+  <div id="map" aria-live="polite"><p>Loading the map…</p></div>
+  <h2>Why this matters</h2>
+  <p>One letter is easy to ignore. A pattern is not. These counts show councillors, journalists, schools and community groups which problems people near them are raising, so that they can ask for the right fix.</p>
+  <p class="note">You may quote these numbers with a link to this page. They show what <b>users of this app</b> chose to report, not every problem in the state.</p>
+  <h2>Have a problem to report?</h2>
+  <ul class="grid"><li><a href="/report/bad-road/"><b>Bad road</b><small>Who to write to and what to include</small></a></li><li><a href="/report/no-water/"><b>No water</b><small>Who to write to and what to include</small></a></li><li><a href="/report/no-electricity/"><b>Power outage</b><small>Who to write to and what to include</small></a></li><li><a href="/report/"><b>All problems</b><small>Find the right office</small></a></li></ul>
+  <div class="cta"><a class="btn" href="/?type=#main">Write my letter with AI ✍️</a><a class="btn ghost" href="/letters.html">Track my letters</a></div>
+  <script>
+  (function () {
+    var box = document.getElementById("map");
+    var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+    var bars = function (rows) { var max = Math.max.apply(null, rows.map(function (r) { return r.count; }).concat(1));
+      return rows.map(function (r) { return '<div class="ibar"><span>' + esc(r.id) + '</span><i style="width:' + Math.max(4, Math.round(r.count / max * 100)) + '%"></i><b>' + r.count + '</b></div>'; }).join(""); };
+    fetch("/api/issues").then(function (r) { return r.json(); }).then(function (d) {
+      if (!d.live) { box.innerHTML = '<p class="note">The Issue Map is not switched on yet.</p>'; return; }
+      if (!d.total) { box.innerHTML = '<p class="note">No problems have been added in the last ' + d.months + ' months. <a href="/">Write a letter</a> and tick the map box to be the first.</p>'; return; }
+      var opts = '<option value="">All states</option>' + d.states.map(function (s) { return '<option>' + esc(s.id) + '</option>'; }).join("");
+      box.innerHTML = '<p class="itotal"><b>' + d.total + '</b> problems added in the last ' + d.months + ' months</p>' +
+        '<label class="isel">See one state <select id="ist">' + opts + '</select></label><div id="ibody"></div>' +
+        '<p><button class="btn ghost" id="icsv" type="button">Download these numbers (CSV)</button></p>';
+      var sel = document.getElementById("ist"), body = document.getElementById("ibody");
+      function draw() {
+        var s = sel.value;
+        if (!s) { body.innerHTML = '<h2>Problem types</h2>' + bars(d.types) + '<h2>States with the most problems added</h2>' + bars(d.states); return; }
+        var c = d.cells[s] || {}, rows = Object.keys(c).map(function (t) { return { id: t, count: c[t] }; }).sort(function (a, b) { return b.count - a.count; });
+        body.innerHTML = '<h2>' + esc(s) + '</h2>' + (rows.length ? bars(rows) : '<p>Fewer than ' + d.minShown + ' problems of any one type, so nothing is shown yet.</p>');
+      }
+      sel.onchange = draw; draw();
+      document.getElementById("icsv").onclick = function () {
+        var lines = ["state,problem_type,count"]; Object.keys(d.cells).forEach(function (s) { Object.keys(d.cells[s]).forEach(function (t) { lines.push('"' + s + '","' + t + '",' + d.cells[s][t]); }); });
+        var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/csv" })); a.download = "community-issue-map.csv"; document.body.appendChild(a); a.click(); a.remove();
+      };
+    }).catch(function () { box.innerHTML = '<p class="note">The map could not load. Check your internet and try again.</p>'; });
+  })();
+  </script>
+  <p class="updated">Written by students of the ByteBusters Coding Club, Yewa College, Ilaro. Last updated <time datetime="2026-11-14">2026-11-14</time>. Offices are organised a little differently in each state: confirm the right office locally before you deliver a letter. In an emergency, call 112.</p>
+</main>
+<footer><p><a href="/report/">Who do I report to?</a> · <a href="/offices/">Offices</a> · <a href="/how-to/">How-to guides</a> · <a href="/">Write a letter with AI</a></p><p>Built by students of the ByteBusters Coding Club, Yewa College, Ilaro</p></footer>
+</body>
+</html>
