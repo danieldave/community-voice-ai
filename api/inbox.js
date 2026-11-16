@@ -133,7 +133,8 @@ module.exports = async function handler(req, res) {
 
   // ---- 3. an official ----
   if (body.action === 'list' || body.action === 'react') {
-    if (!Object.keys(admins()).length) return res.status(200).json({ live: false, reason: 'no-keys' });
+    if (!process.env.ADMIN_KEYS) return res.status(200).json({ live: false, reason: 'no-keys' });
+    if (!Object.keys(admins()).some(k => k.length >= 16)) return res.status(200).json({ live: false, reason: 'bad-keys' });
     if (!live) return res.status(200).json({ live: false, reason: 'no-database' });
     if (!S.allowed(ip + ':adm', 600)) return res.status(429).json({ error: 'Too many requests. Please wait a little.' });
     const me = whoIs(body.key);

@@ -89,7 +89,7 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'Unknown mode.' });
   } catch (e) {
     console.error('translate:', e.message);
-    return res.status(502).json({ error: e.code === 'daily-limit' ? 'The translator has reached its limit for today. Please come back tomorrow.' : 'The translator could not answer right now. Please try again.', code: e.code || 'unknown' });
+    return res.status(502).json({ error: e.code === 'daily-limit' ? 'The translator has reached its limit for today. Please come back tomorrow.' : 'The translator could not answer right now. Please try again. (code: ' + (e.code || e.name || 'unknown') + ')', code: e.code || 'unknown' });
   }
 };
 module.exports.MAX_TEXT = MAX_TEXT;

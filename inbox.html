@@ -99,7 +99,7 @@
   function open() {
     $("door-msg").textContent = "";
     call({ action: "list" }).then(function (d) {
-      if (d.live === false) { $("door-msg").textContent = d.reason === "no-keys" ? "The inbox is not switched on yet. The site owner must add access keys." : "The inbox database is not connected yet."; return; }
+      if (d.live === false) { $("door-msg").textContent = d.reason === "no-keys" ? "The inbox is not switched on yet. The site owner must add ADMIN_KEYS in Vercel and then redeploy." : d.reason === "bad-keys" ? "ADMIN_KEYS is set, but it is not written correctly. It must be valid JSON and each key must be at least 16 characters." : "The inbox database is not connected yet."; return; }
       if (d.error) { $("door-msg").textContent = d.error; key = ""; try { sessionStorage.removeItem("cv-inbox-key"); } catch (e) {} return; }
       me = d.me; letters = d.letters || [];
       try { sessionStorage.setItem("cv-inbox-key", key); } catch (e) {}

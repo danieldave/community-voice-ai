@@ -117,8 +117,12 @@ Description (user's own words): ${input.description}${communityLang ? "\nCOMMUNI
       const why = { "ai-401": "The site's AI key is not working. The site owner must check OPENAI_API_KEY in Vercel.",
                     "ai-429": "The AI account has no credit left, or is too busy. The site owner must check the OpenAI billing page.",
                     "ai-404": "The AI model name is wrong. The site owner must check OPENAI_MODEL in Vercel.",
+                    "ai-400": "The AI model in OPENAI_MODEL did not accept our request. The site owner should remove OPENAI_MODEL in Vercel or set it to gpt-4o-mini.",
+                    "ai-403": "The AI key is not allowed to use this model. The site owner must check the OpenAI project settings.",
+                    "ai-empty": "The AI sent an empty answer. Please try again.",
+                    "ai-notjson": "The AI answered in the wrong shape. Please try again.",
                     "daily-limit": "The site has reached its AI limit for today. Please come back tomorrow." }[e.code]
-        || (e.name === "AbortError" ? "The AI took too long to answer. Please try again." : "The AI service did not answer correctly. Please try again in a moment.");
+        || (e.name === "AbortError" ? "The AI took too long to answer. Please try again." : "The AI service did not answer correctly. Please try again in a moment. (code: " + (e.code || e.name || "unknown") + ")");
       return res.status(502).json({ error: why, code: e.code || e.name || "unknown" });
     }
 
