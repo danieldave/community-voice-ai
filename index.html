@@ -257,12 +257,13 @@
               <form id="sent-form" class="sent-form" novalidate>
                 <div class="row-2">
                   <div class="field"><label for="sent-on">Date sent</label><input type="date" id="sent-on" required></div>
-                  <div class="field"><label for="sent-how">How</label><select id="sent-how"><option>by hand</option><option>by email</option><option>through the official website</option><option>by WhatsApp</option><option>through the CDA</option></select></div>
+                  <div class="field"><label for="sent-how">How</label><select id="sent-how"><option>by hand</option><option>by post</option><option>by email</option><option>through the official website</option><option>by WhatsApp</option><option>through the CDA</option></select></div>
                 </div>
                 <div class="row-2">
                   <div class="field"><label for="sent-office">Office it went to</label><input type="text" id="sent-office" maxlength="120"></div>
                   <div class="field"><label for="sent-ref">Reference or receipt number <span class="hint-inline">(if any)</span></label><input type="text" id="sent-ref" maxlength="60"></div>
                 </div>
+                <label class="consent"><input type="checkbox" id="inbox-consent"> <span>🏛️ Also put a copy in the <b>officials' inbox</b> on Community Voice, so the office can answer here. Your letter is stored for 400 days with phone numbers and emails hidden. You get a <b>tracking code</b>.</span></label>
                 <button type="submit" class="btn btn-purple">📬 I have sent this letter</button>
                 <span class="small" id="sent-msg" aria-live="polite"></span>
               </form>
@@ -295,6 +296,7 @@
 
   <footer class="site-footer">
     <div class="container">
+      <p class="small"><a href="/inbox.html">🏛️ For public officials: open your inbox</a></p>
       <p class="credit">Built with AI by <span>Yewa College Bytebusters</span> (Generative AI Team &amp; Special Students)</p>
       <p class="small">Government links are official .gov.ng websites. Last verified: <span data-last-verified></span>. In an emergency, call <strong>112</strong> (free on every network). If it does not connect, go to the nearest police station or hospital.</p>
     </div>
@@ -305,5 +307,6 @@
   <script src="js/common.js"></script>
   <script src="js/tracker.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/translate.js" defer></script>
 </body>
 </html>

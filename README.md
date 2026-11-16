@@ -88,3 +88,17 @@ No sign-up, no database, no cookies. The privacy filter removes phone numbers, e
 
 ## Issue Map
 `/issues.html` + `api/issues.js`: an opt-in tick box on the letter form adds only the **state and problem type** to monthly counters in the Upstash database. No letter text, no area. Counts under 3 are hidden. Without the database the page says it is not switched on.
+
+## Officials' inbox (`/inbox.html` + `api/inbox.js`)
+- When a citizen saves a sent letter, they may tick **"put a copy in the officials' inbox"**. The letter is stored (phone numbers and emails hidden) for 400 days and the citizen gets an 8-character **tracking code**.
+- The inbox shows each letter with how it reached the office: **by hand or by post** (came to the office) or **by email, website or WhatsApp** (came online).
+- An official answers with one tap: received, looking into it, work planned, solved, or passed to the right office, plus a short message. The citizen sees the answer in **My Letters**.
+- **Who can open it:** only people with an access key. Keys are set by the site owner in the Vercel setting `ADMIN_KEYS`, for example
+  `{"a-long-secret-key-here": {"name": "Ogun State Office", "state": "Ogun"}, "another-long-key": {"name": "Federal Desk", "state": "all"}}`.
+  Each key must be at least 16 characters. A state office sees only its own state. Without `ADMIN_KEYS` the inbox stays closed.
+- Needs the Upstash database (`KV_REST_API_*`).
+
+## Language button (`js/translate.js` + `api/translate.js`)
+- **Whole site:** pick one of 17 languages and every page is shown in it. Each sentence is translated by AI once, then saved in the database, so it is not paid for again.
+- **Any text:** up to 500 letters, 10 times an hour per visitor.
+- Translations are made by AI and are labelled so on the page. Ask a native speaker to check before relying on them.

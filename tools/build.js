@@ -65,6 +65,7 @@ ${body}
   <p class="updated">Written by students of the ${esc(SITE.publisher)}. Last updated <time datetime="${TODAY}">${TODAY}</time>. Offices are organised a little differently in each state: confirm the right office locally before you deliver a letter. In an emergency, call 112.</p>
 </main>
 <footer><p><a href="/report/">Who do I report to?</a> · <a href="/offices/">Offices</a> · <a href="/how-to/">How-to guides</a> · <a href="/">Write a letter with AI</a></p><p>Built by students of the ${esc(SITE.publisher)}</p></footer>
+<script src="/js/translate.js" defer></script>
 </body>
 </html>
 `;

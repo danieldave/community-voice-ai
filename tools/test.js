@@ -104,5 +104,77 @@ const FORM = { problemType: 'Water', state: 'Ogun', area: 'Ilaro', duration: '1 
     const h = fs.readFileSync(path.join(ROOT, 'issues.html'), 'utf8'); const sm = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
     assert.ok(sm.includes('/issues.html') && h.includes('"Dataset"') && (h.match(/<h1/g) || []).length === 1 && (h.match(/rel="canonical"/g) || []).length === 1);
   });
+  console.log('\nOfficials\' inbox (api/inbox.js) and translator (api/translate.js)');
+  {
+    const inbox = require('../api/inbox'), tr = require('../api/translate');
+    const q = (h, query, ip) => new Promise(r => { const res = { setHeader() {}, code: 200, status(c) { this.code = c; return this; }, json(d) { r({ code: this.code, data: d }); }, end() { r({ code: this.code }); } };
+      h({ method: 'GET', query, headers: { origin: 'https://community-voice-ai-ziry.vercel.app', host: 'community-voice-ai-ziry.vercel.app', 'x-forwarded-for': ip || '3.3.3.3' } }, res); });
+    // a small pretend database
+    const H = {}, Z = {}, K = {}; const real = global.fetch;
+    global.fetch = async (u, o) => {
+      const cmds = JSON.parse(o.body);
+      if (String(u).includes('openai')) { const list = JSON.parse(cmds.messages[1].content.startsWith('[') ? cmds.messages[1].content : '[]');
+        const out = list.length ? { t: list.map(x => 'YO:' + x) } : { translation: 'YO:' + cmds.messages[1].content };
+        return { ok: true, json: async () => ({ choices: [{ message: { content: JSON.stringify(out) } }] }) }; }
+      return { ok: true, json: async () => cmds.map(c => {
+        if (c[0] === 'HSETNX') { if (H[c[1]]) return { result: 0 }; H[c[1]] = { [c[2]]: c[3] }; return { result: 1 }; }
+        if (c[0] === 'HSET') { H[c[1]] = H[c[1]] || {}; for (let i = 2; i < c.length; i += 2) H[c[1]][c[i]] = c[i + 1]; return { result: 1 }; }
+        if (c[0] === 'HGETALL') return { result: [].concat(...Object.entries(H[c[1]] || {})) };
+        if (c[0] === 'ZADD') { (Z[c[1]] = Z[c[1]] || []).unshift(c[3]); return { result: 1 }; }
+        if (c[0] === 'ZREVRANGE') return { result: Z[c[1]] || [] };
+        if (c[0] === 'GET') return { result: K[c[1]] || null };
+        if (c[0] === 'SET') { K[c[1]] = c[2]; return { result: 'OK' }; }
+        return { result: 1 }; }) };
+    };
+    process.env.KV_REST_API_URL = 'https://db.example'; process.env.KV_REST_API_TOKEN = 't'; process.env.OPENAI_API_KEY = 'test';
+    process.env.ADMIN_KEYS = JSON.stringify({ 'ogun-office-key-0001': { name: 'Ogun State Office', state: 'Ogun' }, 'short': { name: 'Bad', state: 'all' } });
+    const letter = 'Dear Sir, the road in our area has been bad for three years. Call me on 08031234567 or a@b.com. We respectfully request repairs.';
+    let code;
+    await ok('a citizen files a copy and gets a tracking code; phone and email are hidden', async () => {
+      const r = await call(inbox, { body: { action: 'file', state: 'Ogun', type: 'Roads', office: 'Local Government Council', how: 'by hand', sentOn: '2026-11-01', subject: 'BAD ROAD', letter }, ip: '4.4.4.1' });
+      assert.strictEqual(r.data.filed, true); code = r.data.code; assert.ok(/^[A-Z2-9]{8}$/.test(code));
+      const stored = JSON.stringify(H); assert.ok(!stored.includes('08031234567') && !stored.includes('a@b.com'));
+      await call(inbox, { body: { action: 'file', state: 'Lagos', type: 'Water', how: 'by email', sentOn: '2026-11-02', subject: 'NO WATER', letter }, ip: '4.4.4.2' });
+      assert.strictEqual((await call(inbox, { body: { action: 'file', state: 'Atlantis', type: 'Roads', letter } })).code, 400);
+    });
+    await ok('the inbox opens only with a real key, and a state office sees only its state', async () => {
+      assert.strictEqual((await call(inbox, { body: { action: 'list', key: 'wrong-key-wrong-key-1' }, ip: '4.4.4.3' })).code, 401);
+      assert.strictEqual((await call(inbox, { body: { action: 'list', key: 'short' }, ip: '4.4.4.3' })).code, 401);
+      const r = await call(inbox, { body: { action: 'list', key: 'ogun-office-key-0001' }, ip: '4.4.4.4' });
+      assert.strictEqual(r.data.me.name, 'Ogun State Office'); assert.deepStrictEqual(r.data.letters.map(l => l.state), ['Ogun']);
+      assert.strictEqual(r.data.letters[0].online, false); assert.strictEqual(r.data.letters[0].how, 'by hand');
+    });
+    await ok('an official answers, and the citizen sees the answer with the tracking code', async () => {
+      const lagos = Object.keys(H).find(k => H[k].state === 'Lagos').slice(5);
+      assert.strictEqual((await call(inbox, { body: { action: 'react', key: 'ogun-office-key-0001', id: lagos, status: 'solved' }, ip: '4.4.4.4' })).code, 403);
+      const r = await call(inbox, { body: { action: 'react', key: 'ogun-office-key-0001', id: code, status: 'planned', reply: 'Engineers will inspect next week. Call 08031234567.' }, ip: '4.4.4.4' });
+      assert.strictEqual(r.data.saved, true); assert.ok(!r.data.reply.includes('08031234567'));
+      const seen = (await q(inbox, { code })).data; assert.strictEqual(seen.status, 'planned'); assert.strictEqual(seen.repliedBy, 'Ogun State Office');
+      assert.ok(!('letter' in seen), 'the tracking view never shows the letter');
+      assert.strictEqual((await q(inbox, { code: 'ZZZZZZZZ' })).data.found, false);
+    });
+    await ok('too many wrong keys from one visitor are stopped (429)', async () => {
+      let last; for (let i = 0; i < 10; i++) last = await call(inbox, { body: { action: 'list', key: 'guess-guess-guess-' + i }, ip: '4.4.4.9' });
+      assert.strictEqual(last.code, 429);
+    });
+    await ok('translator: any text is capped at 500 letters and 10 uses an hour', async () => {
+      assert.strictEqual((await call(tr, { body: { mode: 'text', text: 'x'.repeat(501), to: 'yo' }, ip: '5.5.5.1' })).code, 400);
+      assert.strictEqual((await call(tr, { body: { mode: 'text', text: 'Good morning', to: 'xx' }, ip: '5.5.5.1' })).code, 400);
+      let r; for (let i = 0; i < 10; i++) r = await call(tr, { body: { mode: 'text', text: 'Good morning ' + i, to: 'yo' }, ip: '5.5.5.2' });
+      assert.ok(r.data.translation.startsWith('YO:'));
+      assert.strictEqual((await call(tr, { body: { mode: 'text', text: 'one more', to: 'yo' }, ip: '5.5.5.2' })).code, 429);
+    });
+    await ok('translator: a page sentence is paid for once, then comes from the database', async () => {
+      const a = await call(tr, { body: { mode: 'page', strings: ['Write a letter', 'Who do I report to?'], to: 'ha' }, ip: '5.5.5.3' });
+      assert.deepStrictEqual(a.data.t, ['YO:Write a letter', 'YO:Who do I report to?']); assert.strictEqual(a.data.fresh, 2);
+      const b = await call(tr, { body: { mode: 'page', strings: ['Who do I report to?', 'New words'], to: 'ha' }, ip: '5.5.5.3' });
+      assert.strictEqual(b.data.fresh, 1);
+    });
+    await ok('the inbox page is hidden from search engines and not in the sitemap', async () => {
+      assert.ok(fs.readFileSync(path.join(ROOT, 'inbox.html'), 'utf8').includes('noindex'));
+      assert.ok(!fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8').includes('inbox'));
+    });
+    global.fetch = real;
+  }
   console.log(`\nAll ${passed} checks passed.`);
 })().catch(e => { console.error('\n  ✗ FAILED:', e.message); process.exit(1); });

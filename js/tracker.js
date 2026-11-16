@@ -87,8 +87,20 @@
             (s.key !== "solved" ? '<button type="button" class="btn btn-outline" data-act="solved">✅ Solved</button>' : '<button type="button" class="btn btn-outline" data-act="waiting">↩️ Not solved after all</button>') +
             '<button type="button" class="btn btn-outline" data-act="view">📄 See letter</button>' +
             '<button type="button" class="btn btn-outline" data-act="delete" aria-label="Delete this letter">🗑️</button>' +
-          '</div><pre class="letter-view hidden">' + esc(l.letter) + '</pre></article>';
+          '</div>' + (l.code ? '<div class="official" data-code="' + esc(l.code) + '">🏛️ In the officials\' inbox · tracking code <b>' + esc(l.code) + '</b> · <span>checking for an answer…</span></div>' : '') +
+          '<pre class="letter-view hidden">' + esc(l.letter) + '</pre></article>';
       }).join("");
+    // letters that were shared with the officials' inbox: ask the server what the office answered
+    var SAID = { "new": "not opened yet", received: "✅ The office received it", review: "🔎 The office is looking into it", planned: "🛠️ Work is planned", solved: "🎉 The office says it is solved", redirect: "↪️ Passed to the right office" };
+    box.querySelectorAll(".official").forEach(function (o) {
+      fetch("/api/inbox?code=" + encodeURIComponent(o.getAttribute("data-code"))).then(function (r) { return r.json(); }).then(function (d) {
+        var s = o.querySelector("span");
+        if (!d.live) { s.textContent = "the inbox is not switched on right now."; return; }
+        if (!d.found) { s.textContent = "this copy is no longer stored."; return; }
+        s.innerHTML = "<b>" + esc(SAID[d.status] || d.status) + "</b>" + (d.repliedOn ? " (" + esc(nice(d.repliedOn)) + (d.repliedBy ? ", " + esc(d.repliedBy) : "") + ")" : "") + (d.reply ? '<br>“' + esc(d.reply) + '”' : "");
+        if (d.status !== "new") o.classList.add("answered");
+      }).catch(function () { o.querySelector("span").textContent = "could not check right now."; });
+    });
     box.onclick = function (e) {
       var b = e.target.closest("[data-act]"); if (!b) return;
       var card = b.closest("[data-id]"), id = card.getAttribute("data-id"), act = b.getAttribute("data-act");

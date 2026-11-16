@@ -357,3 +357,7 @@ details.faq p { margin: 8px 0 0; }
 /* Issue Map consent line */
 .consent { display: flex; gap: 10px; align-items: flex-start; margin: 10px 0 14px; padding: 10px 12px; border: 1px dashed var(--line); border-radius: 12px; background: var(--surface-2); font-size: 15px; }
 .consent input { width: 22px; height: 22px; margin-top: 2px; flex: none; accent-color: var(--purple); }
+
+.official { margin-top: 10px; padding: 10px 14px; border-radius: 12px; background: #efe9ff; color: #2a1f6b; font-size: 14.5px; }
+.official.answered { background: #dff5e8; color: #0c4a30; }
+[data-theme="dark"] .official { background: #2a2360; color: #e9e4ff; } [data-theme="dark"] .official.answered { background: #123d2a; color: #d3f5e2; }

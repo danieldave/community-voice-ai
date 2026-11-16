@@ -222,8 +222,17 @@
       const old = CVTracker.find(followUpId);
       CVTracker.update(followUpId, { followUps: ((old && old.followUps) || 0) + 1, lastFollowUp: sentOn, sentOn: sentOn, status: "waiting", letter: letterBox.value, how: $("sent-how").value, reference: clean($("sent-ref").value.trim()) || (old && old.reference) || "" });
     } else {
-      CVTracker.add({ form: lastForm, subject: lastResult && lastResult.subject, letter: letterBox.value, sentOn: sentOn,
+      const entry = CVTracker.add({ form: lastForm, subject: lastResult && lastResult.subject, letter: letterBox.value, sentOn: sentOn,
         how: $("sent-how").value, office: clean($("sent-office").value.trim()), reference: clean($("sent-ref").value.trim()) });
+      // The citizen's own choice: put a copy in the officials' inbox and get a tracking code
+      if ($("inbox-consent") && $("inbox-consent").checked) {
+        fetch("/api/inbox", { method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "file", state: lastForm.state, type: lastForm.problemType, office: entry.office, how: entry.how, sentOn: sentOn, subject: entry.subject || "", letter: entry.letter }) })
+          .then(r => r.json()).then(d => {
+            if (d.filed && d.code) { CVTracker.update(entry.id, { code: d.code }); $("sent-msg").innerHTML = "Saved, and a copy is in the officials' inbox. Your tracking code is <b>" + d.code + "</b>. <a href=\"letters.html\">See My Letters →</a>"; }
+            else $("sent-msg").innerHTML = "Saved on this phone. " + (d.error || "The officials' inbox is not switched on yet.") + " <a href=\"letters.html\">See My Letters →</a>";
+          }).catch(() => {});
+      }
     }
     $("sent-msg").innerHTML = "Saved. We will remind you after " + CVTracker.DUE_DAYS + " days. <a href=\"letters.html\">See My Letters →</a>";
     toast("Letter saved to My Letters 📬");
