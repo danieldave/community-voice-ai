@@ -273,7 +273,7 @@
       });
       let data = {};
       try { data = await r.json(); } catch (_) {}
-      if (!r.ok) throw new Error(data.error || "We could not write your letter right now.");
+      if (!r.ok) { const e = new Error(data.error || "We could not write your letter right now."); e.fromServer = true; throw e; }
       renderResult(data, payload.state);
       // Optional and anonymous: count the STATE and PROBLEM TYPE only (never the letter, area or words)
       const consent = document.getElementById("map-consent");
@@ -282,7 +282,7 @@
           body: JSON.stringify({ state: payload.state, type: payload.problemType }) }).catch(() => {});
       }
     } catch (err) {
-      $("out-error").textContent = (err && err.message ? err.message : "Something went wrong.") + " Check your internet connection and try again.";
+      $("out-error").textContent = (err && err.fromServer) ? err.message : "We could not reach the server. Check your internet connection and try again.";
       show("out-error");
     } finally {
       btn.disabled = false; btn.textContent = SUBMIT_LABEL;

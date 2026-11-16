@@ -111,7 +111,16 @@ Description (user's own words): ${input.description}${communityLang ? "\nCOMMUNI
   try {
     let out;
     try { out = await S.askOpenAI(SYSTEM_PROMPT, userPrompt, 1800); }
-    catch (e) { console.error("OpenAI:", e.message); return res.status(502).json({ error: "The AI service did not answer correctly. Please try again in a moment." }); }
+    catch (e) {
+      console.error("OpenAI:", e.message);
+      // Say WHY, so the site owner can fix it fast (no secret is shown)
+      const why = { "ai-401": "The site's AI key is not working. The site owner must check OPENAI_API_KEY in Vercel.",
+                    "ai-429": "The AI account has no credit left, or is too busy. The site owner must check the OpenAI billing page.",
+                    "ai-404": "The AI model name is wrong. The site owner must check OPENAI_MODEL in Vercel.",
+                    "daily-limit": "The site has reached its AI limit for today. Please come back tomorrow." }[e.code]
+        || (e.name === "AbortError" ? "The AI took too long to answer. Please try again." : "The AI service did not answer correctly. Please try again in a moment.");
+      return res.status(502).json({ error: why, code: e.code || e.name || "unknown" });
+    }
 
     // Make the reply safe and predictable
     const result = {
