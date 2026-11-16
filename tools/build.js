@@ -61,6 +61,7 @@ function page({ rel, title, description, h1, crumbs, body, schema }) {
   <nav class="crumbs" aria-label="Breadcrumb">${crumbs.map((c, i) => i < crumbs.length - 1 ? `<a href="${c[1]}">${esc(c[0])}</a> › ` : esc(c[0])).join('')}</nav>
   <h1>${esc(h1)}</h1>
 ${body}
+  <p class="note"><b>Emergency?</b> A letter is not for emergencies. Call <b>112</b> (free on every network). If it does not connect, go to the nearest police station, fire station or hospital, or call your state's own emergency line.</p>
   <p class="updated">Written by students of the ${esc(SITE.publisher)}. Last updated <time datetime="${TODAY}">${TODAY}</time>. Offices are organised a little differently in each state: confirm the right office locally before you deliver a letter. In an emergency, call 112.</p>
 </main>
 <footer><p><a href="/report/">Who do I report to?</a> · <a href="/offices/">Offices</a> · <a href="/how-to/">How-to guides</a> · <a href="/">Write a letter with AI</a></p><p>Built by students of the ${esc(SITE.publisher)}</p></footer>

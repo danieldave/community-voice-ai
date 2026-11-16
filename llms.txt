@@ -18,6 +18,9 @@ Key facts:
 ## Data
 - [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
 
+## Data
+- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
+
 ## Who do I report to? (one page per problem)
 - [Who do I report a bad or damaged road to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/bad-road/): First find out who owns the road. Local streets belong to the Local Government, state roads to the State Ministry of Works, and federal highways to the Federal Ministry of Works and FERMA. Then send a dated letter with photos and the exact location.
 - [Who do I report potholes to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/potholes/): Report potholes to whoever owns the road, usually the Local Government for streets and the State road agency for main roads. Count them, photograph them and give the exact stretch.
