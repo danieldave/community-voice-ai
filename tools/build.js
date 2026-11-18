@@ -210,3 +210,4 @@ write('llms.txt', llms + `\n\n## Data\n- [Community Issue Map](${URL_}/issues.ht
   fs.writeFileSync(path.join(ROOT, f), h);
 });
 console.log('Done:', pages.length, 'pages in the sitemap.');
+require('./build-key-maker.js');

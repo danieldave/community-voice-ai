@@ -120,8 +120,8 @@ const FORM = { problemType: 'Water', state: 'Ogun', area: 'Ilaro', duration: '1 
         if (c[0] === 'HSETNX') { if (H[c[1]]) return { result: 0 }; H[c[1]] = { [c[2]]: c[3] }; return { result: 1 }; }
         if (c[0] === 'HSET') { H[c[1]] = H[c[1]] || {}; for (let i = 2; i < c.length; i += 2) H[c[1]][c[i]] = c[i + 1]; return { result: 1 }; }
         if (c[0] === 'HGETALL') return { result: [].concat(...Object.entries(H[c[1]] || {})) };
-        if (c[0] === 'ZADD') { (Z[c[1]] = Z[c[1]] || []).unshift(c[3]); return { result: 1 }; }
-        if (c[0] === 'ZREVRANGE') return { result: Z[c[1]] || [] };
+        if (c[0] === 'ZADD') { (Z[c[1]] = Z[c[1]] || []).unshift([c[2], c[3]]); return { result: 1 }; }
+        if (c[0] === 'ZREVRANGE') return { result: [].concat(...(Z[c[1]] || []).map(x => c[4] === 'WITHSCORES' ? [x[1], String(x[0])] : [x[1]])) };
         if (c[0] === 'GET') return { result: K[c[1]] || null };
         if (c[0] === 'SET') { K[c[1]] = c[2]; return { result: 'OK' }; }
         return { result: 1 }; }) };
@@ -152,6 +152,36 @@ const FORM = { problemType: 'Water', state: 'Ogun', area: 'Ilaro', duration: '1 
       const seen = (await q(inbox, { code })).data; assert.strictEqual(seen.status, 'planned'); assert.strictEqual(seen.repliedBy, 'Ogun State Office');
       assert.ok(!('letter' in seen), 'the tracking view never shows the letter');
       assert.strictEqual((await q(inbox, { code: 'ZZZZZZZZ' })).data.found, false);
+    });
+    await ok('one key per office: an LGA sees only its LGA, a state office only its problem types', async () => {
+      const I = require('../api/inbox'), L = require('../js/lgas.js');
+      const yewa = L.byCode('Ogun', '05'), abk = L.byCode('Ogun', '01');
+      const keys = { lga: 'K7MQ-2XRT-9WBH-4PZN-6CDF-JV3S', water: 'M3NB-7QXR-2TKW-9HPF-4ZDC-8GVJ', fed: 'P9WX-3MRT-6BKQ-2HZN-7FDC-4GVS', nema: 'R2TB-8MXQ-5WKH-3PZF-9NDC-6GVJ' };
+      process.env.ADMIN_KEYS = [[keys.lga, 'OG.05'], [keys.water, 'OG#WAT'], [keys.fed, 'NG'], [keys.nema, 'NG#NEMA']].map(([k, sc]) => I.fingerprint(k) + ':' + sc).join(',') + ',junk:XX#ZZZ';
+      assert.ok(!process.env.ADMIN_KEYS.includes('K7MQ'), 'the setting holds fingerprints, never the keys');
+      const file = (lga, type, state = 'Ogun') => call(inbox, { body: { action: 'file', state, lga, type, how: 'by hand', sentOn: '2026-11-10', subject: type, letter }, ip: '4.5.' + Math.floor(Math.random() * 250) + '.1' });
+      const a = (await file(yewa, 'Roads')).data.code, b = (await file(yewa, 'Water')).data.code, c = (await file(abk, 'Water')).data.code, d = (await file('Not a real LGA', 'Flooding', 'Lagos')).data.code;
+      const ids = async k => (await call(inbox, { body: { action: 'list', key: k }, ip: '4.6.0.1' })).data.letters.map(l => l.id).sort();
+      assert.deepStrictEqual(await ids(keys.lga.toLowerCase().replace(/-/g, ' ')), [a, b].sort(), 'Yewa South sees only Yewa South, typed in any case');
+      assert.deepStrictEqual(await ids(keys.water), [b, c].sort(), 'the Ogun water office sees only water letters in Ogun');
+      assert.deepStrictEqual(await ids(keys.nema), [d], 'NEMA sees flooding letters in every state');
+      assert.ok((await ids(keys.fed)).includes(d) && (await ids(keys.fed)).includes(a), 'the Federal Desk sees everything');
+      assert.strictEqual(H['cv:l:' + d].lga, '', 'an LGA that is not in the state is not stored');
+      const r = await call(inbox, { body: { action: 'react', key: keys.lga, id: c, status: 'solved' }, ip: '4.6.0.2' });
+      assert.strictEqual(r.code, 403, 'an office cannot answer a letter outside its scope');
+      const me = (await call(inbox, { body: { action: 'list', key: keys.water }, ip: '4.6.0.3' })).data.me;
+      assert.strictEqual(me.name, 'Ogun State Water Corporation / Water Board');
+    });
+    await ok('the LGA list has all 774 LGAs and the office scopes are valid', async () => {
+      const L = require('../js/lgas.js'), I = require('../api/inbox'); let n = 0, codes = new Set();
+      Object.entries(L.LGAS).forEach(([st, list]) => { n += list.length; codes.add(L.CODES[st]); list.forEach((x, i) => assert.strictEqual(Number(x[0]), i + 1, st)); });
+      assert.strictEqual(n, 774); assert.strictEqual(codes.size, 37); assert.strictEqual(L.LGAS['Ogun'].length, 20); assert.strictEqual(L.LGAS['Kano'].length, 44); assert.strictEqual(L.LGAS['FCT (Abuja)'].length, 6);
+      assert.ok(I.officeFor('KN.44') && !I.officeFor('KN.45') && I.officeFor('FC#GOV').name === 'Office of the FCT Minister');
+    });
+    await ok('the offline key maker is built from the same LGA list and is not deployed', async () => {
+      const km = fs.readFileSync(path.join(ROOT, 'tools', 'office-key-maker.html'), 'utf8');
+      assert.ok(km.includes('"OG":') || km.includes('"Ogun":"OG"')); assert.ok(km.includes('Yewa South (Egbado South)') && !km.includes('/*DATA*/null'));
+      assert.ok(fs.readFileSync(path.join(ROOT, '.vercelignore'), 'utf8').includes('tools/office-key-maker.html'));
     });
     await ok('too many wrong keys from one visitor are stopped (429)', async () => {
       let last; for (let i = 0; i < 10; i++) last = await call(inbox, { body: { action: 'list', key: 'guess-guess-guess-' + i }, ip: '4.4.4.9' });

@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Office Key Maker · Community Voice AI</title>
+<style>
+  :root { --ink: #1f1a4d; --muted: #5d5a7a; --bg: #f6f3ff; --card: #fff; --line: #e1d9f7; --purple: #5b34c9; --gold: #f5b300; --red: #b3261e; --green: #17895a; --soft: #efe9ff; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Arial, sans-serif; color: var(--ink); background: var(--bg); }
+  header { background: linear-gradient(90deg, #1f1a4d, #5b34c9); color: #fff; padding: 18px; }
+  header h1 { margin: 0; font-size: 22px; } header p { margin: 4px 0 0; opacity: .9; }
+  main { max-width: 900px; margin: 0 auto; padding: 18px 14px 60px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; margin-bottom: 16px; }
+  h2 { font-size: 19px; margin: 0 0 8px; } .step { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--purple); color: #fff; font-size: 15px; margin-right: 8px; }
+  .safe { background: #e4f6ec; color: #0c4a30; border-radius: 12px; padding: 12px 14px; }
+  .warn { background: #fff3c4; color: #4a3500; border-radius: 12px; padding: 12px 14px; }
+  label.row { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; } label.row input { margin-top: 5px; width: 18px; height: 18px; }
+  .states { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 2px 10px; margin: 8px 0; max-height: 260px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; }
+  .states label { display: flex; gap: 6px; align-items: center; font-size: 15px; }
+  button { font: 700 15px system-ui, sans-serif; border: 0; border-radius: 12px; padding: 12px 16px; background: var(--purple); color: #fff; cursor: pointer; margin: 4px 6px 4px 0; }
+  button.ghost { background: var(--soft); color: #3b2a8c; } button:disabled { opacity: .5; cursor: default; }
+  textarea, select, input[type=text] { width: 100%; font: 14px ui-monospace, Menlo, Consolas, monospace; padding: 10px; border-radius: 10px; border: 1.5px solid var(--line); background: #fff; color: var(--ink); }
+  select, input[type=text] { font: 15px system-ui, sans-serif; }
+  textarea { height: 120px; word-break: break-all; }
+  .big { font: 800 26px ui-monospace, Menlo, Consolas, monospace; letter-spacing: .04em; background: var(--soft); border-radius: 12px; padding: 14px; text-align: center; word-break: break-all; }
+  .muted { color: var(--muted); font-size: 14px; } .count { font-weight: 800; color: var(--purple); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; } th, td { text-align: left; padding: 6px; border-bottom: 1px solid var(--line); vertical-align: top; } td.k { font-family: ui-monospace, Menlo, Consolas, monospace; white-space: nowrap; }
+  .scroll { max-height: 300px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } @media (max-width: 600px) { .grid2 { grid-template-columns: 1fr; } }
+  [hidden] { display: none !important; }
+  #printable { display: none; }
+  @media print { body { background: #fff; } header, main { display: none !important; } #printable { display: block; font-size: 11px; } #printable table { font-size: 11px; } #printable h1 { font-size: 16px; } #printable td.k { font-size: 12px; font-weight: 700; } }
+</style>
+</head>
+<body>
+<header><h1>🔐 Office Key Maker</h1><p>Community Voice AI · officials' inbox access keys</p></header>
+<main>
+  <div class="card safe"><b>This page works offline and sends nothing anywhere.</b> Keys are made by your own device's secure random generator. Turn off your internet before you start if you want to be sure. Nobody else, including the website, ever sees the keys.</div>
+
+  <section class="card">
+    <h2><span class="step">1</span>Choose the offices</h2>
+    <label class="row"><input type="checkbox" id="wLga" checked><span><b>Local Governments</b> <span class="muted">(1 key per LGA: it sees only letters from its LGA)</span></span></label>
+    <label class="row"><input type="checkbox" id="wState" checked><span><b>State offices</b> <span class="muted">(9 per state: Governor's office sees the whole state; Works, Water, Environment, Emergency, Power, Education, Health and Security each see only their problem types)</span></span></label>
+    <label class="row"><input type="checkbox" id="wFed" checked><span><b>Federal offices</b> <span class="muted">(10: the Federal Desk sees everything; FERMA, NEMA, NERC, NESREA, Police and others see their problem types in every state)</span></span></label>
+    <p style="margin:10px 0 0"><b>Which states?</b> <button type="button" class="ghost" id="allS">All</button><button type="button" class="ghost" id="noS">None</button></p>
+    <div class="states" id="states"></div>
+    <p>Keys to make: <span class="count" id="count">0</span></p>
+  </section>
+
+  <section class="card">
+    <h2><span class="step">2</span>Make the keys</h2>
+    <p class="warn">Making a new full set <b>replaces</b> the old set. Once you paste the new value into Vercel, every old key stops working. For one office only, use step 5 instead.</p>
+    <button type="button" id="make">Make the keys</button>
+    <p class="muted" id="made"></p>
+  </section>
+
+  <section class="card" id="outV" hidden>
+    <h2><span class="step">3</span>Paste this into Vercel</h2>
+    <p>This is the value of <b>ADMIN_KEYS</b>. It holds only a scrambled fingerprint of each key, so it is useless to anyone who sees it. Size: <b id="size"></b> (Vercel allows 64 KB for all settings together).</p>
+    <textarea id="vercel" readonly></textarea>
+    <button type="button" id="copyV">Copy for Vercel</button><button type="button" class="ghost" id="dlV">Download as a text file</button>
+    <ol class="muted"><li>Vercel → <b>community-voice-ai</b> project → <b>Settings</b> → <b>Environment Variables</b>.</li><li>Click the three dots beside <b>ADMIN_KEYS</b> → <b>Edit</b>. Delete the old value, paste the new one, tick Production (and Preview if you test there), <b>Save</b>.</li><li><b>Deployments</b> → three dots on the newest → <b>Redeploy</b>. The new keys work when it says Ready.</li></ol>
+  </section>
+
+  <section class="card" id="outK" hidden>
+    <h2><span class="step">4</span>Keep the private list, give each office its own key</h2>
+    <p class="warn"><b>This list is the only copy of the keys.</b> Save it on a computer that is not shared, or print it and lock it away. Do not email it as one file, post it in a group, or upload it anywhere. Send each office only its own line, privately.</p>
+    <button type="button" id="dlK">Download the private list (CSV)</button><button type="button" class="ghost" id="printK">Print the private list</button>
+    <div class="scroll"><table><thead><tr><th>Office</th><th>Sees</th><th>Key</th></tr></thead><tbody id="rows"></tbody></table></div>
+  </section>
+
+  <section class="card">
+    <h2><span class="step">5</span>Later: add or replace one office</h2>
+    <p class="muted">Use this when a new official needs access, or a key was lost or leaked.</p>
+    <div class="grid2"><div><label for="oneS"><b>State</b></label><select id="oneS"></select></div><div><label for="oneO"><b>Office</b></label><select id="oneO"></select></div></div>
+    <button type="button" id="makeOne">Make a key for this office</button>
+    <div id="oneOut" hidden>
+      <p>Give this key to the office, privately:</p><div class="big" id="oneKey"></div>
+      <p>Then in Vercel, edit <b>ADMIN_KEYS</b>:</p>
+      <ol><li id="oneFind"></li><li>Add a comma at the end of the value and paste this after it: <textarea id="oneLine" readonly style="height:48px"></textarea><button type="button" class="ghost" id="copyOne">Copy this line</button></li><li>Save, then Redeploy.</li></ol>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="step">6</span>Remove an office or check a key</h2>
+    <p>To <b>remove</b> an office: in ADMIN_KEYS, find the entry that ends with its code (for example <code>:OG.05</code> for Yewa South), delete that entry and its comma, save and redeploy. The codes are in the private list.</p>
+    <label for="chk"><b>Check a key</b> (shows the fingerprint to look for in ADMIN_KEYS):</label>
+    <input type="text" id="chk" autocomplete="off" placeholder="Type or paste a key"><p class="muted" id="chkOut"></p>
+  </section>
+</main>
+<div id="printable"></div>
+<script>
+"use strict";
+var DATA = {"codes":{"Abia":"AB","Adamawa":"AD","Akwa Ibom":"AK","Anambra":"AN","Bauchi":"BA","Bayelsa":"BY","Benue":"BE","Borno":"BO","Cross River":"CR","Delta":"DE","Ebonyi":"EB","Edo":"ED","Ekiti":"EK","Enugu":"EN","FCT (Abuja)":"FC","Gombe":"GO","Imo":"IM","Jigawa":"JI","Kaduna":"KD","Kano":"KN","Katsina":"KT","Kebbi":"KE","Kogi":"KO","Kwara":"KW","Lagos":"LA","Nasarawa":"NA","Niger":"NI","Ogun":"OG","Ondo":"ON","Osun":"OS","Oyo":"OY","Plateau":"PL","Rivers":"RI","Sokoto":"SO","Taraba":"TA","Yobe":"YO","Zamfara":"ZA"},"lgas":{"Abia":[["01","Aba North"],["02","Aba South"],["03","Arochukwu"],["04","Bende"],["05","Ikwuano"],["06","Isiala Ngwa North"],["07","Isiala Ngwa South"],["08","Isuikwuato"],["09","Obingwa"],["10","Ohafia"],["11","Osisioma"],["12","Ugwunagbo"],["13","Ukwa East"],["14","Ukwa West"],["15","Umuahia North"],["16","Umuahia South"],["17","Umunneochi"]],"Adamawa":[["01","Demsa"],["02","Fufore"],["03","Ganye"],["04","Girei"],["05","Gombi"],["06","Guyuk"],["07","Hong"],["08","Jada"],["09","Lamurde"],["10","Madagali"],["11","Maiha"],["12","Mayo-Belwa"],["13","Michika"],["14","Mubi North"],["15","Mubi South"],["16","Numan"],["17","Shelleng"],["18","Song"],["19","Toungo"],["20","Yola North"],["21","Yola South"]],"Akwa Ibom":[["01","Abak"],["02","Eastern Obolo"],["03","Eket"],["04","Esit Eket"],["05","Essien Udim"],["06","Etim Ekpo"],["07","Etinan"],["08","Ibeno"],["09","Ibesikpo Asutan"],["10","Ibiono Ibom"],["11","Ika"],["12","Ikono"],["13","Ikot Abasi"],["14","Ikot Ekpene"],["15","Ini"],["16","Itu"],["17","Mbo"],["18","Mkpat Enin"],["19","Nsit Atai"],["20","Nsit Ibom"],["21","Nsit Ubium"],["22","Obot Akara"],["23","Okobo"],["24","Onna"],["25","Oron"],["26","Oruk Anam"],["27","Udung Uko"],["28","Ukanafun"],["29","Uruan"],["30","Urue Offong/Oruko"],["31","Uyo"]],"Anambra":[["01","Aguata"],["02","Ayamelum"],["03","Anambra East"],["04","Anambra West"],["05","Anaocha"],["06","Awka North"],["07","Awka South"],["08","Dunukofia"],["09","Ekwusigo"],["10","Idemili North"],["11","Idemili-South"],["12","Ihiala"],["13","Njikoka"],["14","Nnewi North"],["15","Nnewi South"],["16","Ogbaru"],["17","Onitsha-North"],["18","Onitsha-South"],["19","Orumba North"],["20","Orumba South"],["21","Oyi"]],"Bauchi":[["01","Alkaleri"],["02","Bauchi"],["03","Bogoro"],["04","Dambam"],["05","Darazo"],["06","Dass"],["07","Gamawa"],["08","Ganjuwa"],["09","Giade"],["10","Itas/Gadau"],["11","Jama'are"],["12","Katagum"],["13","Kirfi"],["14","Misau"],["15","Ningi"],["16","Shira"],["17","Tafawa Balewa"],["18","Toro"],["19","Warji"],["20","Zaki"]],"Bayelsa":[["01","Brass"],["02","Ekeremor"],["03","Kolokuma/Opokuma"],["04","Nembe"],["05","Ogbia"],["06","Sagbama"],["07","Southern Ijaw"],["08","Yenagoa"]],"Benue":[["01","Ado"],["02","Agatu"],["03","Apa"],["04","Buruku"],["05","Gboko"],["06","Guma"],["07","Gwer East"],["08","Gwer West"],["09","Katsina-Ala"],["10","Konshisha"],["11","Kwande"],["12","Logo"],["13","Makurdi"],["14","Obi"],["15","Ogbadibo"],["16","Oju"],["17","Ohimini"],["18","Okpokwu"],["19","Otukpo"],["20","Tarka"],["21","Ukum"],["22","Ushongo"],["23","Vandeikya"]],"Borno":[["01","Abadam"],["02","Askira/Uba"],["03","Bama"],["04","Bayo"],["05","Biu"],["06","Chibok"],["07","Damboa"],["08","Dikwa"],["09","Gubio"],["10","Guzamala"],["11","Gwoza"],["12","Hawul"],["13","Jere"],["14","Kaga"],["15","Kala Balge"],["16","Konduga"],["17","Kukawa"],["18","Kwaya/Kusar"],["19","Mafa"],["20","Magumeri"],["21","Maiduguri Metropolitan"],["22","Marte"],["23","Mobbar"],["24","Monguno"],["25","Ngala"],["26","Nganzai"],["27","Shani"]],"Cross River":[["01","Abi"],["02","Akamkpa"],["03","Akpabuyo"],["04","Bakassi"],["05","Bekwarra"],["06","Biase"],["07","Boki"],["08","Calabar Municipal"],["09","Calabar South"],["10","Etung"],["11","Ikom"],["12","Obanliku"],["13","Obubra"],["14","Obudu"],["15","Odukpani"],["16","Ogoja"],["17","Yakurr"],["18","Yala"]],"Delta":[["01","Aniocha North"],["02","Aniocha-South"],["03","Bomadi"],["04","Burutu"],["05","Ethiope East"],["06","Ethiope West"],["07","Ika North-East"],["08","Ika-South"],["09","Isoko North"],["10","Isoko South"],["11","Ndokwa East"],["12","Ndokwa West"],["13","Okpe"],["14","Oshimili-North"],["15","Oshimili-South"],["16","Patani"],["17","Sapele"],["18","Udu"],["19","Ughelli North"],["20","Ughelli South"],["21","Ukwuani"],["22","Uvwie"],["23","Warri North"],["24","Warri South"],["25","Warri South West"]],"Ebonyi":[["01","Abakaliki"],["02","Afikpo North"],["03","Afikpo South"],["04","Ebonyi"],["05","Ezza North"],["06","Ezza South"],["07","Ikwo"],["08","Ishielu"],["09","Ivo"],["10","Izzi"],["11","Ohaozara"],["12","Ohaukwu"],["13","Onicha"]],"Edo":[["01","Akoko Edo"],["02","Egor"],["03","Esan Central"],["04","Esan North East"],["05","Esan South East"],["06","Esan West"],["07","Etsako Central"],["08","Etsako East"],["09","Etsako West"],["10","Igueben"],["11","Ikpoba/Okha"],["12","Oredo"],["13","Orhionmwon"],["14","Ovia North East"],["15","Ovia South West"],["16","Owan East"],["17","Owan West"],["18","Uhunmwode"]],"Ekiti":[["01","Ado Ekiti"],["02","Efon"],["03","Ekiti East"],["04","Ekiti West"],["05","Ekiti South West"],["06","Emure"],["07","Gbonyin (Aiyekire)"],["08","Ido/Osi"],["09","Ijero"],["10","Ikere"],["11","Ikole"],["12","Ilejemeje"],["13","Irepodun/Ifelodun"],["14","Ise/Orun"],["15","Moba"],["16","Oye"]],"Enugu":[["01","Aninri"],["02","Awgu"],["03","Enugu East"],["04","Enugu North"],["05","Enugu South"],["06","Ezeagu"],["07","Igbo Etiti"],["08","Igbo Eze North"],["09","Igbo Eze South"],["10","Isi Uzo"],["11","Nkanu East"],["12","Nkanu West"],["13","Nsukka"],["14","Oji-River"],["15","Udenu"],["16","Udi"],["17","Uzo-Uwani"]],"FCT (Abuja)":[["01","Abaji"],["02","Bwari"],["03","Gwagwalada"],["04","Kuje"],["05","Kwali"],["06","Abuja Municipal (AMAC)"]],"Gombe":[["01","Akko"],["02","Balanga"],["03","Billiri"],["04","Dukku"],["05","Funakaye"],["06","Gombe"],["07","Kaltungo"],["08","Kwami"],["09","Nafada"],["10","Shongom"],["11","Yalmaltu/Deba"]],"Imo":[["01","Aboh Mbaise"],["02","Ahiazu Mbaise"],["03","Ehime Mbano"],["04","Ezinihitte Mbaise"],["05","Ideato North"],["06","Ideato South"],["07","Ihitte Uboma"],["08","Ikeduru"],["09","Isiala Mbano"],["10","Isu"],["11","Mbaitoli"],["12","Ngor Okpala"],["13","Njaba"],["14","Nkwerre"],["15","Nwangele"],["16","Obowo"],["17","Oguta"],["18","Ohaji Egbema"],["19","Okigwe"],["20","Onuimo"],["21","Orlu"],["22","Orsu"],["23","Oru East"],["24","Oru West"],["25","Owerri Municipal"],["26","Owerri North"],["27","Owerri West"]],"Jigawa":[["01","Auyo"],["02","Babura"],["03","Birnin Kudu"],["04","Birniwa"],["05","Buji"],["06","Dutse"],["07","Garki"],["08","Gagarawa"],["09","Gumel"],["10","Guri"],["11","Gwaram"],["12","Gwiwa"],["13","Hadejia"],["14","Jahun"],["15","Kafin Hausa"],["16","Kaugama"],["17","Kazaure"],["18","Kirika Samma"],["19","Kiyawa"],["20","Maigatari"],["21","Malam Madori"],["22","Miga"],["23","Ringim"],["24","Roni"],["25","Sule Tankarkar"],["26","Taura"],["27","Yankwashi"]],"Kaduna":[["01","Birnin Gwari"],["02","Chikun"],["03","Giwa"],["04","Igabi"],["05","Ikara"],["06","Jaba"],["07","Jema'a"],["08","Kachia"],["09","Kaduna North"],["10","Kaduna South"],["11","Kagarko"],["12","Kajuru"],["13","Kaura"],["14","Kauru"],["15","Kubau"],["16","Kudan"],["17","Lere"],["18","Makarfi"],["19","Sabon Gari"],["20","Sanga"],["21","Soba"],["22","Zangon Kataf"],["23","Zaria"]],"Kano":[["01","Ajingi"],["02","Albasu"],["03","Bagwai"],["04","Bebeji"],["05","Bichi"],["06","Bunkure"],["07","Dala"],["08","Danbata"],["09","Dawaki Kudu"],["10","Dawaki Tofa"],["11","Doguwa"],["12","Fagge"],["13","Gabasawa"],["14","Garko"],["15","Garun Malam"],["16","Gaya"],["17","Gezawa"],["18","Gwale"],["19","Gwarzo"],["20","Kabo"],["21","Kano Municipal"],["22","Karaye"],["23","Kibiya"],["24","Kiru"],["25","Kumbotso"],["26","Kunchi"],["27","Kura"],["28","Madobi"],["29","Makoda"],["30","Minjibir"],["31","Nasarawa"],["32","Rano"],["33","Rimin Gado"],["34","Rogo"],["35","Shanono"],["36","Sumaila"],["37","Takai"],["38","Tarauni"],["39","Tofa"],["40","Tsanyawa"],["41","Tudun Wada"],["42","Ungogo"],["43","Warawa"],["44","Wudil"]],"Katsina":[["01","Bakori"],["02","Batagarawa"],["03","Batsari"],["04","Baure"],["05","Bindawa"],["06","Charanchi"],["07","Dandume"],["08","Danja"],["09","Dan Musa"],["10","Daura"],["11","Dutsi"],["12","Dutsin-Ma"],["13","Faskari"],["14","Funtua"],["15","Ingawa"],["16","Jibia"],["17","Kafur"],["18","Kaita"],["19","Kankara"],["20","Kankia"],["21","Katsina"],["22","Kurfi"],["23","Kusada"],["24","Mai'adua"],["25","Malufashi"],["26","Mani"],["27","Mashi"],["28","Matazu"],["29","Musawa"],["30","Rimi"],["31","Sabuwa"],["32","Safana"],["33","Sandamu"],["34","Zango"]],"Kebbi":[["01","Aliero"],["02","Arewa"],["03","Argungu"],["04","Augie"],["05","Bagudo"],["06","Birnin Kebbi"],["07","Bunza"],["08","Dandi"],["09","Fakai"],["10","Gwandu"],["11","Jega"],["12","Kalgo"],["13","Koko/Besse"],["14","Maiyama"],["15","Ngaski"],["16","Sakaba"],["17","Shanga"],["18","Suru"],["19","Wasagu/Danko"],["20","Yauri"],["21","Zuru"]],"Kogi":[["01","Adavi"],["02","Ajaokuta"],["03","Ankpa"],["04","Bassa"],["05","Dekina"],["06","Ibaji"],["07","Idah"],["08","Igalamela/Odolu"],["09","Ijumu"],["10","Kabba/Bunu"],["11","Kogi (Koton Karfe)"],["12","Lokoja"],["13","Mopa Moro"],["14","Ofu"],["15","Ogori Mangogo"],["16","Okehi"],["17","Okene"],["18","Olamaboro"],["19","Omala"],["20","Yagba East"],["21","Yagba West"]],"Kwara":[["01","Asa"],["02","Baruten"],["03","Edu"],["04","Ekiti"],["05","Ifelodun"],["06","Ilorin East"],["07","Ilorin-South"],["08","Ilorin-West"],["09","Irepodun"],["10","Isin"],["11","Kaiama"],["12","Moro"],["13","Offa"],["14","Oke-Ero"],["15","Oyun"],["16","Patigi"]],"Lagos":[["01","Agege"],["02","Ajeromi/Ifelodun"],["03","Alimosho"],["04","Amuwo-Odofin"],["05","Apapa"],["06","Badagry"],["07","Epe"],["08","Eti-Osa"],["09","Ibeju/Lekki"],["10","Ifako-Ijaye"],["11","Ikeja"],["12","Ikorodu"],["13","Kosofe"],["14","Lagos Island"],["15","Lagos Mainland"],["16","Mushin"],["17","Ojo"],["18","Oshodi/Isolo"],["19","Somolu"],["20","Surulere"]],"Nasarawa":[["01","Akwanga"],["02","Awe"],["03","Doma"],["04","Karu"],["05","Keana"],["06","Keffi"],["07","Kokona"],["08","Lafia"],["09","Nasarawa"],["10","Nasarawa Eggon"],["11","Obi"],["12","Toto"],["13","Wamba"]],"Niger":[["01","Agaie"],["02","Agwara"],["03","Bida"],["04","Borgu"],["05","Bosso"],["06","Chanchaga"],["07","Edatti"],["08","Gbako"],["09","Gurara"],["10","Katcha"],["11","Kontagora"],["12","Lapai"],["13","Lavun"],["14","Magama"],["15","Mariga"],["16","Mashegu"],["17","Mokwa"],["18","Munya"],["19","Paikoro"],["20","Rafi"],["21","Rijau"],["22","Shiroro"],["23","Suleja"],["24","Tafa"],["25","Wushishi"]],"Ogun":[["01","Abeokuta North"],["02","Abeokuta South"],["03","Ado-Odo/Ota"],["04","Yewa North (Egbado North)"],["05","Yewa South (Egbado South)"],["06","Ewekoro"],["07","Ifo"],["08","Ijebu East"],["09","Ijebu North"],["10","Ijebu North East"],["11","Ijebu Ode"],["12","Ikenne"],["13","Imeko/Afon"],["14","Ipokia"],["15","Obafemi/Owode"],["16","Odeda"],["17","Odogbolu"],["18","Ogun Water Side"],["19","Remo North"],["20","Sagamu"]],"Ondo":[["01","Akoko North East"],["02","Akoko North West"],["03","Akoko South East"],["04","Akoko South West"],["05","Akure North"],["06","Akure South"],["07","Ese-Odo"],["08","Idanre"],["09","Ifedore"],["10","Ilaje"],["11","Ileoluji/Okeigbo"],["12","Irele"],["13","Odigbo"],["14","Okitipupa"],["15","Ondo East"],["16","Ondo West"],["17","Ose"],["18","Owo"]],"Osun":[["01","Atakumosa East"],["02","Atakumosa West"],["03","Ayedaade"],["04","Ayedire"],["05","Boluwaduro"],["06","Boripe"],["07","Ede North"],["08","Ede South"],["09","Egbedore"],["10","Ejigbo"],["11","Ife Central"],["12","Ifedayo"],["13","Ife East"],["14","Ifelodun"],["15","Ife North"],["16","Ife South"],["17","Ila"],["18","Ilesa East"],["19","Ilesa West"],["20","Irepodun"],["21","Irewole"],["22","Isokan"],["23","Iwo"],["24","Obokun"],["25","Odo-Otin"],["26","Ola-Oluwa"],["27","Olorunda"],["28","Oriade"],["29","Orolu"],["30","Osogbo"]],"Oyo":[["01","Afijio"],["02","Akinyele"],["03","Atiba"],["04","Atisbo"],["05","Egbeda"],["06","Ibadan North"],["07","Ibadan North East"],["08","Ibadan North West"],["09","Ibadan South-East"],["10","Ibadan South West"],["11","Ibarapa Central"],["12","Ibarapa East"],["13","Ibarapa North"],["14","Ido"],["15","Irepo"],["16","Iseyin"],["17","Itesiwaju"],["18","Iwajowa"],["19","Kajola"],["20","Lagelu"],["21","Ogbomoso North"],["22","Ogbomoso South"],["23","Ogo-Oluwa"],["24","Olorunsogo"],["25","Oluyole"],["26","Ona-Ara"],["27","Oorelope"],["28","Ori Ire"],["29","Oyo East"],["30","Oyo West"],["31","Saki East"],["32","Saki West"],["33","Surulere"]],"Plateau":[["01","Barikin Ladi"],["02","Bassa"],["03","Bokkos"],["04","Jos East"],["05","Jos North"],["06","Jos South"],["07","Kanam"],["08","Kanke"],["09","Langtang North"],["10","Langtang South"],["11","Mangu"],["12","Mikang"],["13","Pankshin"],["14","Qua'an Pan"],["15","Riyom"],["16","Shendam"],["17","Wase"]],"Rivers":[["01","Abua-Odual"],["02","Ahoada East"],["03","Ahoada West"],["04","Akuku Toru"],["05","Andoni"],["06","Asari-Toru"],["07","Bonny"],["08","Degema"],["09","Eleme"],["10","Emohua"],["11","Etche"],["12","Gokana"],["13","Ikwerre"],["14","Khana"],["15","Obio/Akpor"],["16","Ogba/Egbema/Ndoni"],["17","Ogu/Bolo"],["18","Okrika"],["19","Omuma"],["20","Opobo/Nkoro"],["21","Oyigbo"],["22","Port Harcourt"],["23","Tai"]],"Sokoto":[["01","Binji"],["02","Bodinga"],["03","Dange/Shuni"],["04","Gada"],["05","Goronyo"],["06","Gudu"],["07","Gwadabawa"],["08","Illela"],["09","Isa"],["10","Kware"],["11","Kebbe"],["12","Rabah"],["13","Sabon Birni"],["14","Shagari"],["15","Silame"],["16","Sokoto North"],["17","Sokoto South"],["18","Tambuwal"],["19","Tangaza"],["20","Tureta"],["21","Wamakko"],["22","Wurno"],["23","Yabo"]],"Taraba":[["01","Ardo-Kola"],["02","Bali"],["03","Donga"],["04","Gashaka"],["05","Gassol"],["06","Ibi"],["07","Jalingo"],["08","Karim-Lamido"],["09","Kurmi"],["10","Lau"],["11","Sardauna"],["12","Takum"],["13","Ussa"],["14","Wukari"],["15","Yorro"],["16","Zing"]],"Yobe":[["01","Bade"],["02","Bursari"],["03","Damaturu"],["04","Fika"],["05","Fune"],["06","Geidam"],["07","Gujba"],["08","Gulani"],["09","Jakusko"],["10","Karasawa"],["11","Machina"],["12","Nangere"],["13","Nguru"],["14","Potiskum"],["15","Tarmuwa"],["16","Yunusari"],["17","Yusufari"]],"Zamfara":[["01","Anka"],["02","Bakura"],["03","Birnin Magaji"],["04","Bukkuyum"],["05","Bungudu"],["06","Gummi"],["07","Gusau"],["08","Kaura Namoda"],["09","Maradun"],["10","Maru"],["11","Shinkafi"],["12","Talata Mafara"],["13","Tsafe"],["14","Zurmi"]]},"stateRoles":{"GOV":{"name":"Office of the Governor","fct":"Office of the FCT Minister","types":null},"WRK":{"name":"Ministry of Works","types":["Roads"]},"WAT":{"name":"Water Corporation / Water Board","types":["Water"]},"ENV":{"name":"Ministry of Environment","types":["Waste and Drainage","Environment and Pollution","Flooding"]},"EMA":{"name":"State Emergency Management Agency (SEMA)","fct":"FCT Emergency Management Department (FEMD)","types":["Flooding"]},"PWR":{"name":"Ministry of Energy / Power","types":["Electricity / Streetlights"]},"EDU":{"name":"Ministry of Education / SUBEB","fct":"FCT Education Secretariat / UBEB","types":["School Facilities"]},"HLT":{"name":"Ministry of Health / Primary Health Care Board","fct":"FCT Health Secretariat / PHC Board","types":["Health Facility"]},"SEC":{"name":"Security Adviser / Ministry of Internal Security","fct":"FCT Security Department","types":["Security"]}},"natRoles":{"FMENV":{"name":"Federal Ministry of Environment","types":["Environment and Pollution","Waste and Drainage"]},"NESREA":{"name":"NESREA","types":["Environment and Pollution"]},"FERMA":{"name":"FERMA (federal roads)","types":["Roads"]},"FMW":{"name":"Federal Ministry of Works","types":["Roads"]},"FMWR":{"name":"Federal Ministry of Water Resources and Sanitation","types":["Water"]},"NEMA":{"name":"NEMA","types":["Flooding"]},"NERC":{"name":"NERC (electricity regulator)","types":["Electricity / Streetlights"]},"NPF":{"name":"Nigeria Police Force","types":["Security"]},"NCDC":{"name":"NCDC","types":["Health Facility"]}}};
+
+// ---------- SHA-256 (written out here so the page works offline, from a file, on any phone) ----------
+function sha256hex(str) {
+  var b = unescape(encodeURIComponent(str)), n = b.length, words = [], i, j;
+  var K = [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+    0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+    0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+    0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+  var H = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  for (i = 0; i < n; i++) words[i >> 2] |= b.charCodeAt(i) << (24 - (i % 4) * 8);
+  words[n >> 2] |= 0x80 << (24 - (n % 4) * 8);
+  var total = ((n + 8) >> 6) * 16 + 16; for (i = words.length; i < total; i++) words[i] = words[i] | 0;
+  words[total - 1] = n * 8;
+  var r = function (x, c) { return (x >>> c) | (x << (32 - c)); }, w = new Array(64);
+  for (i = 0; i < total; i += 16) {
+    var a = H[0], bb = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
+    for (j = 0; j < 64; j++) {
+      if (j < 16) w[j] = words[i + j] | 0;
+      else { var s0 = r(w[j - 15], 7) ^ r(w[j - 15], 18) ^ (w[j - 15] >>> 3), s1 = r(w[j - 2], 17) ^ r(w[j - 2], 19) ^ (w[j - 2] >>> 10); w[j] = (w[j - 16] + s0 + w[j - 7] + s1) | 0; }
+      var t1 = (h + (r(e, 6) ^ r(e, 11) ^ r(e, 25)) + ((e & f) ^ (~e & g)) + K[j] + w[j]) | 0, t2 = ((r(a, 2) ^ r(a, 13) ^ r(a, 22)) + ((a & bb) ^ (a & c) ^ (bb & c))) | 0;
+      h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = bb; bb = a; a = (t1 + t2) | 0;
+    }
+    H[0] = (H[0] + a) | 0; H[1] = (H[1] + bb) | 0; H[2] = (H[2] + c) | 0; H[3] = (H[3] + d) | 0; H[4] = (H[4] + e) | 0; H[5] = (H[5] + f) | 0; H[6] = (H[6] + g) | 0; H[7] = (H[7] + h) | 0;
+  }
+  return H.map(function (x) { return ("00000000" + (x >>> 0).toString(16)).slice(-8); }).join("");
+}
+
+// ---------- keys: 24 characters from 31 easy-to-read letters and numbers (about 119 bits: far beyond guessing) ----------
+var ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+function newKey() {
+  var out = "", buf = new Uint8Array(1);
+  while (out.length < 24) { crypto.getRandomValues(buf); if (buf[0] < 248) out += ALPHABET[buf[0] % 31]; }   // 248 = 8 x 31, so every character is equally likely
+  return out.match(/.{4}/g).join("-");
+}
+var normal = function (k) { return String(k || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); };
+var fingerprint = function (k) { return sha256hex("cv-office-key:" + normal(k)).slice(0, 20); };
+var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+
+// ---------- the offices ----------
+function stateOffices(st) {
+  var code = DATA.codes[st], fct = st === "FCT (Abuja)", out = [];
+  Object.keys(DATA.stateRoles).forEach(function (r) {
+    var role = DATA.stateRoles[r];
+    out.push({ scope: code + "#" + r, state: st, name: fct && role.fct ? role.fct : r === "GOV" ? role.name + ", " + st + " State" : (fct ? "FCT " : st + " State ") + role.name,
+      sees: role.types ? role.types.join(", ") + " letters in " + (fct ? "the FCT" : st + " State") : "every letter in " + (fct ? "the FCT" : st + " State") });
+  });
+  return out;
+}
+function lgaOffices(st) {
+  return DATA.lgas[st].map(function (x) { var fct = st === "FCT (Abuja)";
+    return { scope: DATA.codes[st] + "." + x[0], state: st, name: fct ? x[1] + " Area Council, FCT" : x[1] + " Local Government, " + st + " State", sees: "every letter from " + x[1] }; });
+}
+function fedOffices() {
+  return [{ scope: "NG", state: "Federal", name: "Federal Desk (all states)", sees: "every letter in Nigeria" }].concat(Object.keys(DATA.natRoles).map(function (r) {
+    return { scope: "NG#" + r, state: "Federal", name: DATA.natRoles[r].name, sees: DATA.natRoles[r].types.join(", ") + " letters in every state" }; }));
+}
+
+// ---------- step 1 ----------
+var $ = function (id) { return document.getElementById(id); }, STATES = Object.keys(DATA.lgas);
+$("states").innerHTML = STATES.map(function (s) { return '<label><input type="checkbox" class="st" value="' + esc(s) + '" checked> ' + esc(s) + "</label>"; }).join("");
+function chosen() { return [].slice.call(document.querySelectorAll(".st:checked")).map(function (x) { return x.value; }); }
+function plan() {
+  var list = [];
+  chosen().forEach(function (s) { if ($("wState").checked) list = list.concat(stateOffices(s)); if ($("wLga").checked) list = list.concat(lgaOffices(s)); });
+  if ($("wFed").checked) list = list.concat(fedOffices());
+  return list;
+}
+function recount() { $("count").textContent = plan().length; }
+document.addEventListener("change", function (e) { if (e.target.matches("input[type=checkbox]")) recount(); });
+$("allS").onclick = function () { document.querySelectorAll(".st").forEach(function (x) { x.checked = true; }); recount(); };
+$("noS").onclick = function () { document.querySelectorAll(".st").forEach(function (x) { x.checked = false; }); recount(); };
+recount();
+
+// ---------- steps 2 to 4 ----------
+var made = [];
+function download(name, text, type) { var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+function copy(id, btn) { var t = $(id); t.select(); var done = function () { var o = btn.textContent; btn.textContent = "Copied ✓"; setTimeout(function () { btn.textContent = o; }, 1500); };
+  if (navigator.clipboard) navigator.clipboard.writeText(t.value).then(done, function () { document.execCommand("copy"); done(); }); else { document.execCommand("copy"); done(); } }
+$("make").onclick = function () {
+  var list = plan(); if (!list.length) { $("made").textContent = "Choose at least one kind of office and one state."; return; }
+  if (made.length && !confirm("Make a completely new set? The keys on this page will be replaced.")) return;
+  made = list.map(function (o) { var k = newKey(); return { name: o.name, scope: o.scope, state: o.state, sees: o.sees, key: k, fp: fingerprint(k) }; });
+  var value = made.map(function (m) { return m.fp + ":" + m.scope; }).join(",");
+  $("vercel").value = value; var kb = value.length / 1024;
+  $("size").textContent = kb.toFixed(1) + " KB" + (kb > 55 ? " (too big: choose fewer offices)" : "");
+  $("rows").innerHTML = made.map(function (m) { return "<tr><td>" + esc(m.name) + '<br><span class="muted">code ' + m.scope + "</span></td><td>" + esc(m.sees) + '</td><td class="k">' + m.key + "</td></tr>"; }).join("");
+  $("outV").hidden = false; $("outK").hidden = false;
+  $("made").textContent = made.length + " keys made on " + new Date().toLocaleString() + ". Now do steps 3 and 4.";
+  $("outV").scrollIntoView({ behavior: "smooth" });
+};
+$("copyV").onclick = function () { copy("vercel", this); };
+$("dlV").onclick = function () { download("ADMIN_KEYS-value.txt", $("vercel").value, "text/plain"); };
+$("dlK").onclick = function () {
+  var csv = "Office,State,Code,Sees,Key\n" + made.map(function (m) { return [m.name, m.state, m.scope, m.sees, m.key].map(function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(","); }).join("\n");
+  download("PRIVATE-office-keys-" + new Date().toISOString().slice(0, 10) + ".csv", csv, "text/csv");
+};
+$("printK").onclick = function () {
+  $("printable").innerHTML = "<h1>PRIVATE · Community Voice AI office keys · " + new Date().toLocaleDateString() + "</h1><table><thead><tr><th>Office</th><th>Code</th><th>Key</th></tr></thead><tbody>" +
+    made.map(function (m) { return "<tr><td>" + esc(m.name) + "</td><td>" + m.scope + '</td><td class="k">' + m.key + "</td></tr>"; }).join("") + "</tbody></table>";
+  window.print();
+};
+
+// ---------- step 5: one office ----------
+$("oneS").innerHTML = '<option value="Federal">Federal offices</option>' + STATES.map(function (s) { return '<option value="' + esc(s) + '">' + esc(s) + "</option>"; }).join("");
+function fillOne() { var s = $("oneS").value, list = s === "Federal" ? fedOffices() : stateOffices(s).concat(lgaOffices(s));
+  $("oneO").innerHTML = list.map(function (o) { return '<option value="' + o.scope + '">' + esc(o.name) + "</option>"; }).join(""); $("oneOut").hidden = true; }
+$("oneS").onchange = fillOne; $("oneO").onchange = function () { $("oneOut").hidden = true; }; $("oneS").value = "Ogun"; fillOne();
+$("makeOne").onclick = function () {
+  var scope = $("oneO").value, k = newKey();
+  $("oneKey").textContent = k; $("oneLine").value = fingerprint(k) + ":" + scope;
+  $("oneFind").innerHTML = "If this office already has a key, find the entry ending in <code>:" + scope + "</code> and delete it with its comma (this switches the old key off).";
+  $("oneOut").hidden = false;
+};
+$("copyOne").onclick = function () { copy("oneLine", this); };
+
+// ---------- step 6 ----------
+$("chk").oninput = function () { var n = normal(this.value); $("chkOut").textContent = n.length >= 16 ? "Look for an entry starting with: " + fingerprint(this.value) : ""; };
+</script>
+</body>
+</html>

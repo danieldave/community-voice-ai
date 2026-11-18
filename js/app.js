@@ -17,6 +17,16 @@
     stateSel.appendChild(o);
   });
 
+  // ---- Local Government Areas: the list follows the state you chose (774 LGAs) ----
+  const lgaSel = $("lga");
+  function fillLgas() {
+    const names = window.CVLGAS ? window.CVLGAS.names(stateSel.value) : [];
+    lgaSel.innerHTML = names.length
+      ? '<option value="">Choose your LGA</option>' + names.map(n => '<option>' + n.replace(/&/g, "&amp;").replace(/</g, "&lt;") + '</option>').join("") + '<option value="">I am not sure</option>'
+      : '<option value="">Choose your state first</option>';
+  }
+  stateSel.addEventListener("change", fillLgas);
+
   // ---- Community copy languages (v2) ----
   const langSel = $("communityLang");
   Object.entries(window.CV_LANGS || {}).forEach(([code, name]) => {
@@ -227,7 +237,7 @@
       // The citizen's own choice: put a copy in the officials' inbox and get a tracking code
       if ($("inbox-consent") && $("inbox-consent").checked) {
         fetch("/api/inbox", { method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "file", state: lastForm.state, type: lastForm.problemType, office: entry.office, how: entry.how, sentOn: sentOn, subject: entry.subject || "", letter: entry.letter }) })
+          body: JSON.stringify({ action: "file", state: lastForm.state, lga: lastForm.lga || "", type: lastForm.problemType, office: entry.office, how: entry.how, sentOn: sentOn, subject: entry.subject || "", letter: entry.letter }) })
           .then(r => r.json()).then(d => {
             if (d.filed && d.code) { CVTracker.update(entry.id, { code: d.code }); $("sent-msg").innerHTML = "Saved, and a copy is in the officials' inbox. Your tracking code is <b>" + d.code + "</b>. <a href=\"letters.html\">See My Letters →</a>"; }
             else $("sent-msg").innerHTML = "Saved on this phone. " + (d.error || "The officials' inbox is not switched on yet.") + " <a href=\"letters.html\">See My Letters →</a>";
@@ -260,6 +270,7 @@
     const payload = {
       problemType: $("problemType").value,
       state: stateSel.value,
+      lga: lgaSel.value || undefined,
       area: clean($("area").value.trim()),
       duration: $("duration").value,
       affected: $("affected").value,
@@ -269,7 +280,7 @@
       communityLang: langSel.value || undefined,
       followUp: followUp || undefined
     };
-    lastForm = { problemType: payload.problemType, state: payload.state, area: payload.area, duration: payload.duration,
+    lastForm = { problemType: payload.problemType, state: payload.state, lga: payload.lga || "", area: payload.area, duration: payload.duration,
       affected: payload.affected, recipient: payload.recipient, tone: payload.tone, description: payload.description };
 
     btn.disabled = true; btn.textContent = "Writing…";

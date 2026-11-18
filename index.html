@@ -114,6 +114,16 @@
               </select>
             </div>
             <div class="field">
+              <label for="lga">Local Government Area</label>
+              <select id="lga" name="lga" aria-describedby="lga-hint">
+                <option value="">Choose your state first</option>
+              </select>
+              <span class="hint" id="lga-hint">So the letter reaches the right council.</span>
+            </div>
+          </div>
+
+          <div class="row-2">
+            <div class="field">
               <label for="area">Where: Area or community</label>
               <input type="text" id="area" name="area" maxlength="80" required placeholder="e.g. Rumuokoro or Ota" aria-describedby="area-hint">
               <span class="hint" id="area-hint">Area only. Do not type your house address.</span>
@@ -303,6 +313,7 @@
   </footer>
 
   <script src="js/directory.js"></script>
+  <script src="js/lgas.js"></script>
   <script src="js/privacy.js"></script>
   <script src="js/common.js"></script>
   <script src="js/tracker.js"></script>

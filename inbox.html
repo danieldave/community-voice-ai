@@ -105,7 +105,8 @@
       try { sessionStorage.setItem("cv-inbox-key", key); } catch (e) {}
       $("door").hidden = true; $("box").hidden = false;
       $("greet").textContent = greeting() + ", " + me.name + ".";
-      $("scope").textContent = me.state === "all" ? "You are seeing letters from every state." : "You are seeing letters from " + me.state + " State.";
+      var where = me.state === "all" ? "every state" : me.lga ? me.lga + (me.state === "FCT (Abuja)" ? ", FCT" : ", " + me.state + " State") : me.state === "FCT (Abuja)" ? "the FCT" : me.state + " State";
+      $("scope").textContent = "You are seeing " + (me.types ? me.types.join(", ").toLowerCase() + " letters" : "all letters") + " from " + where + ". Other offices cannot see your letters or your answers.";
       draw();
     }).catch(function () { $("door-msg").textContent = "We could not reach the server. Check your internet and try again."; });
   }
@@ -132,7 +133,7 @@
         '<span class="tag ' + (l.online ? "online" : "office") + '">' + (l.online ? "💻 Reached you online: " : "🏢 Reached your office: ") + esc(l.how) + '</span>' +
         (l.status !== "solved" && d > 14 ? '<span class="tag wait">⏳ ' + d + ' days waiting</span>' : '') + '</div>' +
         '<h3>' + esc(l.subject || l.type) + '</h3>' +
-        '<div class="meta">' + esc(l.state) + (l.office ? ' · addressed to ' + esc(l.office) : '') + ' · sent ' + esc(nice(l.sentOn)) + ' · code ' + l.id + ' · tap to read</div></summary>' +
+        '<div class="meta">' + (l.lga ? esc(l.lga) + ', ' : '') + esc(l.state) + (l.office ? ' · addressed to ' + esc(l.office) : '') + ' · sent ' + esc(nice(l.sentOn)) + ' · code ' + l.id + ' · tap to read</div></summary>' +
         '<pre>' + esc(l.letter) + '</pre>' +
         '<h3 style="font-size:16px">How is your office responding?</h3>' +
         '<div class="react">' + ["received", "review", "planned", "solved", "redirect"].map(function (s) { return '<button type="button" data-s="' + s + '" aria-pressed="' + (l.status === s) + '">' + LABEL[s] + '</button>'; }).join("") + '</div>' +

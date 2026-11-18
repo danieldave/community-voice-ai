@@ -93,9 +93,14 @@ No sign-up, no database, no cookies. The privacy filter removes phone numbers, e
 - When a citizen saves a sent letter, they may tick **"put a copy in the officials' inbox"**. The letter is stored (phone numbers and emails hidden) for 400 days and the citizen gets an 8-character **tracking code**.
 - The inbox shows each letter with how it reached the office: **by hand or by post** (came to the office) or **by email, website or WhatsApp** (came online).
 - An official answers with one tap: received, looking into it, work planned, solved, or passed to the right office, plus a short message. The citizen sees the answer in **My Letters**.
-- **Who can open it:** only people with an access key. Keys are set by the site owner in the Vercel setting `ADMIN_KEYS`, for example
-  `{"a-long-secret-key-here": {"name": "Ogun State Office", "state": "Ogun"}, "another-long-key": {"name": "Federal Desk", "state": "all"}}`.
-  Each key must be at least 16 characters. A state office sees only its own state. Without `ADMIN_KEYS` the inbox stays closed.
+- **Each office sees only its own letters.** The letter form asks for the Local Government Area (all 774 LGAs, from INEC's official list in `js/lgas.js`). Scopes (in `js/office-roles.js`):
+  - a **Local Government** (e.g. code `OG.05`, Yewa South) sees every letter from its LGA;
+  - a **State office** (Works, Water, Environment, Emergency, Power, Education, Health, Security) sees only its problem types in its state;
+  - the **Governor's office** (`OG#GOV`) sees its whole state;
+  - a **Federal office** (FERMA, NEMA, NERC, NESREA, Police, NCDC and others) sees its problem types in every state; the **Federal Desk** (`NG`) sees everything.
+  Letters where the citizen chose "I am not sure" of the LGA go to the state and federal offices only.
+- **Keys:** made on the owner's own device with `tools/office-key-maker.html` (offline, never deployed). It makes one unguessable 24-character key per office (about 119 bits) and the value for the Vercel setting `ADMIN_KEYS`. That value holds only a 20-character SHA-256 fingerprint of each key with its scope, e.g. `3f9a0c…e1:OG.05,7b21d4…9c:OG#WAT`, so the keys themselves are never stored anywhere online. A full set (1,117 offices) is about 30 KB; Vercel allows 64 KB for all settings together. Run `node tools/build.js` to rebuild the key maker after changing the LGA list.
+- The old hand-written form still works for tests: `{"a-key-of-16-or-more": {"name": "Test Office", "state": "Ogun", "lga": "Yewa South (Egbado South)"}}`.
 - Needs the Upstash database (`KV_REST_API_*`).
 
 ## Language button (`js/translate.js` + `api/translate.js`)

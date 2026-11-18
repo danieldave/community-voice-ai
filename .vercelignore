@@ -1,3 +1,7 @@
 server.js
 .env
 .env.example
+
+# the owner's offline key maker is not part of the public website
+tools/office-key-maker.html
+tools/key-maker.template.html

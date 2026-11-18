@@ -16,12 +16,17 @@
           POST { action: "list",  key }
           POST { action: "react", key, id, status, reply }
 
-   WHO IS AN OFFICIAL?  Only the site owner decides. Access keys live in
-   the Vercel setting ADMIN_KEYS, never in this code, for example:
-       {"ogun-9F3k-PLEASE-CHANGE-ME": {"name": "Ogun State Office", "state": "Ogun"},
-        "abuja-7Qp2-PLEASE-CHANGE-ME": {"name": "Federal Desk", "state": "all"}}
-   A key must be at least 16 characters long. Without ADMIN_KEYS nobody
-   can open the inbox.
+   WHO IS AN OFFICIAL?  Only the site owner decides, with the Vercel setting
+   ADMIN_KEYS. Each office gets its OWN key and sees only its own letters:
+     a Local Government sees only letters from its LGA,
+     a State office (Water, Works...) sees only its problem types in its state,
+     the Governor's office sees its whole state, a Federal agency sees its
+     problem types in every state. (Scopes are listed in js/office-roles.js.)
+   The keys are made on the owner's own device with tools/office-key-maker.html.
+   ADMIN_KEYS holds only a SCRAMBLED fingerprint of each key, never the key, like:
+       3f9a0c...e1:OG.05,7b21d4...9c:OG#WAT,0c55aa...03:NG#NEMA
+   (The old, hand-written form still works for small tests:
+    {"a-key-of-16-or-more": {"name": "Test Office", "state": "Ogun", "lga": "Yewa South (Egbado South)"}} )
 
    PRIVACY
    - Filing a copy is the citizen's own choice (a tick box, off by default).
@@ -33,6 +38,8 @@
 const crypto = require('crypto');
 const S = require('./_lib/shared');
 const { STATES, TYPES } = require('./issues');
+const L = require('../js/lgas.js');
+const R = require('../js/office-roles.js');
 
 const HOWS = ['by hand', 'by post', 'by email', 'through the official website', 'by WhatsApp', 'through the CDA'];
 const ONLINE = ['by email', 'through the official website', 'by WhatsApp'];
@@ -57,20 +64,75 @@ const newCode = () => Array.from(crypto.randomBytes(8), b => ALPHABET[b % ALPHAB
 const validCode = c => typeof c === 'string' && c.length === 8 && [...c].every(ch => ALPHABET.includes(ch));
 
 // ---- who holds a key? ----
-function admins() {
-  try { const o = JSON.parse(process.env.ADMIN_KEYS || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; }
+// A key is typed in any case, with or without dashes or spaces. Its fingerprint is the first
+// 20 letters of SHA-256("cv-office-key:" + key). The key maker uses exactly the same recipe.
+const normal = k => String(k || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+const fingerprint = k => crypto.createHash('sha256').update('cv-office-key:' + normal(k)).digest('hex').slice(0, 20);
+
+// Turn a scope code into an office: { name, state, lga, types }
+function officeFor(scope) {
+  let m;
+  if (scope === 'NG') return { name: 'Federal Desk (all states)', state: 'all', lga: '', types: null, scope };
+  if ((m = /^NG#([A-Z]+)$/.exec(scope)) && R.NATIONAL_ROLES[m[1]]) return { name: R.NATIONAL_ROLES[m[1]].name, state: 'all', lga: '', types: R.NATIONAL_ROLES[m[1]].types, scope };
+  if (!(m = /^([A-Z]{2})([.#])([A-Z0-9]+)$/.exec(scope))) return null;
+  const state = L.stateOfCode(m[1]); if (!state) return null;
+  if (m[2] === '.') { const lga = L.byCode(state, m[3]); return lga ? { name: state === 'FCT (Abuja)' ? lga + ' Area Council, FCT' : lga + ' Local Government, ' + state + ' State', state, lga, types: null, scope } : null; }
+  const role = R.STATE_ROLES[m[3]]; if (!role) return null;
+  const fct = state === 'FCT (Abuja)';
+  const name = fct && role.fct ? role.fct : m[3] === 'GOV' ? role.name + ', ' + state + ' State' : (fct ? 'FCT ' : state + ' State ') + role.name;
+  return { name, state, lga: '', types: role.types, scope };
+}
+
+let cache = { raw: null, map: null, legacy: null };
+function keyBook() {
+  const raw = process.env.ADMIN_KEYS || '';
+  if (cache.raw === raw) return cache;
+  const map = new Map(); let legacy = null;
+  if (raw.trim().startsWith('{')) {                        // the old hand-written form
+    try { legacy = JSON.parse(raw); } catch (e) { legacy = {}; }
+  } else {
+    raw.split(/[\s,]+/).forEach(entry => {
+      const m = /^([0-9a-f]{20}):([A-Z0-9.#]+)$/.exec(entry.trim());
+      if (m) { const o = officeFor(m[2]); if (o) map.set(m[1], o); }
+    });
+  }
+  cache = { raw, map, legacy };
+  return cache;
+}
+function keysReady() {
+  const b = keyBook();
+  return b.legacy ? Object.keys(b.legacy).some(k => k.length >= 16) : b.map.size > 0;
 }
 function whoIs(key) {
   if (typeof key !== 'string' || key.length < 16 || key.length > 200) return null;
+  const b = keyBook();
+  if (!b.legacy) return b.map.get(fingerprint(key)) || null;
   const given = crypto.createHash('sha256').update(key).digest();
   let found = null;
-  for (const [k, v] of Object.entries(admins())) {           // compare every key the same way, so timing tells nothing
+  for (const [k, v] of Object.entries(b.legacy)) {           // compare every key the same way, so timing tells nothing
     if (k.length < 16 || !v || typeof v !== 'object') continue;
     if (crypto.timingSafeEqual(given, crypto.createHash('sha256').update(k).digest())) found = v;
   }
   if (!found) return null;
   const state = found.state === 'all' || STATES.includes(found.state) ? found.state : null;
-  return state ? { name: String(found.name || 'Official').slice(0, 80), state } : null;
+  if (!state) return null;
+  const lga = state !== 'all' && L.names(state).includes(found.lga) ? found.lga : '';
+  const types = Array.isArray(found.types) ? found.types.filter(t => TYPES.includes(t)) : null;
+  return { name: String(found.name || 'Official').slice(0, 80), state, lga, types: types && types.length ? types : null, scope: 'custom' };
+}
+
+// Can this office read this letter?
+function sees(me, l) {
+  if (me.state !== 'all' && l.state !== me.state) return false;
+  if (me.lga && l.lga !== me.lga) return false;
+  if (me.types && !me.types.includes(l.type)) return false;
+  return true;
+}
+// Which lists in the database hold this office's letters?
+function listsFor(me) {
+  if (me.lga) return ['cv:idx:' + me.state + '|L|' + me.lga];
+  if (me.types) return me.types.map(t => me.state === 'all' ? 'cv:idx:T|' + t : 'cv:idx:' + me.state + '|T|' + t);
+  return [me.state === 'all' ? 'cv:idx:all' : 'cv:idx:' + me.state];
 }
 
 function publicView(l) {
@@ -110,6 +172,7 @@ module.exports = async function handler(req, res) {
     const how = HOWS.includes(body.how) ? body.how : 'by hand';
     const sentOn = /^\d{4}-\d{2}-\d{2}$/.test(String(body.sentOn)) ? body.sentOn : new Date().toISOString().slice(0, 10);
     const letter = tidy(body.letter, 5000), subject = tidy(body.subject, 200), office = tidy(body.office, 120);
+    const lga = L.names(body.state).includes(body.lga) ? body.lga : '';      // only a real LGA of that state, or none
     if (letter.length < 80) return res.status(400).json({ error: 'The letter is too short to file.' });
     if (!live) return res.status(200).json({ live: false, filed: false });
     if (!S.allowed(ip + ':file', 5)) return res.status(429).json({ error: 'You have filed several letters this hour. Please try again later.' });
@@ -120,11 +183,10 @@ module.exports = async function handler(req, res) {
         const [made] = await db([['HSETNX', 'cv:l:' + id, 'state', body.state]]);
         if (!made.result) continue;
         await db([
-          ['HSET', 'cv:l:' + id, 'type', body.type, 'office', office, 'how', how, 'sentOn', sentOn, 'subject', subject, 'letter', letter, 'status', 'new', 'filedAt', new Date(now).toISOString()],
-          ['EXPIRE', 'cv:l:' + id, TTL],
-          ['ZADD', 'cv:idx:' + body.state, now, id], ['ZADD', 'cv:idx:all', now, id],
-          ['ZREMRANGEBYSCORE', 'cv:idx:' + body.state, 0, now - TTL * 1000], ['ZREMRANGEBYSCORE', 'cv:idx:all', 0, now - TTL * 1000]
-        ]);
+          ['HSET', 'cv:l:' + id, 'type', body.type, 'lga', lga, 'office', office, 'how', how, 'sentOn', sentOn, 'subject', subject, 'letter', letter, 'status', 'new', 'filedAt', new Date(now).toISOString()],
+          ['EXPIRE', 'cv:l:' + id, TTL]
+        ].concat(...['cv:idx:all', 'cv:idx:' + body.state, 'cv:idx:T|' + body.type, 'cv:idx:' + body.state + '|T|' + body.type].concat(lga ? ['cv:idx:' + body.state + '|L|' + lga] : [])
+          .map(k => [['ZADD', k, now, id], ['ZREMRANGEBYSCORE', k, 0, now - TTL * 1000]])));
         return res.status(200).json({ live: true, filed: true, code: id });
       }
       return res.status(503).json({ error: 'Could not file the letter. Please try again.' });
@@ -134,7 +196,7 @@ module.exports = async function handler(req, res) {
   // ---- 3. an official ----
   if (body.action === 'list' || body.action === 'react') {
     if (!process.env.ADMIN_KEYS) return res.status(200).json({ live: false, reason: 'no-keys' });
-    if (!Object.keys(admins()).some(k => k.length >= 16)) return res.status(200).json({ live: false, reason: 'bad-keys' });
+    if (!keysReady()) return res.status(200).json({ live: false, reason: 'bad-keys' });
     if (!live) return res.status(200).json({ live: false, reason: 'no-database' });
     if (!S.allowed(ip + ':adm', 600)) return res.status(429).json({ error: 'Too many requests. Please wait a little.' });
     const me = whoIs(body.key);
@@ -144,20 +206,23 @@ module.exports = async function handler(req, res) {
     }
     try {
       if (body.action === 'list') {
-        const [ids] = await db([['ZREVRANGE', 'cv:idx:' + me.state, 0, MAX_LIST - 1]]);
-        const list = ids.result || [];
-        const rows = list.length ? await db(list.map(id => ['HGETALL', 'cv:l:' + id])) : [];
-        const letters = rows.map((r, i) => ({ id: list[i], ...toObject(r.result) })).filter(l => l.state)
-          .map(l => ({ id: l.id, state: l.state, type: l.type, office: l.office, how: l.how, online: ONLINE.includes(l.how), sentOn: l.sentOn, subject: l.subject, letter: l.letter,
+        const lists = listsFor(me);
+        const got = await db(lists.map(k => ['ZREVRANGE', k, 0, MAX_LIST - 1, 'WITHSCORES']));
+        const score = new Map();
+        got.forEach(g => { const a = g.result || []; for (let i = 0; i < a.length; i += 2) score.set(a[i], Number(a[i + 1])); });
+        const ids = [...score.keys()].sort((x, y) => score.get(y) - score.get(x)).slice(0, MAX_LIST);
+        const rows = ids.length ? await db(ids.map(id => ['HGETALL', 'cv:l:' + id])) : [];
+        const letters = rows.map((r, i) => ({ id: ids[i], ...toObject(r.result) })).filter(l => l.state && sees(me, l))
+          .map(l => ({ id: l.id, state: l.state, lga: l.lga || '', type: l.type, office: l.office, how: l.how, online: ONLINE.includes(l.how), sentOn: l.sentOn, subject: l.subject, letter: l.letter,
             status: STATUSES.includes(l.status) ? l.status : 'new', reply: l.reply || '', by: l.by || '', at: l.at || '', filedAt: l.filedAt || '' }));
-        return res.status(200).json({ live: true, me, letters, statuses: STATUSES });
+        return res.status(200).json({ live: true, me: { name: me.name, state: me.state, lga: me.lga, types: me.types }, letters, statuses: STATUSES });
       }
       const id = String(body.id || '').toUpperCase();
       if (!validCode(id) || !STATUSES.includes(body.status) || body.status === 'new') return res.status(400).json({ error: 'Choose a letter and a reaction.' });
       const [r] = await db([['HGETALL', 'cv:l:' + id]]);
       const l = toObject(r.result);
       if (!l.state) return res.status(404).json({ error: 'That letter is no longer here.' });
-      if (me.state !== 'all' && l.state !== me.state) return res.status(403).json({ error: 'That letter belongs to another state.' });
+      if (!sees(me, l)) return res.status(403).json({ error: 'That letter belongs to another office.' });
       const reply = tidy(body.reply, 400), at = new Date().toISOString();
       await db([['HSET', 'cv:l:' + id, 'status', body.status, 'reply', reply, 'by', me.name, 'at', at]]);
       return res.status(200).json({ live: true, saved: true, id, status: body.status, reply, by: me.name, at });
@@ -165,4 +230,4 @@ module.exports = async function handler(req, res) {
   }
   return res.status(400).json({ error: 'Unknown action.' });
 };
-module.exports.HOWS = HOWS; module.exports.STATUSES = STATUSES;
+module.exports.HOWS = HOWS; module.exports.STATUSES = STATUSES; module.exports.fingerprint = fingerprint; module.exports.officeFor = officeFor;

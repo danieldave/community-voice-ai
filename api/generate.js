@@ -4,6 +4,7 @@
  * Environment Variables (OPENAI_API_KEY) — never in the frontend or the repo.
  */
 const { clean } = require("../js/privacy.js");
+const LGAS = require("../js/lgas.js");       // the 774 Local Government Areas
 const S = require("./_lib/shared");      // fair-use limit, saved answers, website check, 17 languages, timeout
 
 // Allowed values (anything else is rejected).
@@ -36,6 +37,7 @@ TASK: You will receive a problem type, location, duration, who is affected, reci
 AUDIENCE: Students and young people who are not confident with formal writing. Use simple English a 12-year-old can understand, while keeping the correct formal letter format.
 
 FORMAT OF THE LETTER (plain text, use line breaks):
+- If a Local Government Area is given and the letter goes to a Local Government Chairman, address it to "The Chairman, [LGA] Local Government" (for the FCT: "[LGA] Area Council").
 - Sender line: "A Concerned Resident, [Area], [State]" using the area and state given. Never include a real name, house address or phone number.
 - Date line: [Date]
 - Recipient by title and office only, e.g. "The Chairman, [LGA] Local Government Council". Never name a real person. If the LGA is not given, keep the [LGA] placeholder.
@@ -83,6 +85,8 @@ module.exports = async function handler(req, res) {
   };
 
   const missing = Object.entries(input).filter(([, v]) => !v).map(([k]) => k);
+  // Optional: the Local Government Area, only if it really belongs to that state
+  const lga = LGAS.names(input.state).includes(body.lga) ? body.lga : "";
   // Optional extras (v2): a copy in a community language, and details of the first letter for follow-ups
   const communityLang = S.LANGUAGES[body.communityLang] && body.communityLang !== "en" ? body.communityLang : "";
   const f = body.followUp && typeof body.followUp === "object" ? body.followUp : null;
@@ -96,6 +100,7 @@ module.exports = async function handler(req, res) {
   const userPrompt =
 `Problem type: ${input.problemType}
 State: ${input.state}
+Local Government Area: ${lga || "not given"}
 Area / community: ${input.area}
 How long: ${input.duration}
 Who is affected: ${input.affected}

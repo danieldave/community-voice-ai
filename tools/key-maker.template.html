@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Office Key Maker · Community Voice AI</title>
+<style>
+  :root { --ink: #1f1a4d; --muted: #5d5a7a; --bg: #f6f3ff; --card: #fff; --line: #e1d9f7; --purple: #5b34c9; --gold: #f5b300; --red: #b3261e; --green: #17895a; --soft: #efe9ff; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Arial, sans-serif; color: var(--ink); background: var(--bg); }
+  header { background: linear-gradient(90deg, #1f1a4d, #5b34c9); color: #fff; padding: 18px; }
+  header h1 { margin: 0; font-size: 22px; } header p { margin: 4px 0 0; opacity: .9; }
+  main { max-width: 900px; margin: 0 auto; padding: 18px 14px 60px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; margin-bottom: 16px; }
+  h2 { font-size: 19px; margin: 0 0 8px; } .step { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--purple); color: #fff; font-size: 15px; margin-right: 8px; }
+  .safe { background: #e4f6ec; color: #0c4a30; border-radius: 12px; padding: 12px 14px; }
+  .warn { background: #fff3c4; color: #4a3500; border-radius: 12px; padding: 12px 14px; }
+  label.row { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; } label.row input { margin-top: 5px; width: 18px; height: 18px; }
+  .states { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 2px 10px; margin: 8px 0; max-height: 260px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; }
+  .states label { display: flex; gap: 6px; align-items: center; font-size: 15px; }
+  button { font: 700 15px system-ui, sans-serif; border: 0; border-radius: 12px; padding: 12px 16px; background: var(--purple); color: #fff; cursor: pointer; margin: 4px 6px 4px 0; }
+  button.ghost { background: var(--soft); color: #3b2a8c; } button:disabled { opacity: .5; cursor: default; }
+  textarea, select, input[type=text] { width: 100%; font: 14px ui-monospace, Menlo, Consolas, monospace; padding: 10px; border-radius: 10px; border: 1.5px solid var(--line); background: #fff; color: var(--ink); }
+  select, input[type=text] { font: 15px system-ui, sans-serif; }
+  textarea { height: 120px; word-break: break-all; }
+  .big { font: 800 26px ui-monospace, Menlo, Consolas, monospace; letter-spacing: .04em; background: var(--soft); border-radius: 12px; padding: 14px; text-align: center; word-break: break-all; }
+  .muted { color: var(--muted); font-size: 14px; } .count { font-weight: 800; color: var(--purple); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; } th, td { text-align: left; padding: 6px; border-bottom: 1px solid var(--line); vertical-align: top; } td.k { font-family: ui-monospace, Menlo, Consolas, monospace; white-space: nowrap; }
+  .scroll { max-height: 300px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } @media (max-width: 600px) { .grid2 { grid-template-columns: 1fr; } }
+  [hidden] { display: none !important; }
+  #printable { display: none; }
+  @media print { body { background: #fff; } header, main { display: none !important; } #printable { display: block; font-size: 11px; } #printable table { font-size: 11px; } #printable h1 { font-size: 16px; } #printable td.k { font-size: 12px; font-weight: 700; } }
+</style>
+</head>
+<body>
+<header><h1>🔐 Office Key Maker</h1><p>Community Voice AI · officials' inbox access keys</p></header>
+<main>
+  <div class="card safe"><b>This page works offline and sends nothing anywhere.</b> Keys are made by your own device's secure random generator. Turn off your internet before you start if you want to be sure. Nobody else, including the website, ever sees the keys.</div>
+
+  <section class="card">
+    <h2><span class="step">1</span>Choose the offices</h2>
+    <label class="row"><input type="checkbox" id="wLga" checked><span><b>Local Governments</b> <span class="muted">(1 key per LGA: it sees only letters from its LGA)</span></span></label>
+    <label class="row"><input type="checkbox" id="wState" checked><span><b>State offices</b> <span class="muted">(9 per state: Governor's office sees the whole state; Works, Water, Environment, Emergency, Power, Education, Health and Security each see only their problem types)</span></span></label>
+    <label class="row"><input type="checkbox" id="wFed" checked><span><b>Federal offices</b> <span class="muted">(10: the Federal Desk sees everything; FERMA, NEMA, NERC, NESREA, Police and others see their problem types in every state)</span></span></label>
+    <p style="margin:10px 0 0"><b>Which states?</b> <button type="button" class="ghost" id="allS">All</button><button type="button" class="ghost" id="noS">None</button></p>
+    <div class="states" id="states"></div>
+    <p>Keys to make: <span class="count" id="count">0</span></p>
+  </section>
+
+  <section class="card">
+    <h2><span class="step">2</span>Make the keys</h2>
+    <p class="warn">Making a new full set <b>replaces</b> the old set. Once you paste the new value into Vercel, every old key stops working. For one office only, use step 5 instead.</p>
+    <button type="button" id="make">Make the keys</button>
+    <p class="muted" id="made"></p>
+  </section>
+
+  <section class="card" id="outV" hidden>
+    <h2><span class="step">3</span>Paste this into Vercel</h2>
+    <p>This is the value of <b>ADMIN_KEYS</b>. It holds only a scrambled fingerprint of each key, so it is useless to anyone who sees it. Size: <b id="size"></b> (Vercel allows 64 KB for all settings together).</p>
+    <textarea id="vercel" readonly></textarea>
+    <button type="button" id="copyV">Copy for Vercel</button><button type="button" class="ghost" id="dlV">Download as a text file</button>
+    <ol class="muted"><li>Vercel → <b>community-voice-ai</b> project → <b>Settings</b> → <b>Environment Variables</b>.</li><li>Click the three dots beside <b>ADMIN_KEYS</b> → <b>Edit</b>. Delete the old value, paste the new one, tick Production (and Preview if you test there), <b>Save</b>.</li><li><b>Deployments</b> → three dots on the newest → <b>Redeploy</b>. The new keys work when it says Ready.</li></ol>
+  </section>
+
+  <section class="card" id="outK" hidden>
+    <h2><span class="step">4</span>Keep the private list, give each office its own key</h2>
+    <p class="warn"><b>This list is the only copy of the keys.</b> Save it on a computer that is not shared, or print it and lock it away. Do not email it as one file, post it in a group, or upload it anywhere. Send each office only its own line, privately.</p>
+    <button type="button" id="dlK">Download the private list (CSV)</button><button type="button" class="ghost" id="printK">Print the private list</button>
+    <div class="scroll"><table><thead><tr><th>Office</th><th>Sees</th><th>Key</th></tr></thead><tbody id="rows"></tbody></table></div>
+  </section>
+
+  <section class="card">
+    <h2><span class="step">5</span>Later: add or replace one office</h2>
+    <p class="muted">Use this when a new official needs access, or a key was lost or leaked.</p>
+    <div class="grid2"><div><label for="oneS"><b>State</b></label><select id="oneS"></select></div><div><label for="oneO"><b>Office</b></label><select id="oneO"></select></div></div>
+    <button type="button" id="makeOne">Make a key for this office</button>
+    <div id="oneOut" hidden>
+      <p>Give this key to the office, privately:</p><div class="big" id="oneKey"></div>
+      <p>Then in Vercel, edit <b>ADMIN_KEYS</b>:</p>
+      <ol><li id="oneFind"></li><li>Add a comma at the end of the value and paste this after it: <textarea id="oneLine" readonly style="height:48px"></textarea><button type="button" class="ghost" id="copyOne">Copy this line</button></li><li>Save, then Redeploy.</li></ol>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="step">6</span>Remove an office or check a key</h2>
+    <p>To <b>remove</b> an office: in ADMIN_KEYS, find the entry that ends with its code (for example <code>:OG.05</code> for Yewa South), delete that entry and its comma, save and redeploy. The codes are in the private list.</p>
+    <label for="chk"><b>Check a key</b> (shows the fingerprint to look for in ADMIN_KEYS):</label>
+    <input type="text" id="chk" autocomplete="off" placeholder="Type or paste a key"><p class="muted" id="chkOut"></p>
+  </section>
+</main>
+<div id="printable"></div>
+<script>
+"use strict";
+var DATA = /*DATA*/null;
+
+// ---------- SHA-256 (written out here so the page works offline, from a file, on any phone) ----------
+function sha256hex(str) {
+  var b = unescape(encodeURIComponent(str)), n = b.length, words = [], i, j;
+  var K = [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+    0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+    0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+    0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+  var H = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  for (i = 0; i < n; i++) words[i >> 2] |= b.charCodeAt(i) << (24 - (i % 4) * 8);
+  words[n >> 2] |= 0x80 << (24 - (n % 4) * 8);
+  var total = ((n + 8) >> 6) * 16 + 16; for (i = words.length; i < total; i++) words[i] = words[i] | 0;
+  words[total - 1] = n * 8;
+  var r = function (x, c) { return (x >>> c) | (x << (32 - c)); }, w = new Array(64);
+  for (i = 0; i < total; i += 16) {
+    var a = H[0], bb = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], h = H[7];
+    for (j = 0; j < 64; j++) {
+      if (j < 16) w[j] = words[i + j] | 0;
+      else { var s0 = r(w[j - 15], 7) ^ r(w[j - 15], 18) ^ (w[j - 15] >>> 3), s1 = r(w[j - 2], 17) ^ r(w[j - 2], 19) ^ (w[j - 2] >>> 10); w[j] = (w[j - 16] + s0 + w[j - 7] + s1) | 0; }
+      var t1 = (h + (r(e, 6) ^ r(e, 11) ^ r(e, 25)) + ((e & f) ^ (~e & g)) + K[j] + w[j]) | 0, t2 = ((r(a, 2) ^ r(a, 13) ^ r(a, 22)) + ((a & bb) ^ (a & c) ^ (bb & c))) | 0;
+      h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = bb; bb = a; a = (t1 + t2) | 0;
+    }
+    H[0] = (H[0] + a) | 0; H[1] = (H[1] + bb) | 0; H[2] = (H[2] + c) | 0; H[3] = (H[3] + d) | 0; H[4] = (H[4] + e) | 0; H[5] = (H[5] + f) | 0; H[6] = (H[6] + g) | 0; H[7] = (H[7] + h) | 0;
+  }
+  return H.map(function (x) { return ("00000000" + (x >>> 0).toString(16)).slice(-8); }).join("");
+}
+
+// ---------- keys: 24 characters from 31 easy-to-read letters and numbers (about 119 bits: far beyond guessing) ----------
+var ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+function newKey() {
+  var out = "", buf = new Uint8Array(1);
+  while (out.length < 24) { crypto.getRandomValues(buf); if (buf[0] < 248) out += ALPHABET[buf[0] % 31]; }   // 248 = 8 x 31, so every character is equally likely
+  return out.match(/.{4}/g).join("-");
+}
+var normal = function (k) { return String(k || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); };
+var fingerprint = function (k) { return sha256hex("cv-office-key:" + normal(k)).slice(0, 20); };
+var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+
+// ---------- the offices ----------
+function stateOffices(st) {
+  var code = DATA.codes[st], fct = st === "FCT (Abuja)", out = [];
+  Object.keys(DATA.stateRoles).forEach(function (r) {
+    var role = DATA.stateRoles[r];
+    out.push({ scope: code + "#" + r, state: st, name: fct && role.fct ? role.fct : r === "GOV" ? role.name + ", " + st + " State" : (fct ? "FCT " : st + " State ") + role.name,
+      sees: role.types ? role.types.join(", ") + " letters in " + (fct ? "the FCT" : st + " State") : "every letter in " + (fct ? "the FCT" : st + " State") });
+  });
+  return out;
+}
+function lgaOffices(st) {
+  return DATA.lgas[st].map(function (x) { var fct = st === "FCT (Abuja)";
+    return { scope: DATA.codes[st] + "." + x[0], state: st, name: fct ? x[1] + " Area Council, FCT" : x[1] + " Local Government, " + st + " State", sees: "every letter from " + x[1] }; });
+}
+function fedOffices() {
+  return [{ scope: "NG", state: "Federal", name: "Federal Desk (all states)", sees: "every letter in Nigeria" }].concat(Object.keys(DATA.natRoles).map(function (r) {
+    return { scope: "NG#" + r, state: "Federal", name: DATA.natRoles[r].name, sees: DATA.natRoles[r].types.join(", ") + " letters in every state" }; }));
+}
+
+// ---------- step 1 ----------
+var $ = function (id) { return document.getElementById(id); }, STATES = Object.keys(DATA.lgas);
+$("states").innerHTML = STATES.map(function (s) { return '<label><input type="checkbox" class="st" value="' + esc(s) + '" checked> ' + esc(s) + "</label>"; }).join("");
+function chosen() { return [].slice.call(document.querySelectorAll(".st:checked")).map(function (x) { return x.value; }); }
+function plan() {
+  var list = [];
+  chosen().forEach(function (s) { if ($("wState").checked) list = list.concat(stateOffices(s)); if ($("wLga").checked) list = list.concat(lgaOffices(s)); });
+  if ($("wFed").checked) list = list.concat(fedOffices());
+  return list;
+}
+function recount() { $("count").textContent = plan().length; }
+document.addEventListener("change", function (e) { if (e.target.matches("input[type=checkbox]")) recount(); });
+$("allS").onclick = function () { document.querySelectorAll(".st").forEach(function (x) { x.checked = true; }); recount(); };
+$("noS").onclick = function () { document.querySelectorAll(".st").forEach(function (x) { x.checked = false; }); recount(); };
+recount();
+
+// ---------- steps 2 to 4 ----------
+var made = [];
+function download(name, text, type) { var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+function copy(id, btn) { var t = $(id); t.select(); var done = function () { var o = btn.textContent; btn.textContent = "Copied ✓"; setTimeout(function () { btn.textContent = o; }, 1500); };
+  if (navigator.clipboard) navigator.clipboard.writeText(t.value).then(done, function () { document.execCommand("copy"); done(); }); else { document.execCommand("copy"); done(); } }
+$("make").onclick = function () {
+  var list = plan(); if (!list.length) { $("made").textContent = "Choose at least one kind of office and one state."; return; }
+  if (made.length && !confirm("Make a completely new set? The keys on this page will be replaced.")) return;
+  made = list.map(function (o) { var k = newKey(); return { name: o.name, scope: o.scope, state: o.state, sees: o.sees, key: k, fp: fingerprint(k) }; });
+  var value = made.map(function (m) { return m.fp + ":" + m.scope; }).join(",");
+  $("vercel").value = value; var kb = value.length / 1024;
+  $("size").textContent = kb.toFixed(1) + " KB" + (kb > 55 ? " (too big: choose fewer offices)" : "");
+  $("rows").innerHTML = made.map(function (m) { return "<tr><td>" + esc(m.name) + '<br><span class="muted">code ' + m.scope + "</span></td><td>" + esc(m.sees) + '</td><td class="k">' + m.key + "</td></tr>"; }).join("");
+  $("outV").hidden = false; $("outK").hidden = false;
+  $("made").textContent = made.length + " keys made on " + new Date().toLocaleString() + ". Now do steps 3 and 4.";
+  $("outV").scrollIntoView({ behavior: "smooth" });
+};
+$("copyV").onclick = function () { copy("vercel", this); };
+$("dlV").onclick = function () { download("ADMIN_KEYS-value.txt", $("vercel").value, "text/plain"); };
+$("dlK").onclick = function () {
+  var csv = "Office,State,Code,Sees,Key\n" + made.map(function (m) { return [m.name, m.state, m.scope, m.sees, m.key].map(function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(","); }).join("\n");
+  download("PRIVATE-office-keys-" + new Date().toISOString().slice(0, 10) + ".csv", csv, "text/csv");
+};
+$("printK").onclick = function () {
+  $("printable").innerHTML = "<h1>PRIVATE · Community Voice AI office keys · " + new Date().toLocaleDateString() + "</h1><table><thead><tr><th>Office</th><th>Code</th><th>Key</th></tr></thead><tbody>" +
+    made.map(function (m) { return "<tr><td>" + esc(m.name) + "</td><td>" + m.scope + '</td><td class="k">' + m.key + "</td></tr>"; }).join("") + "</tbody></table>";
+  window.print();
+};
+
+// ---------- step 5: one office ----------
+$("oneS").innerHTML = '<option value="Federal">Federal offices</option>' + STATES.map(function (s) { return '<option value="' + esc(s) + '">' + esc(s) + "</option>"; }).join("");
+function fillOne() { var s = $("oneS").value, list = s === "Federal" ? fedOffices() : stateOffices(s).concat(lgaOffices(s));
+  $("oneO").innerHTML = list.map(function (o) { return '<option value="' + o.scope + '">' + esc(o.name) + "</option>"; }).join(""); $("oneOut").hidden = true; }
+$("oneS").onchange = fillOne; $("oneO").onchange = function () { $("oneOut").hidden = true; }; $("oneS").value = "Ogun"; fillOne();
+$("makeOne").onclick = function () {
+  var scope = $("oneO").value, k = newKey();
+  $("oneKey").textContent = k; $("oneLine").value = fingerprint(k) + ":" + scope;
+  $("oneFind").innerHTML = "If this office already has a key, find the entry ending in <code>:" + scope + "</code> and delete it with its comma (this switches the old key off).";
+  $("oneOut").hidden = false;
+};
+$("copyOne").onclick = function () { copy("oneLine", this); };
+
+// ---------- step 6 ----------
+$("chk").oninput = function () { var n = normal(this.value); $("chkOut").textContent = n.length >= 16 ? "Look for an entry starting with: " + fingerprint(this.value) : ""; };
+</script>
+</body>
+</html>
