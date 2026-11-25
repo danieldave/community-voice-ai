@@ -1,0 +1,262 @@
+# Community Voice AI
+
+> Community Voice AI is a free web app built by students of the ByteBusters Coding Club, Yewa College, Ilaro (Odu'a Investment Foundation), Nigeria. It turns a real community problem described in everyday English or Pidgin (no water, bad roads, dark streets, flooding, blocked drains) into a polite, formal letter to a Local Government Council, State Ministry, Federal agency, CDA, school or traditional ruler.
+
+Key facts:
+- The user is always the author: the AI drafts, the user edits every word.
+- Personal details (names, phone numbers, emails) are removed before anything reaches the AI; letters are signed "A Concerned Resident".
+- Only checked official .gov.ng websites are suggested. In an emergency, call 112 first.
+- A short community copy is available in 16 Nigerian languages for reading at meetings.
+- A follow-up tracker reminds users after 14 days and drafts a polite follow-up letter.
+- A Nigerian Sign Language page was made with Deaf and Hard-of-Hearing students.
+
+## Pages
+- [Write a letter](https://community-voice-ai-ziry.vercel.app/)
+- [How it works, privacy and FAQ](https://community-voice-ai-ziry.vercel.app/how-it-works.html)
+- [Nigerian Sign Language](https://community-voice-ai-ziry.vercel.app/sign-language.html)
+- [Questions and answers](https://community-voice-ai-ziry.vercel.app/faq/): who to write to, how to write the letter, follow-ups and FOI requests
+- [About / who built this](https://community-voice-ai-ziry.vercel.app/about/): made by ByteBusters students at Yewa College, Ilaro (Odu'a Investment Foundation)
+- [Full text for AI assistants](https://community-voice-ai-ziry.vercel.app/llms-full.txt)
+
+## Data
+- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
+
+## Data
+- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
+
+## Data
+- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
+
+## Data
+- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
+
+## Data
+- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
+
+## Data
+- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
+
+## Data
+- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
+
+## Data
+- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
+
+## Data
+- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
+
+## Who do I report to? (one page per problem)
+- [Who do I report a bad or damaged road to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/bad-road/): First find out who owns the road. Local streets belong to the Local Government, state roads to the State Ministry of Works, and federal highways to the Federal Ministry of Works and FERMA. Then send a dated letter with photos and the exact location.
+- [Who do I report potholes to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/potholes/): Report potholes to whoever owns the road, usually the Local Government for streets and the State road agency for main roads. Count them, photograph them and give the exact stretch.
+- [Who do I report no public water supply to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/no-water/): For taps that have stopped running, write to the State Water Corporation. For a community borehole, write to the Local Government Council or the state rural water supply agency.
+- [Who do I report a broken community borehole to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/broken-borehole/): Write to the Local Government Council or the state rural water agency, say exactly what is broken (pump, tank, generator, pipes), and offer what the community can contribute.
+- [Who do I report dirty or unsafe water to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/dirty-water/): Report unsafe water to the body that supplies it and to the Local Government health department, and warn neighbours to boil or treat water in the meantime.
+- [Who do I report a long power outage to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/no-electricity/): Complain first to your electricity distribution company in writing and keep the complaint number. If it is not resolved, escalate to the regulator's consumer forum office for your area.
+- [Who do I report a faulty transformer to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/faulty-transformer/): A faulty transformer is the distribution company's duty to repair or replace. Write to the DisCo business unit, and do not pay cash to individuals for repairs.
+- [Who do I report unfair estimated electricity bills to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/estimated-billing/): Dispute the bill in writing with your DisCo, ask for a prepaid meter, and keep copies. If it is not settled, take the complaint to the regulator's consumer forum.
+- [Who do I report streetlights that do not work to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/streetlights/): Write to the Local Government Council, list which poles are out, and explain the safety risk at night.
+- [Who do I report fallen or dangerous electric cables to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/dangerous-cables/): Treat fallen or sparking cables as an emergency: keep people away, call the distribution company's emergency line or 112, then follow up with a written report.
+- [Who do I report uncollected refuse or an illegal dump to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/refuse-dump/): Refuse collection is mainly a Local Government duty; some states also have a waste management authority. Write to them with photos and ask for a collection schedule.
+- [Who do I report blocked drainage or gutters to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/blocked-drainage/): Write to the Local Government Council before the rains, show where the drain is blocked, and offer community labour for a clean-up if you can.
+- [Who do I report flooding to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/flooding/): Report flooding to the State Emergency Management Agency and your Local Government. After the emergency, write a letter asking for the cause (drains, culverts, river banks) to be fixed.
+- [Who do I report gully erosion to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/erosion/): Report gully erosion to the State Ministry of Environment early, with measurements and photos, before buildings are at risk.
+- [Who do I report smoke, smell or noise pollution to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/air-or-noise-pollution/): Write to the state environmental agency, describe what you see, smell or hear and when, and name the source only if you are sure of it.
+- [Who do I report illegal tree cutting or bush burning to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/tree-felling/): Report it to the state forestry or environment office, and involve community leaders, because local agreement often stops it fastest.
+- [Who do I report a damaged school building to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/school-building/): Start with the principal, who can write officially. Public primary schools are under the Local Government Education Authority and SUBEB; public secondary schools are under the State Ministry of Education.
+- [Who do I report no toilets or water in school to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/school-toilets/): Raise it with the principal and the PTA, then write to the education authority. Mention girls' attendance and health, which authorities take seriously.
+- [Who do I report not enough desks or chairs to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/school-furniture/): Ask the principal to write to the education authority with exact numbers. Old students' associations and local businesses often help with furniture.
+- [Who do I report not enough teachers to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/no-teachers/): Teacher posting is done by the state education bodies, so the letter should go through the principal and the PTA with the subjects and classes affected.
+- [Who do I report a health centre with no staff or drugs to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/health-centre/): Primary health centres are run by the Local Government with the State Primary Health Care Board. Write to both, and involve the Ward Development Committee.
+- [Who do I report an abandoned government project to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/abandoned-project/): Read the signboard to find the agency and contractor, then write to that agency. If no information is given, a Freedom of Information request can ask for the contract details.
+- [Who do I report theft or insecurity in the area to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/insecurity/): Write to the Divisional Police Officer asking for patrols, and work with your community association. For a crime in progress, call 112; a letter is for patterns, not emergencies.
+- [Who do I report a dangerous road crossing near a school to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/unsafe-crossing/): Ask for a zebra crossing, speed breakers or traffic wardens by writing to the state traffic or transport authority and the road safety command, with the school as co-signatory.
+- [Who do I report a dirty or unsafe market to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/market-sanitation/): Markets are a Local Government responsibility. Write to the council together with the market association, and propose a regular sanitation day.
+- [Who do I report a broken bridge or culvert to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/bridge-or-culvert/): Report a broken bridge or culvert at once to the Local Government and State Ministry of Works, mark it so nobody falls in, and ask for an urgent inspection.
+- [Who do I report stray or dangerous animals to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/stray-animals/): Report stray dogs or dangerous animals to the Local Government veterinary or health office and ask for vaccination and control.
+- [Who do I report no public toilets to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/public-toilets/): Ask the Local Government Council for public toilets at markets and motor parks, and propose how they could be maintained.
+- [Who do I report no access for people with disabilities to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/disability-access/): Write to whoever runs the building asking for ramps, rails or accessible toilets, and copy the state disability office. Nigerian law requires public buildings to be accessible.
+- [Who do I report no playground, library or youth centre to in Nigeria?](https://community-voice-ai-ziry.vercel.app/report/playground-or-library/): Propose it rather than complain: write to the Local Government and your representatives with a suggested site, who would use it and how the community would look after it.
+
+## Offices
+- [Local Government Chairman](https://community-voice-ai-ziry.vercel.app/offices/local-government-chairman/): The Local Government Chairman leads your Local Government Council, the level of government closest to you.
+- [Ward councillor](https://community-voice-ai-ziry.vercel.app/offices/ward-councillor/): A councillor is elected to represent your ward in the Local Government Council.
+- [Community Development Association (CDA)](https://community-voice-ai-ziry.vercel.app/offices/community-development-association/): A CDA is a group of residents who organise to improve their own area.
+- [State Ministry of Works](https://community-voice-ai-ziry.vercel.app/offices/state-ministry-of-works/): The State Ministry of Works builds and maintains state roads, bridges and public buildings.
+- [State Water Corporation](https://community-voice-ai-ziry.vercel.app/offices/state-water-corporation/): The State Water Corporation (or Water Board) supplies pipe-borne water in towns.
+- [Electricity distribution company (DisCo)](https://community-voice-ai-ziry.vercel.app/offices/electricity-distribution-company/): A DisCo is the company that delivers electricity to homes in your area and bills you for it.
+- [School principal](https://community-voice-ai-ziry.vercel.app/offices/school-principal/): The principal runs the school day to day and speaks for it to the education authorities.
+- [Traditional ruler](https://community-voice-ai-ziry.vercel.app/offices/traditional-ruler/): A traditional ruler (Oba, Emir, Obi, Baale or village head) is the custodian of the community and has the ear of government.
+- [Divisional Police Officer (DPO)](https://community-voice-ai-ziry.vercel.app/offices/police-dpo/): The DPO is the officer in charge of your nearest police division.
+- [State House of Assembly member](https://community-voice-ai-ziry.vercel.app/offices/state-house-of-assembly-member/): Your Assembly member represents your constituency in making state laws and can raise your problem with state ministries.
+- [Public Complaints Commission](https://community-voice-ai-ziry.vercel.app/offices/public-complaints-commission/): The Public Complaints Commission is Nigeria's ombudsman: it investigates complaints against government offices and companies, free of charge.
+
+## How-to guides
+- [How do I write a formal letter to a government office in Nigeria?](https://community-voice-ai-ziry.vercel.app/how-to/write-a-formal-letter/): A formal letter has your address and date, the office's address, a salutation, a bold heading, three short paragraphs (the problem, the effect, the request), a polite close and your signature.
+- [How do I write a community petition with signatures?](https://community-voice-ai-ziry.vercel.app/how-to/write-a-petition/): A petition is a formal letter signed by many people. Keep the request to one clear sentence and attach a signature sheet with names, streets and signatures.
+- [What do I do if nobody replies to my letter?](https://community-voice-ai-ziry.vercel.app/how-to/follow-up-a-letter/): Wait about two weeks, then send a short follow-up that quotes the date and reference of the first letter. If there is still no reply, go one level higher and copy the first office.
+- [How do I prove that my letter was received?](https://community-voice-ai-ziry.vercel.app/how-to/get-an-acknowledgement-copy/): Take two copies. Ask the receiving officer to stamp, sign and date your copy. That "acknowledgement copy" is your proof.
+- [How do I take good evidence photos for a complaint?](https://community-voice-ai-ziry.vercel.app/how-to/take-evidence-photos/): Take a wide photo that shows where it is, a close photo that shows the damage, and include something for scale. Do not photograph people's faces without permission.
+- [How do I make a Freedom of Information (FOI) request in Nigeria?](https://community-voice-ai-ziry.vercel.app/how-to/freedom-of-information-request/): Under the Freedom of Information Act, anyone can write to a public institution asking for records, such as a project's contract sum. You do not have to say why, and the law gives the institution seven days to respond.
+- [How do I organise a community meeting about a problem?](https://community-voice-ai-ziry.vercel.app/how-to/hold-a-community-meeting/): Invite people through leaders they trust, keep one topic, let everyone speak, write down what was agreed, and choose who will deliver the letter.
+- [How can students report a problem in their school or community?](https://community-voice-ai-ziry.vercel.app/how-to/students-speak-up/): Students can write a respectful letter through the class teacher, student council or principal, describe the problem with facts, and suggest a solution.
+
+## About
+Community Voice AI was built by students of the ByteBusters coding club at Yewa College, Ilaro, Ogun State, Nigeria, with guidance from the ByteBusters Centre Lead. ByteBusters is a programme of Odu'a Investment Foundation. Free, no sign-up. About page: https://community-voice-ai-ziry.vercel.app/about/
+
+## Questions and answers (also at https://community-voice-ai-ziry.vercel.app/faq/)
+### How do I write a formal letter to a government office in Nigeria?
+A formal letter has your address and date, the office's address, a salutation, a bold heading, three short paragraphs (the problem, the effect, the request), a polite close and your signature. Community Voice AI drafts this for you, and you edit every word.
+
+### Who do I report a bad road to in Nigeria?
+First find out who owns the road. Local streets belong to the Local Government, state roads to the State Ministry of Works, and federal highways to the Federal Ministry of Works and FERMA. Then send a dated letter with photos and the exact location.
+
+### Who do I report a broken borehole or no water supply to?
+For taps that have stopped running, write to the State Water Corporation. For a community borehole, write to the Local Government Council or the state rural water supply agency. In your letter, say exactly what is broken (pump, tank, generator, pipes), and offer what the community can contribute.
+
+### Who do I complain to about a long power outage or estimated bill?
+Complain first to your electricity distribution company in writing and keep the complaint number. If it is not resolved, escalate to the regulator's consumer forum office for your area.
+
+### Who is responsible for refuse collection and blocked drains?
+Refuse collection is mainly a Local Government duty; some states also have a waste management authority. Write to them with photos and ask for a collection schedule. For blocked drains, write to the Local Government Council before the rains.
+
+### How do I prove that my letter was received?
+Take two copies. Ask the receiving officer to stamp, sign and date your copy. That "acknowledgement copy" is your proof.
+
+### What do I do if nobody replies to my letter?
+Wait about two weeks, then send a short follow-up that quotes the date and reference of the first letter. If there is still no reply, go one level higher and copy the first office. Our letter tracker reminds you after 14 days and drafts the follow-up.
+
+### How do I write a community petition with signatures?
+A petition is a formal letter signed by many people. Keep the request to one clear sentence and attach a signature sheet with names, streets and signatures.
+
+### How do I make a Freedom of Information (FOI) request in Nigeria?
+Under the Freedom of Information Act, anyone can write to a public institution asking for records, such as a project's contract sum. You do not have to say why, and the law gives the institution seven days to respond.
+
+### How can students report a problem in their school or community?
+Students can write a respectful letter through the class teacher, student council or principal, describe the problem with facts, and suggest a solution.
+
+### Is Community Voice AI free? Is my information safe?
+Yes, it is free and there is no sign-up. Before anything is sent to the AI, a privacy filter removes phone numbers, emails, long ID or account numbers and names, and letters are signed "A Concerned Resident" unless you change it.
+
+### What should I do in an emergency?
+A letter is not for emergencies. Call 112, which is free on every network. If it does not connect, go to the nearest police station, fire station or hospital.
+
+## Who to report each problem to, in full
+### A bad or damaged road
+First find out who owns the road. Local streets belong to the Local Government, state roads to the State Ministry of Works, and federal highways to the Federal Ministry of Works and FERMA. Then send a dated letter with photos and the exact location.
+Guide: https://community-voice-ai-ziry.vercel.app/report/bad-road/
+
+### Potholes
+Report potholes to whoever owns the road, usually the Local Government for streets and the State road agency for main roads. Count them, photograph them and give the exact stretch.
+Guide: https://community-voice-ai-ziry.vercel.app/report/potholes/
+
+### No public water supply
+For taps that have stopped running, write to the State Water Corporation. For a community borehole, write to the Local Government Council or the state rural water supply agency.
+Guide: https://community-voice-ai-ziry.vercel.app/report/no-water/
+
+### A broken community borehole
+Write to the Local Government Council or the state rural water agency, say exactly what is broken (pump, tank, generator, pipes), and offer what the community can contribute.
+Guide: https://community-voice-ai-ziry.vercel.app/report/broken-borehole/
+
+### Dirty or unsafe water
+Report unsafe water to the body that supplies it and to the Local Government health department, and warn neighbours to boil or treat water in the meantime.
+Guide: https://community-voice-ai-ziry.vercel.app/report/dirty-water/
+
+### A long power outage
+Complain first to your electricity distribution company in writing and keep the complaint number. If it is not resolved, escalate to the regulator's consumer forum office for your area.
+Guide: https://community-voice-ai-ziry.vercel.app/report/no-electricity/
+
+### A faulty transformer
+A faulty transformer is the distribution company's duty to repair or replace. Write to the DisCo business unit, and do not pay cash to individuals for repairs.
+Guide: https://community-voice-ai-ziry.vercel.app/report/faulty-transformer/
+
+### Unfair estimated electricity bills
+Dispute the bill in writing with your DisCo, ask for a prepaid meter, and keep copies. If it is not settled, take the complaint to the regulator's consumer forum.
+Guide: https://community-voice-ai-ziry.vercel.app/report/estimated-billing/
+
+### Streetlights that do not work
+Write to the Local Government Council, list which poles are out, and explain the safety risk at night.
+Guide: https://community-voice-ai-ziry.vercel.app/report/streetlights/
+
+### Fallen or dangerous electric cables
+Treat fallen or sparking cables as an emergency: keep people away, call the distribution company's emergency line or 112, then follow up with a written report.
+Guide: https://community-voice-ai-ziry.vercel.app/report/dangerous-cables/
+
+### Uncollected refuse or an illegal dump
+Refuse collection is mainly a Local Government duty; some states also have a waste management authority. Write to them with photos and ask for a collection schedule.
+Guide: https://community-voice-ai-ziry.vercel.app/report/refuse-dump/
+
+### Blocked drainage or gutters
+Write to the Local Government Council before the rains, show where the drain is blocked, and offer community labour for a clean-up if you can.
+Guide: https://community-voice-ai-ziry.vercel.app/report/blocked-drainage/
+
+### Flooding
+Report flooding to the State Emergency Management Agency and your Local Government. After the emergency, write a letter asking for the cause (drains, culverts, river banks) to be fixed.
+Guide: https://community-voice-ai-ziry.vercel.app/report/flooding/
+
+### Gully erosion
+Report gully erosion to the State Ministry of Environment early, with measurements and photos, before buildings are at risk.
+Guide: https://community-voice-ai-ziry.vercel.app/report/erosion/
+
+### Smoke, smell or noise pollution
+Write to the state environmental agency, describe what you see, smell or hear and when, and name the source only if you are sure of it.
+Guide: https://community-voice-ai-ziry.vercel.app/report/air-or-noise-pollution/
+
+### Illegal tree cutting or bush burning
+Report it to the state forestry or environment office, and involve community leaders, because local agreement often stops it fastest.
+Guide: https://community-voice-ai-ziry.vercel.app/report/tree-felling/
+
+### A damaged school building
+Start with the principal, who can write officially. Public primary schools are under the Local Government Education Authority and SUBEB; public secondary schools are under the State Ministry of Education.
+Guide: https://community-voice-ai-ziry.vercel.app/report/school-building/
+
+### No toilets or water in school
+Raise it with the principal and the PTA, then write to the education authority. Mention girls' attendance and health, which authorities take seriously.
+Guide: https://community-voice-ai-ziry.vercel.app/report/school-toilets/
+
+### Not enough desks or chairs
+Ask the principal to write to the education authority with exact numbers. Old students' associations and local businesses often help with furniture.
+Guide: https://community-voice-ai-ziry.vercel.app/report/school-furniture/
+
+### Not enough teachers
+Teacher posting is done by the state education bodies, so the letter should go through the principal and the PTA with the subjects and classes affected.
+Guide: https://community-voice-ai-ziry.vercel.app/report/no-teachers/
+
+### A health centre with no staff or drugs
+Primary health centres are run by the Local Government with the State Primary Health Care Board. Write to both, and involve the Ward Development Committee.
+Guide: https://community-voice-ai-ziry.vercel.app/report/health-centre/
+
+### An abandoned government project
+Read the signboard to find the agency and contractor, then write to that agency. If no information is given, a Freedom of Information request can ask for the contract details.
+Guide: https://community-voice-ai-ziry.vercel.app/report/abandoned-project/
+
+### Theft or insecurity in the area
+Write to the Divisional Police Officer asking for patrols, and work with your community association. For a crime in progress, call 112; a letter is for patterns, not emergencies.
+Guide: https://community-voice-ai-ziry.vercel.app/report/insecurity/
+
+### A dangerous road crossing near a school
+Ask for a zebra crossing, speed breakers or traffic wardens by writing to the state traffic or transport authority and the road safety command, with the school as co-signatory.
+Guide: https://community-voice-ai-ziry.vercel.app/report/unsafe-crossing/
+
+### A dirty or unsafe market
+Markets are a Local Government responsibility. Write to the council together with the market association, and propose a regular sanitation day.
+Guide: https://community-voice-ai-ziry.vercel.app/report/market-sanitation/
+
+### A broken bridge or culvert
+Report a broken bridge or culvert at once to the Local Government and State Ministry of Works, mark it so nobody falls in, and ask for an urgent inspection.
+Guide: https://community-voice-ai-ziry.vercel.app/report/bridge-or-culvert/
+
+### Stray or dangerous animals
+Report stray dogs or dangerous animals to the Local Government veterinary or health office and ask for vaccination and control.
+Guide: https://community-voice-ai-ziry.vercel.app/report/stray-animals/
+
+### No public toilets
+Ask the Local Government Council for public toilets at markets and motor parks, and propose how they could be maintained.
+Guide: https://community-voice-ai-ziry.vercel.app/report/public-toilets/
+
+### No access for people with disabilities
+Write to whoever runs the building asking for ramps, rails or accessible toilets, and copy the state disability office. Nigerian law requires public buildings to be accessible.
+Guide: https://community-voice-ai-ziry.vercel.app/report/disability-access/
+
+### No playground, library or youth centre
+Propose it rather than complain: write to the Local Government and your representatives with a suggested site, who would use it and how the community would look after it.
+Guide: https://community-voice-ai-ziry.vercel.app/report/playground-or-library/

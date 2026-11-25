@@ -19,7 +19,8 @@ const short = s => s.length > 155 ? s.slice(0, 150).replace(/\s\S*$/, '') + '…
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 const an = w => /^[aeiou]/i.test(w) ? 'an' : 'a';
 const STATIC = ['/', '/letters.html', '/sign-language.html', '/how-it-works.html', '/issues.html'];
-const pages = STATIC.filter(l => l !== '/issues.html').map((loc, i) => ({ loc, pri: i ? '0.6' : '1.0' }));
+// letters.html is personal (noindex, blocked in robots.txt), so it is not in the sitemap
+const pages = STATIC.filter(l => l !== '/issues.html' && l !== '/letters.html').map((loc, i) => ({ loc, pri: i ? '0.6' : '1.0' }));
 const write = (rel, text) => { const f = path.join(ROOT, rel); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, text); };
 const VERIFY = (SITE.googleVerify ? `\n  <meta name="google-site-verification" content="${SITE.googleVerify}">` : '') + (SITE.bingVerify ? `\n  <meta name="msvalidate.01" content="${SITE.bingVerify}">` : '');
 const ORG = { '@type': 'EducationalOrganization', '@id': URL_ + '/#org', name: SITE.publisher, url: URL_ + '/' };
@@ -30,9 +31,15 @@ const cta = type => `<div class="cta"><a class="btn" href="/?type=${encodeURICom
 
 function page({ rel, title, description, h1, crumbs, body, schema }) {
   const url = URL_ + '/' + rel.replace(/index\.html$/, '');
-  if (title.length > 68) title = title.replace(/ \| Community Voice AI$/, '');
-  if (title.length > 68) title = title.replace(/^Who do I report (.*) to in Nigeria\?$/, (m, x) => 'Report ' + x + ': who to write to');
-  if (title.length > 68) title = title.slice(0, 66).replace(/\s\S*$/, '') + '…';
+  // Google shows about 60 letters of a title
+  if (title.length > 60) title = title.replace(/ \| Community Voice AI$/, '');
+  if (title.length > 60) title = title.replace(/^Who do I report (.*) to in Nigeria\?$/, (m, x) => 'Report ' + x + ': who to write to');
+  if (title.length > 60) title = title.replace(/^Report (.*): who to write to$/, (m, x) => 'Who to report ' + x + ' to');
+  if (title.length > 60) title = title.replace(/ in Nigeria\?$/, '?');
+  if (title.length > 60) title = title.replace(/^How to write a letter to /, 'How to write to ');
+  if (title.length > 60) title = title.replace(/ electricity distribution company \(DisCo\)$/, ' electricity company (DisCo)');
+  if (title.length > 60) title = title.replace(/^How can students report a problem in their school or community\?$/, 'How students can report a school or community problem');
+  for (let n = 58; title.length > 60 && n > 30; n -= 4) title = title.replace(/…$/, '').slice(0, n).replace(/\s\S*$/, '') + '…';
   return `<!doctype html>
 <html lang="en-NG">
 <head>
@@ -49,6 +56,9 @@ function page({ rel, title, description, h1, crumbs, body, schema }) {
   <meta property="og:url" content="${url}">
   <meta property="og:image" content="${URL_}/assets/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${esc(title)}">
+  <meta name="twitter:description" content="${esc(description)}">
+  <meta name="twitter:image" content="${URL_}/assets/og-image.png">
   <meta name="theme-color" content="#1f1a4d">
   <link rel="icon" href="/assets/logo.svg">
   <link rel="stylesheet" href="/css/guide.css">
@@ -64,7 +74,7 @@ ${body}
   <p class="note"><b>Emergency?</b> A letter is not for emergencies. Call <b>112</b> (free on every network). If it does not connect, go to the nearest police station, fire station or hospital, or call your state's own emergency line.</p>
   <p class="updated">Written by students of the ${esc(SITE.publisher)}. Last updated <time datetime="${TODAY}">${TODAY}</time>. Offices are organised a little differently in each state: confirm the right office locally before you deliver a letter. In an emergency, call 112.</p>
 </main>
-<footer><p><a href="/report/">Who do I report to?</a> · <a href="/offices/">Offices</a> · <a href="/how-to/">How-to guides</a> · <a href="/">Write a letter with AI</a></p><p>Built by students of the ${esc(SITE.publisher)}</p></footer>
+<footer><p><a href="/report/">Who do I report to?</a> · <a href="/offices/">Offices</a> · <a href="/how-to/">How-to guides</a> · <a href="/">Write a letter with AI</a> · <a href="/faq/">FAQ</a> · <a href="/about/">About / who built this</a></p><p>Built by students of the ${esc(SITE.publisher)}</p></footer>
 <script src="/js/translate.js" defer></script>
 </body>
 </html>
@@ -200,6 +210,67 @@ write('issues.html', page({
 }));
 pages.push({ loc: '/issues.html', pri: '0.8' });
 
+// ---------- /faq/ : what people in Nigeria search before they complain (AEO) ----------
+const P = id => L.PROBLEMS.find(p => p[0] === id), H = id => L.HOWTO.find(h => h[0] === id);
+const SITE_FAQ = [
+  [H('write-a-formal-letter')[1], H('write-a-formal-letter')[2] + ' Community Voice AI drafts this for you, and you edit every word.', '/how-to/write-a-formal-letter/'],
+  ['Who do I report a bad road to in Nigeria?', P('bad-road')[5], '/report/bad-road/'],
+  ['Who do I report a broken borehole or no water supply to?', P('no-water')[5] + ' ' + P('broken-borehole')[5].replace(/^Write to the Local Government Council or the state rural water agency, /, 'In your letter, '), '/report/broken-borehole/'],
+  ['Who do I complain to about a long power outage or estimated bill?', P('no-electricity')[5], '/report/no-electricity/'],
+  ['Who is responsible for refuse collection and blocked drains?', P('refuse-dump')[5] + ' For blocked drains, write to the Local Government Council before the rains.', '/report/refuse-dump/'],
+  [H('get-an-acknowledgement-copy')[1], H('get-an-acknowledgement-copy')[2], '/how-to/get-an-acknowledgement-copy/'],
+  [H('follow-up-a-letter')[1], H('follow-up-a-letter')[2] + ' Our letter tracker reminds you after 14 days and drafts the follow-up.', '/how-to/follow-up-a-letter/'],
+  [H('write-a-petition')[1], H('write-a-petition')[2], '/how-to/write-a-petition/'],
+  [H('freedom-of-information-request')[1], H('freedom-of-information-request')[2], '/how-to/freedom-of-information-request/'],
+  [H('students-speak-up')[1], H('students-speak-up')[2], '/how-to/students-speak-up/'],
+  ['Is Community Voice AI free? Is my information safe?', 'Yes, it is free and there is no sign-up. Before anything is sent to the AI, a privacy filter removes phone numbers, emails, long ID or account numbers and names, and letters are signed "A Concerned Resident" unless you change it.', '/how-it-works.html'],
+  ['What should I do in an emergency?', 'A letter is not for emergencies. Call 112, which is free on every network. If it does not connect, go to the nearest police station, fire station or hospital.', '/how-it-works.html']
+];
+write('faq/index.html', page({
+  rel: 'faq/index.html', title: 'Complaint letter questions in Nigeria | Community Voice AI',
+  description: 'Simple answers: how to write a complaint letter, who to report bad roads, water, power or refuse problems to, and what to do if nobody replies.',
+  h1: 'Questions about community complaint letters', crumbs: [['Home', '/'], ['FAQ', '/faq/']],
+  body: `
+  <p class="answer-box"><b>Quick answer:</b> find out which office is responsible, write a short polite letter (the problem, the effect, your request), keep an acknowledgement copy, and follow up after about two weeks.</p>
+  ${SITE_FAQ.map(([q, a, href]) => `<h2>${esc(q)}</h2>\n  <p>${esc(a)} <a href="${href}">Read more</a></p>`).join('\n  ')}
+  ${cta('')}`,
+  schema: [faqSchema(SITE_FAQ)]
+}));
+pages.push({ loc: '/faq/', pri: '0.8' });
+
+// ---------- /about/ : who built this ----------
+write('about/index.html', page({
+  rel: 'about/index.html', title: 'About Community Voice AI and who built it',
+  description: "Community Voice AI was built by students of the ByteBusters coding club at Yewa College, Ilaro, Ogun State, a programme of Odu'a Investment Foundation.",
+  h1: 'About Community Voice AI: who built this', crumbs: [['Home', '/'], ['About', '/about/']],
+  body: `
+  <p class="answer-box"><b>In short:</b> a free tool that turns a community problem into a polite formal letter, made by secondary school students in the ByteBusters coding club at Yewa College, Ilaro, Ogun State, Nigeria. ByteBusters is run by Odu'a Investment Foundation.</p>
+  <h2>Why we built it</h2>
+  <p>Many communities live with broken boreholes, dark streets, bad roads and blocked drains, but people are not sure which office to write to or how to write a formal letter. We wanted a free tool that helps anyone, in everyday English or Pidgin, write a respectful letter and follow it up.</p>
+  <h2>Who built it</h2>
+  <p>A team of students at the Yewa College ByteBusters centre, including the Generative AI Team, planned the app, wrote the guides and coded the website, with guidance from the ByteBusters Centre Lead. The Nigerian Sign Language page was made with Deaf and Hard-of-Hearing students. Along the way we learned HTML, CSS, JavaScript, how to use an AI model safely, how to put a website online with Vercel, and how search engines read pages.</p>
+  <h2>What it is, and is not</h2>
+  <ul>
+    <li>It is a free writing helper. You are always the author: the AI drafts, you check and edit every word.</li>
+    <li>It is <b>not</b> a government office and it does not deliver letters for you. Offices are organised differently in each state, so confirm the right office locally.</li>
+    <li>It is not for emergencies: call 112.</li>
+  </ul>
+  <p>Read the <a href="/faq/">questions and answers</a> or <a href="/how-it-works.html">how it works</a>.</p>
+  ${cta('')}`,
+  schema: [{ '@type': 'AboutPage', name: 'About Community Voice AI', url: URL_ + '/about/', publisher: { '@id': URL_ + '/#org' } }]
+}));
+pages.push({ loc: '/about/', pri: '0.5' });
+
+// ---------- 404.html : friendly "page not found" (not in the sitemap) ----------
+write('404.html', page({
+  rel: '404.html', title: 'Page not found | Community Voice AI',
+  description: 'This page could not be found. Write a letter, find who to report a problem to, or read our how-to guides.',
+  h1: 'Sorry, we could not find that page', crumbs: [['Home', '/'], ['Page not found', '/404.html']],
+  body: `
+  <p>The link may be old or mistyped. Try one of these:</p>
+  <ul><li><a href="/">Write a letter with AI</a></li><li><a href="/report/">Who do I report to?</a></li><li><a href="/offices/">Offices</a></li><li><a href="/how-to/">How-to guides</a></li><li><a href="/faq/">FAQ</a></li></ul>`
+}).replace('<meta name="robots" content="index, follow', '<meta name="robots" content="noindex, follow').replace(/\n  <link rel="canonical"[^>]*>/, ''));
+
 // ---------- sitemap.xml, llms.txt, verification codes ----------
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.map(p => `  <url><loc>${URL_}${p.loc}</loc><lastmod>${TODAY}</lastmod><priority>${p.pri}</priority></url>`).join('\n')}\n</urlset>\n`);
 const llms = fs.readFileSync(path.join(ROOT, 'llms.txt'), 'utf8').split('\n## Who do I report to')[0].trimEnd();
@@ -209,5 +280,14 @@ write('llms.txt', llms + `\n\n## Data\n- [Community Issue Map](${URL_}/issues.ht
   if (VERIFY) h = h.replace(/(<link rel="canonical"[^>]*>)/, '$1' + VERIFY);
   fs.writeFileSync(path.join(ROOT, f), h);
 });
+// ---------- llms-full.txt (GEO): the summary plus every answer in full ----------
+write('llms-full.txt', fs.readFileSync(path.join(ROOT, 'llms.txt'), 'utf8') + `
+## About
+Community Voice AI was built by students of the ByteBusters coding club at Yewa College, Ilaro, Ogun State, Nigeria, with guidance from the ByteBusters Centre Lead. ByteBusters is a programme of Odu'a Investment Foundation. Free, no sign-up. About page: ${URL_}/about/
+
+## Questions and answers (also at ${URL_}/faq/)
+${SITE_FAQ.map(([q, a]) => `### ${q}\n${a}\n`).join('\n')}
+## Who to report each problem to, in full
+${L.PROBLEMS.map(p => `### ${cap(p[1])}\n${p[5]}\nGuide: ${URL_}/report/${p[0]}/\n`).join('\n')}`);
 console.log('Done:', pages.length, 'pages in the sitemap.');
 require('./build-key-maker.js');

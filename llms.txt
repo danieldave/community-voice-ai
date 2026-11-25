@@ -14,6 +14,21 @@ Key facts:
 - [Write a letter](https://community-voice-ai-ziry.vercel.app/)
 - [How it works, privacy and FAQ](https://community-voice-ai-ziry.vercel.app/how-it-works.html)
 - [Nigerian Sign Language](https://community-voice-ai-ziry.vercel.app/sign-language.html)
+- [Questions and answers](https://community-voice-ai-ziry.vercel.app/faq/): who to write to, how to write the letter, follow-ups and FOI requests
+- [About / who built this](https://community-voice-ai-ziry.vercel.app/about/): made by ByteBusters students at Yewa College, Ilaro (Odu'a Investment Foundation)
+- [Full text for AI assistants](https://community-voice-ai-ziry.vercel.app/llms-full.txt)
+
+## Data
+- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
+
+## Data
+- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
+
+## Data
+- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
+
+## Data
+- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
 
 ## Data
 - [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
