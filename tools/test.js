@@ -43,7 +43,7 @@ const FORM = { problemType: 'Water', state: 'Ogun', area: 'Ilaro', duration: '1 
 
   console.log('SEO / AEO / GEO');
   await ok('every page has a title, description, canonical and valid JSON-LD', () => {
-    ['index.html', 'how-it-works.html', 'sign-language.html', 'letters.html'].forEach(f => {
+    ['index.html', 'how-it-works.html', 'sign-language.html', 'letters.html', 'who-to-send-to.html', 'petition.html', 'whats-new/index.html'].forEach(f => {
       const h = fs.readFileSync(path.join(ROOT, f), 'utf8');
       assert.ok(/<link rel="canonical" href="https:\/\/community-voice-ai-ziry\.vercel\.app\//.test(h), f);
       const d = (h.match(/<meta name="description" content="([^"]*)">/) || [])[1] || ''; assert.ok(d.length >= 50 && d.length <= 170, f + ' ' + d.length);
@@ -206,5 +206,111 @@ const FORM = { problemType: 'Water', state: 'Ogun', area: 'Ilaro', duration: '1 
     });
     global.fetch = real;
   }
+
+  console.log('\nVersion 4: petitions, letter tracker, who to send it to');
+  {
+    const iss = require('../api/issues'), PC = require('../js/petition-words.js');
+    const q = (query, ip) => new Promise(r => { const res = { setHeader() {}, code: 200, status(c) { this.code = c; return this; }, json(d) { r({ code: this.code, data: d }); }, end() { r({ code: this.code }); } };
+      iss({ method: 'GET', query, headers: { origin: 'https://community-voice-ai-ziry.vercel.app', host: 'community-voice-ai-ziry.vercel.app', 'x-forwarded-for': ip || '6.6.6.6' } }, res); });
+    const real = global.fetch;
+    delete process.env.KV_REST_API_URL; delete process.env.KV_REST_API_TOKEN;
+    await ok('petitions: without a database they say live:false (the page offers "collect on this phone")', async () => {
+      assert.strictEqual((await q({ petition: 'check' })).data.live, false);
+      const r = await call(iss, { body: { action: 'petition-create', title: 'Fix our borehole', ask: 'We ask the council to repair it.', state: 'Ogun' }, ip: '6.0.0.1' });
+      assert.strictEqual(r.data.created, false);
+    });
+    await ok('signer check: first name + area only; numbers, surnames and rude words refused', () => {
+      assert.ok(PC.checkSigner('Tunde', 'Oke-Ela, Ilaro').ok && PC.checkSigner('Ọlá', 'Ijebu-Ode').ok && PC.checkSigner('Dickson', 'Sagamu').ok);
+      assert.ok(!PC.checkSigner('Tunde Bakare', 'Ilaro').ok, 'surname');
+      assert.ok(!PC.checkSigner('Ada', '08031234567').ok, 'phone number');
+      assert.ok(!PC.checkSigner('F4ck', 'Ilaro').ok && !PC.checkSigner('Kemi', 'werey street').ok && !PC.checkSigner('Sh1thead', 'Ilaro').ok, 'rude');
+    });
+    // a pretend Upstash database
+    const H = {}, Lst = {}, St = {};
+    global.fetch = async (u, o) => { const cmds = JSON.parse(o.body); return { ok: true, json: async () => cmds.map(c => {
+      const [cmd, k] = c;
+      if (cmd === 'HSETNX') { if (H[k]) return { result: 0 }; H[k] = { [c[2]]: c[3] }; return { result: 1 }; }
+      if (cmd === 'HSET') { H[k] = H[k] || {}; for (let i = 2; i < c.length; i += 2) H[k][c[i]] = c[i + 1]; return { result: 1 }; }
+      if (cmd === 'HGETALL') return { result: [].concat(...Object.entries(H[k] || {})) };
+      if (cmd === 'HGET') return { result: (H[k] || {})[c[2]] || null };
+      if (cmd === 'HEXISTS') return { result: H[k] && c[2] in H[k] ? 1 : 0 };
+      if (cmd === 'LLEN') return { result: (Lst[k] || []).length };
+      if (cmd === 'RPUSH') { (Lst[k] = Lst[k] || []).push(c[2]); return { result: Lst[k].length }; }
+      if (cmd === 'LRANGE') return { result: (Lst[k] || []).slice(c[2], c[3] + 1) };
+      if (cmd === 'SADD') { St[k] = St[k] || new Set(); if (St[k].has(c[2])) return { result: 0 }; St[k].add(c[2]); return { result: 1 }; }
+      if (cmd === 'DEL') { c.slice(1).forEach(x => { delete H[x]; delete Lst[x]; delete St[x]; }); return { result: 1 }; }
+      return { result: 1 }; }) }; };
+    process.env.KV_REST_API_URL = 'https://db.example'; process.env.KV_REST_API_TOKEN = 't';
+    let pid, owner;
+    await ok('a petition is created with a code and a secret owner key; phone numbers in the letter are hidden', async () => {
+      assert.strictEqual((await q({ petition: 'check' })).data.live, true);
+      assert.strictEqual((await call(iss, { body: { action: 'petition-create', title: 'Hi', ask: 'x', state: 'Ogun' }, ip: '6.0.0.2' })).code, 400);
+      assert.strictEqual((await call(iss, { body: { action: 'petition-create', title: 'Fix the road', ask: 'We ask for repairs now please.', state: 'Atlantis' }, ip: '6.0.0.2' })).code, 400);
+      const r = await call(iss, { body: { action: 'petition-create', title: 'Repair the Oke-Ela borehole', ask: 'We ask the Local Government to repair it within a month.', letter: 'Dear Sir, call 08031234567 or me@x.com', state: 'Ogun', area: 'Oke-Ela' }, ip: '6.0.0.2' });
+      assert.strictEqual(r.data.created, true); pid = r.data.id; owner = r.data.owner; assert.ok(/^[A-Z2-9]{8}$/.test(pid) && owner.length === 32);
+      const stored = JSON.stringify(H); assert.ok(!stored.includes('08031234567') && !stored.includes('me@x.com') && !stored.includes(owner), 'no phone, email or raw owner key stored');
+    });
+    await ok('neighbours sign with first name + area; duplicates, rude words and bad codes are refused', async () => {
+      const a = await call(iss, { body: { action: 'petition-sign', id: pid, first: 'tunde', area: 'Oke-Ela' }, ip: '6.0.1.1' });
+      assert.strictEqual(a.data.signed, true); assert.strictEqual(a.data.first, 'Tunde'); assert.strictEqual(a.data.count, 1);
+      assert.strictEqual((await call(iss, { body: { action: 'petition-sign', id: pid, first: 'Tunde', area: 'oke-ela' }, ip: '6.0.1.2' })).code, 409, 'duplicate');
+      assert.strictEqual((await call(iss, { body: { action: 'petition-sign', id: pid, first: 'Bitch', area: 'Ilaro' }, ip: '6.0.1.3' })).code, 400);
+      assert.strictEqual((await call(iss, { body: { action: 'petition-sign', id: 'ZZZZZZZZ', first: 'Ada', area: 'Ilaro' }, ip: '6.0.1.3' })).code, 404);
+      assert.strictEqual((await call(iss, { body: { action: 'petition-sign', id: 'bad', first: 'Ada', area: 'Ilaro' }, ip: '6.0.1.3' })).code, 400);
+      await call(iss, { body: { action: 'petition-sign', id: pid, first: 'Ada', area: 'Ilaro', phone: '08031234567', surname: 'Okafor' }, ip: '6.0.1.4' });
+      const d = (await q({ petition: pid })).data;
+      assert.strictEqual(d.count, 2); assert.deepStrictEqual(d.signatures.map(x => x.first), ['Tunde', 'Ada']);
+      assert.ok(!JSON.stringify(d).includes('Okafor') && !JSON.stringify(Lst).includes('0803'), 'only first name and area are kept');
+      assert.ok(!('owner' in d), 'the owner key is never shown');
+    });
+    await ok('limits: 20 signatures an hour per connection, 3 new petitions an hour, 500 per petition', async () => {
+      let last; for (let i = 0; i < 21; i++) last = await call(iss, { body: { action: 'petition-sign', id: pid, first: 'Name' + 'abcdefghijklmnopqrstu'[i], area: 'Ilaro' }, ip: '6.0.2.1' });
+      assert.strictEqual(last.code, 429);
+      for (let i = 0; i < 3; i++) await call(iss, { body: { action: 'petition-create', title: 'Petition number ' + i, ask: 'We ask for something good.', state: 'Ogun' }, ip: '6.0.2.2' });
+      assert.strictEqual((await call(iss, { body: { action: 'petition-create', title: 'One petition too many', ask: 'We ask for something good.', state: 'Ogun' }, ip: '6.0.2.2' })).code, 429);
+      Lst['cv:p:' + pid + ':s'] = new Array(iss.P_CAP).fill('{"f":"X","a":"Y","d":"2026-11-27"}');
+      assert.strictEqual((await call(iss, { body: { action: 'petition-sign', id: pid, first: 'Late', area: 'Ilaro' }, ip: '6.0.2.3' })).code, 409);
+    });
+    await ok('only the creator (with the owner key) can delete a petition', async () => {
+      assert.strictEqual((await call(iss, { body: { action: 'petition-delete', id: pid, owner: 'f'.repeat(32) }, ip: '6.0.3.1' })).code, 403);
+      assert.strictEqual((await call(iss, { body: { action: 'petition-delete', id: pid, owner }, ip: '6.0.3.1' })).data.deleted, true);
+      assert.strictEqual((await q({ petition: pid })).data.found, false);
+    });
+    await ok('the Issue Map still counts with the petition code in the same file', async () => {
+      assert.strictEqual((await call(iss, { body: { state: 'Ogun', type: 'Water' }, ip: '6.0.4.1' })).data.counted, true);
+    });
+    global.fetch = real;
+    delete process.env.KV_REST_API_URL; delete process.env.KV_REST_API_TOKEN;
+  }
+  await ok('tracker: calendar reminder (.ics) and one-tap follow-up draft are made on the phone', () => {
+    const store = {}; const sandbox = { window: {}, document: { addEventListener() {} }, localStorage: { getItem: k => store[k] || null, setItem: (k, v) => { store[k] = v; } } };
+    new Function('window', 'document', 'localStorage', fs.readFileSync(path.join(ROOT, 'js', 'tracker.js'), 'utf8'))(sandbox.window, sandbox.document, sandbox.localStorage);
+    const T = sandbox.window.CVTracker;
+    const l = T.add({ subject: 'RE: BROKEN BOREHOLE', office: 'The Executive Chairman, Yewa South Local Government', sentOn: '2026-11-01', how: 'by hand', reference: 'LG/114', remindDays: 21, form: { state: 'Ogun', area: 'Oke-Ela' } });
+    const ics = T.ics(l);
+    assert.ok(ics.startsWith('BEGIN:VCALENDAR\r\n') && ics.includes('DTSTART;VALUE=DATE:20261122') && ics.includes('BEGIN:VALARM') && ics.trim().endsWith('END:VCALENDAR'));
+    assert.ok(ics.split('\r\n').every(x => x.length <= 75), 'lines are folded');
+    const d = T.draft(l); assert.ok(d.includes('1 November 2026') && d.includes('LG/114') && d.includes('FOLLOW-UP') && d.includes('A Concerned Resident'));
+    T.update(l.id, { status: 'replied' }); assert.ok(/Acknowledged/.test(T.status(T.find(l.id)).text));
+    T.update(l.id, { status: 'solved' }); assert.strictEqual(T.status(T.find(l.id)).text, '✅ Resolved');
+  });
+  await ok('who to send it to: all 20 Ogun LGAs, office titles only, no invented phone numbers or emails', () => {
+    const O = require('../js/ogun-offices.js'), Lg = require('../js/lgas.js');
+    assert.strictEqual(Lg.names(O.STATE).length, 20);
+    const src = fs.readFileSync(path.join(ROOT, 'js', 'ogun-offices.js'), 'utf8').replace(/\/\*[\s\S]*?\*\//, '');
+    assert.ok(!/\b0[789]\d{9}\b|\+234|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/.test(src), 'no phone numbers or emails in the data');
+    ['lga-chairman', 'councillor', 'ward', 'works', 'dpo', 'pcrc', 'disco'].forEach(id => assert.ok(O.OFFICES.some(o => o.id === id), id));
+    O.OFFICES.forEach(o => { assert.ok(o.verify && o.title && o.to && o.handles, o.id); if (o.link) assert.ok(/^https:\/\/[a-z.]+\.gov\.ng$/.test(o.link), o.link); });
+    Object.values(O.KNOWN).forEach(k => assert.ok(k.checkedOn && k.source, 'admin details need a date and a source'));
+  });
+  await ok("new pages: who-to-send-to and what's new are in the sitemap; the petition page is private", () => {
+    const sm = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
+    assert.ok(sm.includes('/who-to-send-to.html') && sm.includes('/whats-new/') && !sm.includes('/petition.html'));
+    assert.ok(fs.readFileSync(path.join(ROOT, 'petition.html'), 'utf8').includes('<meta name="robots" content="noindex">'));
+    assert.ok(fs.readFileSync(path.join(ROOT, 'robots.txt'), 'utf8').includes('Disallow: /petition.html'));
+    assert.ok(fs.readFileSync(path.join(ROOT, 'whats-new', 'index.html'), 'utf8').includes('the ByteBusters team at Yewa College'));
+    assert.strictEqual((fs.readFileSync(path.join(ROOT, 'llms.txt'), 'utf8').match(/\n## Data/g) || []).length, 1, 'llms.txt is not repeated on every build');
+    assert.ok(fs.readdirSync(path.join(ROOT, 'api')).filter(f => f.endsWith('.js')).length <= 12, 'Vercel Hobby: at most 12 functions');
+  });
   console.log(`\nAll ${passed} checks passed.`);
 })().catch(e => { console.error('\n  ✗ FAILED:', e.message); process.exit(1); });

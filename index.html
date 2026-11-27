@@ -39,6 +39,7 @@
         <a href="index.html" aria-current="page">✍️ Write a Letter</a>
         <a href="letters.html">📬 My Letters</a>
         <a href="sign-language.html">🤟 Sign Language</a>
+        <a href="who-to-send-to.html">🏛️ Who to send it to</a>
         <a href="how-it-works.html">💡 How It Works</a>
         <a href="/report/">🧭 Who do I report to?</a>
         <a href="/issues.html">📍 Issue Map</a>
@@ -263,7 +264,7 @@
 
             <section class="sent-box" aria-labelledby="sent-title">
               <h3 class="section-title" id="sent-title">📬 Did you send it? Track it</h3>
-              <p class="small">Letters that are followed up get answered more often. Save the date you sent it, and we will remind you after 14 days and write the follow-up for you.</p>
+              <p class="small">Letters that are followed up get answered more often. Save the date you sent it, and we will remind you (you can add it to your phone's calendar) and write the follow-up for you.</p>
               <form id="sent-form" class="sent-form" novalidate>
                 <div class="row-2">
                   <div class="field"><label for="sent-on">Date sent</label><input type="date" id="sent-on" required></div>
@@ -273,6 +274,7 @@
                   <div class="field"><label for="sent-office">Office it went to</label><input type="text" id="sent-office" maxlength="120"></div>
                   <div class="field"><label for="sent-ref">Reference or receipt number <span class="hint-inline">(if any)</span></label><input type="text" id="sent-ref" maxlength="60"></div>
                 </div>
+                <div class="field"><label for="sent-remind">Remind me to follow up after</label><select id="sent-remind"><option value="7">7 days</option><option value="14" selected>14 days</option><option value="21">21 days</option><option value="30">30 days</option></select></div>
                 <label class="consent"><input type="checkbox" id="inbox-consent"> <span>🏛️ Also put a copy in the <b>officials' inbox</b> on Community Voice, so the office can answer here. Your letter is stored for 400 days with phone numbers and emails hidden. You get a <b>tracking code</b>.</span></label>
                 <button type="submit" class="btn btn-purple">📬 I have sent this letter</button>
                 <span class="small" id="sent-msg" aria-live="polite"></span>
@@ -306,7 +308,7 @@
 
   <footer class="site-footer">
     <div class="container">
-      <p class="small"><a href="/faq/">Questions &amp; answers (FAQ)</a> · <a href="/about/">About / who built this</a> · <a href="/report/">Who do I report to?</a></p>
+      <p class="small"><a href="/faq/">Questions &amp; answers (FAQ)</a> · <a href="/about/">About / who built this</a> · <a href="/whats-new/">What's new</a> · <a href="/report/">Who do I report to?</a></p>
       <p class="small"><a href="/inbox.html">🏛️ For public officials: open your inbox</a></p>
       <p class="credit">Built with AI by <span>Yewa College Bytebusters</span> (Generative AI Team &amp; Special Students)</p>
       <p class="small">Government links are official .gov.ng websites. Last verified: <span data-last-verified></span>. In an emergency, call <strong>112</strong> (free on every network). If it does not connect, go to the nearest police station or hospital.</p>

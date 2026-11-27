@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en-NG">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Community petition: collect signatures | Community Voice AI</title>
+  <meta name="description" content="Turn a community letter into a petition. Neighbours add a first name and area, and you download a signature list (PDF) to attach. No accounts.">
+  <meta name="theme-color" content="#1f1a4d">
+  <script>(function(){var t;try{t=localStorage.getItem("cv-theme")}catch(e){}if(!t)t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t)})();</script>
+  <link rel="canonical" href="https://community-voice-ai-ziry.vercel.app/petition.html">
+  <meta name="google-site-verification" content="gRx6rQOAdy83jB7Xta6qp0gE61CorO4qy7RzTVvn-WY">
+  <meta name="robots" content="noindex">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Community Voice AI">
+  <meta property="og:title" content="Community petition: collect signatures | Community Voice AI">
+  <meta property="og:description" content="Turn a community letter into a petition. Neighbours add a first name and area, and you download a signature list (PDF) to attach. No accounts.">
+  <meta property="og:url" content="https://community-voice-ai-ziry.vercel.app/petition.html">
+  <meta property="og:image" content="https://community-voice-ai-ziry.vercel.app/assets/og-image.png">
+  <meta property="og:locale" content="en_NG">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "EducationalOrganization", "@id": "https://community-voice-ai-ziry.vercel.app/#org", "name": "ByteBusters Coding Club, Yewa College, Ilaro", "address": {"@type": "PostalAddress", "addressLocality": "Ilaro", "addressRegion": "Ogun State", "addressCountry": "NG"}, "parentOrganization": {"@type": "Organization", "name": "Odu'a Investment Foundation"}}]}</script>
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="index.html" aria-label="Community Voice AI home">
+        <img src="assets/logo.svg" alt="" width="42" height="42">
+        <span class="brand-name">COMMUNITY <span>VOICE</span> AI</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="index.html">✍️ Write a Letter</a>
+        <a href="letters.html">📬 My Letters</a>
+        <a href="sign-language.html">🤟 Sign Language</a>
+        <a href="who-to-send-to.html">🏛️ Who to send it to</a>
+        <a href="how-it-works.html">💡 How It Works</a>
+      </nav>
+      <div class="tools">
+        <button type="button" class="icon-btn" data-theme-toggle aria-pressed="false">🌙 Night</button>
+        <button type="button" class="icon-btn" data-text-toggle aria-pressed="false">A+ Text</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+  <section class="page-head">
+    <div class="blob b1" aria-hidden="true"></div>
+    <div class="blob b2" aria-hidden="true"></div>
+    <div class="container">
+      <h1 id="pet-h1">✍️ Community petition</h1>
+      <p id="pet-lead">Turn your letter into a petition. Neighbours add only their <strong>first name and area</strong>, and you download a signature list (PDF) to attach to your letter.</p>
+    </div>
+  </section>
+  <div class="container">
+    <section class="card hidden" id="pet-create" style="margin-top:18px" aria-labelledby="pet-create-title">
+      <h2 id="pet-create-title">Start a petition</h2>
+      <p class="sub">Keep it short and polite. Officials will read it.</p>
+      <form id="pet-form" class="sent-form" novalidate>
+        <div class="field"><label for="pet-title">Title</label><input type="text" id="pet-title" maxlength="120" placeholder="e.g. Repair the broken borehole at Oke-Ela" required></div>
+        <div class="field"><label for="pet-ask">What are we asking for? <span class="hint-inline">(one sentence)</span></label><input type="text" id="pet-ask" maxlength="300" placeholder="We ask the Local Government to repair the borehole within one month." required></div>
+        <div class="row-2">
+          <div class="field"><label for="pet-state">State</label><select id="pet-state"></select></div>
+          <div class="field"><label for="pet-area">Area or community</label><input type="text" id="pet-area" maxlength="60"></div>
+        </div>
+        <div class="field"><label for="pet-letter">The letter <span class="hint-inline">(optional: neighbours can read it before signing)</span></label><textarea id="pet-letter" maxlength="3000"></textarea></div>
+        <fieldset class="pet-mode"><legend class="label-like">How will people sign?</legend>
+          <label class="consent"><input type="radio" name="pet-mode" value="online" id="pet-mode-online"> <span>🌐 <b>Online link</b>: neighbours sign on their own phones. The title, request, letter (phone numbers and emails hidden) and each signer's first name and area are stored on our server for 180 days and shown on the petition page. <em id="pet-online-off" class="hidden">(Not switched on right now: use "Collect on this phone".)</em></span></label>
+          <label class="consent"><input type="radio" name="pet-mode" value="local" id="pet-mode-local" checked> <span>📱 <b>Collect on this phone</b>: pass your phone around. Nothing leaves this phone.</span></label>
+        </fieldset>
+        <button type="submit" class="btn btn-gold btn-block">✍️ Create the petition</button>
+        <span class="small" id="pet-form-msg" aria-live="polite"></span>
+      </form>
+    </section>
+    <section class="hidden" id="pet-view" style="margin-top:18px">
+      <article class="card">
+        <p class="pet-tag" id="pet-tag"></p>
+        <h2 id="pet-title-v" data-no-translate></h2>
+        <p class="pet-ask" id="pet-ask-v" data-no-translate></p>
+        <p class="small" id="pet-meta-v"></p>
+        <details class="sent" id="pet-letter-wrap"><summary>📄 Read the letter</summary><pre id="pet-letter-v"></pre></details>
+        <div class="pet-count"><p><b id="pet-count">0</b> <span id="pet-count-label">signatures</span></p><div class="progress" role="progressbar" aria-label="Signatures collected" aria-valuemin="0" aria-valuenow="0" id="pet-bar"><div></div></div></div>
+      </article>
+      <section class="card" style="margin-top:16px" aria-labelledby="sign-title">
+        <h2 id="sign-title">Add your name</h2>
+        <form id="sign-form" class="sent-form" novalidate>
+          <div class="row-2">
+            <div class="field"><label for="sign-first">First name only</label><input type="text" id="sign-first" maxlength="30" autocomplete="given-name" required></div>
+            <div class="field"><label for="sign-area">Your area or street</label><input type="text" id="sign-area" maxlength="40" required></div>
+          </div>
+          <label class="consent"><input type="checkbox" id="sign-ok"> <span>I live in or care about this area, and I agree that my <b>first name and area</b> will be shown on this petition and on the signature list given to the office. (No surname, phone number or address.)</span></label>
+          <button type="submit" class="btn btn-purple">✍️ Sign</button>
+          <span class="small" id="sign-msg" aria-live="polite"></span>
+        </form>
+      </section>
+      <section class="card" style="margin-top:16px" aria-labelledby="share-title">
+        <h2 id="share-title">Share and export</h2>
+        <div class="actions">
+          <a class="btn btn-gold" id="pet-wa" target="_blank" rel="noopener" href="#">💬 Share on WhatsApp</a>
+          <button type="button" class="btn btn-outline" id="pet-copy">🔗 Copy link</button>
+          <button type="button" class="btn btn-outline" id="pet-pdf">📄 Signature list (PDF)</button>
+          <button type="button" class="btn btn-outline" id="pet-print">🖨️ Print</button>
+          <button type="button" class="btn btn-outline hidden" id="pet-delete">🗑️ Delete petition</button>
+        </div>
+        <p class="small" id="pet-share-note"></p>
+      </section>
+      <section class="card" style="margin-top:16px" aria-labelledby="list-title">
+        <h2 id="list-title">Who has signed</h2>
+        <ol class="sig-list" id="pet-list" data-no-translate></ol>
+      </section>
+    </section>
+    <section class="card hidden" id="pet-missing" style="margin-top:18px"><h2>Petition not found</h2><p id="pet-missing-msg">This petition may have been deleted or the link is incomplete.</p><a class="btn btn-gold" href="petition.html">✍️ Start a petition</a></section>
+    <section class="card" id="pet-mine" style="margin-top:22px" aria-labelledby="mine-title">
+      <h2 id="mine-title" style="margin-top:0">📋 Petitions on this phone</h2>
+      <div id="pet-mine-list" data-no-translate><p class="small">None yet.</p></div>
+    </section>
+    <section class="card" style="margin-top:22px">
+      <h2 style="margin-top:0">How petitions stay safe</h2>
+      <ul class="steps">
+        <li>Signers give a <strong>first name and area only</strong>. Numbers, surnames and rude words are refused.</li>
+        <li>Online petitions accept at most 500 signatures, one per first name and area, and a limited number per hour from one connection. They are deleted after 180 days, or earlier by the person who started them.</li>
+        <li>Names are typed by the signers themselves and are not checked. Say so when you attach the list, and add a paper sheet with real signatures for important petitions. See <a href="/how-to/write-a-petition/">how to write a petition</a>.</li>
+      </ul>
+    </section>
+  </div>
+  <div id="print-area" aria-hidden="true"></div>
+</main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p class="small"><a href="/faq/">Questions &amp; answers (FAQ)</a> · <a href="/about/">About / who built this</a> · <a href="/report/">Who do I report to?</a> · <a href="/whats-new/">What's new</a></p>
+      <p class="small"><a href="/inbox.html">🏛️ For public officials: open your inbox</a></p>
+      <p class="credit">Built with AI by <span>Yewa College Bytebusters</span> (Generative AI Team &amp; Special Student)</p>
+      <p class="small">Government links are official .gov.ng websites. Last verified: <span data-last-verified></span>. In an emergency, call <strong>112</strong>.</p>
+    </div>
+  </footer>
+
+  <script src="js/directory.js"></script>
+  <script src="js/privacy.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/petition-words.js"></script>
+  <script src="js/tracker.js"></script>
+  <script src="js/petition.js"></script>
+
+  <script src="js/translate.js" defer></script>
+</body>
+</html>

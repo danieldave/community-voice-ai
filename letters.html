@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>My Letters: follow-up tracker | Community Voice AI</title>
-  <meta name="description" content="Track the community letters you have sent, get a reminder after 14 days, and write a polite follow-up letter in one tap. Saved on your phone only.">
+  <meta name="description" content="Track the letters you sent: status, calendar reminders, a one-tap follow-up draft and a petition for neighbours to sign. Saved on your phone only.">
   <meta name="theme-color" content="#1f1a4d">
   <script>(function(){var t;try{t=localStorage.getItem("cv-theme")}catch(e){}if(!t)t=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t)})();</script>
   <link rel="canonical" href="https://community-voice-ai-ziry.vercel.app/letters.html">
@@ -13,7 +13,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Community Voice AI">
   <meta property="og:title" content="My Letters: follow-up tracker | Community Voice AI">
-  <meta property="og:description" content="Track the community letters you have sent, get a reminder after 14 days, and write a polite follow-up letter in one tap. Saved on your phone only.">
+  <meta property="og:description" content="Track the letters you sent: status, calendar reminders, a one-tap follow-up draft and a petition for neighbours to sign. Saved on your phone only.">
   <meta property="og:url" content="https://community-voice-ai-ziry.vercel.app/letters.html">
   <meta property="og:image" content="https://community-voice-ai-ziry.vercel.app/assets/og-image.png">
   <meta property="og:locale" content="en_NG">
@@ -38,6 +38,7 @@
         <a href="index.html">✍️ Write a Letter</a>
         <a href="letters.html" aria-current="page">📬 My Letters</a>
         <a href="sign-language.html">🤟 Sign Language</a>
+        <a href="who-to-send-to.html">🏛️ Who to send it to</a>
         <a href="how-it-works.html">💡 How It Works</a>
       </nav>
       <div class="tools">
@@ -53,10 +54,34 @@
     <div class="blob b2" aria-hidden="true"></div>
     <div class="container">
       <h1>📬 My Letters</h1>
-      <p>Many letters to government are never followed up, so nothing happens. Here you can see every letter you sent, how many days have passed, and write a polite follow-up after 14 days. Your letters are saved <strong>on this phone only</strong>.</p>
+      <p>Many letters to government are never followed up, so nothing happens. Here you can see every letter you sent, its status (sent, acknowledged, resolved), add a reminder to your calendar, write a polite follow-up in one tap, or turn the letter into a petition. Your letters are saved <strong>on this phone only</strong>.</p>
     </div>
   </section>
   <div class="container">
+    <details class="card add-letter" style="margin-top:18px">
+      <summary><b>➕ Add a letter I sent somewhere else</b> <span class="small">(written on paper, by email or another app)</span></summary>
+      <form id="add-form" class="sent-form" novalidate style="margin-top:12px">
+        <div class="field"><label for="add-subject">What is the letter about?</label><input type="text" id="add-subject" maxlength="120" placeholder="e.g. Broken borehole at Oke-Ela" required></div>
+        <div class="field"><label for="add-office">Who did you send it to? <span class="hint-inline">(office title)</span></label><input type="text" id="add-office" maxlength="120" list="office-titles" placeholder="e.g. The Executive Chairman, Yewa South Local Government" required>
+          <datalist id="office-titles"><option value="The Executive Chairman, Local Government Council"><option value="The Ward Councillor"><option value="The Honourable Commissioner for Works"><option value="The General Manager, State Water Corporation"><option value="The Divisional Police Officer (DPO)"><option value="Customer Care, electricity distribution company"><option value="The Chairman, Community Development Association"><option value="The Principal"></datalist>
+          <span class="hint">Not sure? See <a href="who-to-send-to.html">who to send it to</a>.</span></div>
+        <div class="row-2">
+          <div class="field"><label for="add-on">Date sent</label><input type="date" id="add-on" required></div>
+          <div class="field"><label for="add-how">How</label><select id="add-how"><option>by hand</option><option>by post</option><option>by email</option><option>through the official website</option><option>by WhatsApp</option><option>through the CDA</option></select></div>
+        </div>
+        <div class="row-2">
+          <div class="field"><label for="add-state">State</label><select id="add-state"></select></div>
+          <div class="field"><label for="add-area">Area or community</label><input type="text" id="add-area" maxlength="60"></div>
+        </div>
+        <div class="row-2">
+          <div class="field"><label for="add-ref">Reference or receipt number <span class="hint-inline">(if any)</span></label><input type="text" id="add-ref" maxlength="60"></div>
+          <div class="field"><label for="add-remind">Remind me to follow up after</label><select id="add-remind"><option value="7">7 days</option><option value="14" selected>14 days</option><option value="21">21 days</option><option value="30">30 days</option></select></div>
+        </div>
+        <div class="field"><label for="add-letter">The letter <span class="hint-inline">(optional: paste it to keep a copy and make a petition)</span></label><textarea id="add-letter" maxlength="5000"></textarea></div>
+        <button type="submit" class="btn btn-purple">💾 Save to My Letters</button>
+        <span class="small" id="add-msg" aria-live="polite"></span>
+      </form>
+    </details>
     <div id="letters-list" aria-live="polite"></div>
     <section class="card" style="margin-top:22px">
       <h2 style="margin-top:0">Why follow up?</h2>
@@ -64,14 +89,16 @@
         <li>Offices receive many letters. A follow-up shows the community is still waiting and is organised.</li>
         <li>Mention the date of your first letter and any reference number. Keep copies of everything.</li>
         <li>After two follow-ups with no answer, ask your Community Development Association (CDA) or traditional ruler to deliver the next one in person.</li>
+        <li>Many voices are stronger than one: <strong>✍️ Make it a petition</strong> lets neighbours add their first name and area, and gives you a signature list (PDF) to attach.</li>
       </ul>
+      <p class="small">📅 <strong>Calendar reminder</strong> downloads a small <code>.ics</code> file. Open it and your phone's calendar adds the reminder. It stays on your phone; we never see it.</p>
     </section>
   </div>
 </main>
 
   <footer class="site-footer">
     <div class="container">
-      <p class="small"><a href="/faq/">Questions &amp; answers (FAQ)</a> · <a href="/about/">About / who built this</a> · <a href="/report/">Who do I report to?</a></p>
+      <p class="small"><a href="/faq/">Questions &amp; answers (FAQ)</a> · <a href="/about/">About / who built this</a> · <a href="/report/">Who do I report to?</a> · <a href="/whats-new/">What's new</a></p>
       <p class="small"><a href="/inbox.html">🏛️ For public officials: open your inbox</a></p>
       <p class="credit">Built with AI by <span>Yewa College Bytebusters</span> (Generative AI Team &amp; Special Student)</p>
       <p class="small">Government links are official .gov.ng websites. Last verified: <span data-last-verified></span>. In an emergency, call <strong>112</strong>.</p>

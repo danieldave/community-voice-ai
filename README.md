@@ -2,7 +2,21 @@
 
 Built by Nigerian secondary school students. Community Voice AI helps young people turn a real community problem (no clean water, a broken road, a dark street) into a polite, formal letter. The user picks who it is for and the tone, the AI drafts it, and the user edits it. **The user is always the author.**
 
-**New in version 3: the Civic Guide library.** `tools/library.js` holds 30 community problems, 11 offices and 8 how-to guides. `node tools/build.js` turns them into real pages: "Who do I report ___ to in Nigeria?" (`/report/`), "How to write a letter to ___" (`/offices/`) and step-by-step guides (`/how-to/`), each with the right kind of office, the evidence to collect and a sample opening. The guides never print phone numbers or names of office holders, because those change. To add a page: add an entry, run the build, then `node tools/test.js`. Search Console codes go in `tools/site.json`.
+**New in version 4 (by the ByteBusters team at Yewa College):** see also `/whats-new/`.
+
+| Feature | What it does | Data collected | Where |
+|---|---|---|---|
+| **Letter tracker, upgraded** | Status Sent / Acknowledged / Resolved, reminder after 7–30 days, calendar reminder as an `.ics` file, one-tap follow-up draft written on the phone (no AI, no internet), "Add a letter I sent somewhere else" | Nothing on the server (phone only) | `letters.html`, `js/tracker.js` |
+| **Petitions** | "Make it a petition" from any saved letter. Neighbours add a **first name + area** with an online link, or on one phone. Signature list as a PDF (made in the browser, no library) or printed | Online mode: title, request, letter (phones/emails hidden), first name + area of each signer, 180 days, deletable by the creator. Phone mode: nothing | `petition.html`, `js/petition.js`, `js/petition-words.js`, `api/issues.js` (no new function) |
+| **Who to send it to (Ogun State)** | All 20 Ogun LGAs: LGA chairman, secretary, councillor, ward committee, LGEA, CDA, traditional ruler, state ministries, Assembly member, DPO, PCRC, police PRO, IBEDC customer care, NERC forum office. Office titles and "address the letter to" only, each with a **verify locally** note. Users fill in checked details (kept on the phone) and can share a checked list as a file | Phone only | `who-to-send-to.html`, `js/ogun-offices.js`, `js/who.js` |
+
+Petition safety without a moderator: first name must be one word of letters, area cannot contain long numbers, a profanity filter (English, Pidgin, Yoruba) runs in the browser and on the server, 20 signatures and 3 new petitions per visitor per hour, 500 signatures per petition, one signature per first name + area. Without the Upstash database the page offers only "Collect on this phone".
+
+**Admin: filling in real office contacts.** `js/ogun-offices.js` has an empty `KNOWN` list. Add an address, phone or email there **only after checking it in person or on an official .gov.ng site**, with `checkedOn` and `source` (the tests refuse entries without them). Never copy numbers from social media. The site still tells users to verify locally.
+
+The site still has 4 server functions (Vercel Hobby allows 12).
+
+**Version 3: the Civic Guide library.** `tools/library.js` holds 30 community problems, 11 offices and 8 how-to guides. `node tools/build.js` turns them into real pages: "Who do I report ___ to in Nigeria?" (`/report/`), "How to write a letter to ___" (`/offices/`) and step-by-step guides (`/how-to/`), each with the right kind of office, the evidence to collect and a sample opening. The guides never print phone numbers or names of office holders, because those change. To add a page: add an entry, run the build, then `node tools/test.js`. Search Console codes go in `tools/site.json`.
 
 ## New in version 2
 
@@ -84,7 +98,7 @@ Click **Deploy**. After about a minute you will get a link like `community-voice
 The list of office types appears in **two** places: `js/directory.js` (`OFFICES`) and `api/generate.js` (`OFFICE_TYPES`). If you add or rename one, change both.
 
 ## Privacy
-No sign-up, no database, no cookies. The privacy filter removes phone numbers, emails, long ID/account numbers and names after "my name is" — first in the browser, then again on the server. Users can see exactly what was sent to the AI.
+No sign-up, no accounts, no cookies. My Letters, reminders and directory notes stay on the phone. Optional server storage only for the officials' inbox, the Issue Map counters and online petitions (see above). The privacy filter removes phone numbers, emails, long ID/account numbers and names after "my name is" — first in the browser, then again on the server. Users can see exactly what was sent to the AI.
 
 ## Issue Map
 `/issues.html` + `api/issues.js`: an opt-in tick box on the letter form adds only the **state and problem type** to monthly counters in the Upstash database. No letter text, no area. Counts under 3 are hidden. Without the database the page says it is not switched on.

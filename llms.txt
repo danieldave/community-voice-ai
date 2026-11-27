@@ -7,40 +7,20 @@ Key facts:
 - Personal details (names, phone numbers, emails) are removed before anything reaches the AI; letters are signed "A Concerned Resident".
 - Only checked official .gov.ng websites are suggested. In an emergency, call 112 first.
 - A short community copy is available in 16 Nigerian languages for reading at meetings.
-- A follow-up tracker reminds users after 14 days and drafts a polite follow-up letter.
+- A letter tracker (on the user's phone only) records the office, date sent and status (sent, acknowledged, resolved), adds calendar reminders (.ics) and drafts a follow-up letter in one tap, without AI.
+- Any letter can become a petition: neighbours add a first name and area (online link or on one phone) and the user downloads a signature list PDF.
+- "Who to send it to" lists office titles for all 20 Ogun State LGAs (Local Government chairman, councillor, ward, ministries, police, IBEDC customer care) without guessing phone numbers or emails; every entry says to verify locally.
 - A Nigerian Sign Language page was made with Deaf and Hard-of-Hearing students.
 
 ## Pages
 - [Write a letter](https://community-voice-ai-ziry.vercel.app/)
 - [How it works, privacy and FAQ](https://community-voice-ai-ziry.vercel.app/how-it-works.html)
 - [Nigerian Sign Language](https://community-voice-ai-ziry.vercel.app/sign-language.html)
+- [Who to send it to (Ogun State)](https://community-voice-ai-ziry.vercel.app/who-to-send-to.html): office titles for all 20 Ogun State LGAs, with verify-locally notes
+- [What's new](https://community-voice-ai-ziry.vercel.app/whats-new/): version 4 features added by the ByteBusters team at Yewa College
 - [Questions and answers](https://community-voice-ai-ziry.vercel.app/faq/): who to write to, how to write the letter, follow-ups and FOI requests
 - [About / who built this](https://community-voice-ai-ziry.vercel.app/about/): made by ByteBusters students at Yewa College, Ilaro (Odu'a Investment Foundation)
 - [Full text for AI assistants](https://community-voice-ai-ziry.vercel.app/llms-full.txt)
-
-## Data
-- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
-
-## Data
-- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
-
-## Data
-- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
-
-## Data
-- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
-
-## Data
-- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
-
-## Data
-- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
-
-## Data
-- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
-
-## Data
-- [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)
 
 ## Data
 - [Community Issue Map](https://community-voice-ai-ziry.vercel.app/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)

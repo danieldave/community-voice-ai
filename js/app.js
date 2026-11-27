@@ -233,7 +233,8 @@
       CVTracker.update(followUpId, { followUps: ((old && old.followUps) || 0) + 1, lastFollowUp: sentOn, sentOn: sentOn, status: "waiting", letter: letterBox.value, how: $("sent-how").value, reference: clean($("sent-ref").value.trim()) || (old && old.reference) || "" });
     } else {
       const entry = CVTracker.add({ form: lastForm, subject: lastResult && lastResult.subject, letter: letterBox.value, sentOn: sentOn,
-        how: $("sent-how").value, office: clean($("sent-office").value.trim()), reference: clean($("sent-ref").value.trim()) });
+        how: $("sent-how").value, office: clean($("sent-office").value.trim()), reference: clean($("sent-ref").value.trim()), remindDays: Number($("sent-remind").value) || CVTracker.DUE_DAYS });
+      lastSaved = entry;
       // The citizen's own choice: put a copy in the officials' inbox and get a tracking code
       if ($("inbox-consent") && $("inbox-consent").checked) {
         fetch("/api/inbox", { method: "POST", headers: { "Content-Type": "application/json" },
@@ -244,9 +245,12 @@
           }).catch(() => {});
       }
     }
-    $("sent-msg").innerHTML = "Saved. We will remind you after " + CVTracker.DUE_DAYS + " days. <a href=\"letters.html\">See My Letters →</a>";
+    const days = followUpId ? CVTracker.DUE_DAYS : Number($("sent-remind").value) || CVTracker.DUE_DAYS;
+    $("sent-msg").innerHTML = "Saved. We will remind you after " + days + " days. <button type=\"button\" class=\"btn btn-outline\" id=\"sent-ics\">📅 Add reminder to my calendar</button> <a href=\"letters.html\">See My Letters →</a>";
+    $("sent-ics").addEventListener("click", () => { const l = followUpId ? CVTracker.find(followUpId) : lastSaved; if (l) { CVTracker.remind(l); toast("Reminder file downloaded 📅"); } });
     toast("Letter saved to My Letters 📬");
   });
+  let lastSaved = null;
 
   // ---- Submit ----
   const form = $("cv-form");
@@ -349,4 +353,12 @@
   // A Civic Guide page can send the problem type: /?type=Roads
   try { const sent = new URLSearchParams(location.search).get("type"); const box = $("problemType");
     if (sent && box && [...box.options].some(o => o.value === sent)) { box.value = sent; box.dispatchEvent(new Event("change", { bubbles: true })); } } catch (e) {}
+  // (v4) "Who to send it to" can send the recipient, state, LGA and office title:
+  //   /?recipient=Local+Government+Chairman&state=Ogun&lga=Ewekoro&office=The+Executive+Chairman...
+  try {
+    const q = new URLSearchParams(location.search), pick = (id, v) => { const box = $(id); if (v && box && [...box.options].some(o => o.value === v)) { box.value = v; box.dispatchEvent(new Event("change", { bubbles: true })); return true; } return false; };
+    pick("recipient", q.get("recipient"));
+    if (pick("state", q.get("state"))) pick("lga", q.get("lga"));
+    const off = q.get("office"); if (off) $("sent-office").value = off.slice(0, 120);
+  } catch (e) {}
 })();

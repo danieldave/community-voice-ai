@@ -18,9 +18,9 @@ const json = o => JSON.stringify(o).replace(/</g, '\\u003c');
 const short = s => s.length > 155 ? s.slice(0, 150).replace(/\s\S*$/, '') + '…' : s;
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 const an = w => /^[aeiou]/i.test(w) ? 'an' : 'a';
-const STATIC = ['/', '/letters.html', '/sign-language.html', '/how-it-works.html', '/issues.html'];
-// letters.html is personal (noindex, blocked in robots.txt), so it is not in the sitemap
-const pages = STATIC.filter(l => l !== '/issues.html' && l !== '/letters.html').map((loc, i) => ({ loc, pri: i ? '0.6' : '1.0' }));
+const STATIC = ['/', '/letters.html', '/sign-language.html', '/how-it-works.html', '/issues.html', '/who-to-send-to.html', '/petition.html'];
+// letters.html and petition.html are personal (noindex, blocked in robots.txt), so they are not in the sitemap
+const pages = STATIC.filter(l => !['/issues.html', '/letters.html', '/petition.html'].includes(l)).map((loc, i) => ({ loc, pri: i ? '0.6' : '1.0' }));
 const write = (rel, text) => { const f = path.join(ROOT, rel); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, text); };
 const VERIFY = (SITE.googleVerify ? `\n  <meta name="google-site-verification" content="${SITE.googleVerify}">` : '') + (SITE.bingVerify ? `\n  <meta name="msvalidate.01" content="${SITE.bingVerify}">` : '');
 const ORG = { '@type': 'EducationalOrganization', '@id': URL_ + '/#org', name: SITE.publisher, url: URL_ + '/' };
@@ -66,7 +66,7 @@ function page({ rel, title, description, h1, crumbs, body, schema }) {
 </head>
 <body>
 <header class="bar"><a class="brand" href="/"><img src="/assets/logo.svg" alt="" width="36" height="36"><span>COMMUNITY <span>VOICE</span> AI</span></a></header>
-<nav class="gnav" aria-label="Main"><a href="/report/">Who do I report to?</a><a href="/offices/">Offices</a><a href="/how-to/">How-to guides</a><a href="/">Write a letter</a><a href="/letters.html">My letters</a></nav>
+<nav class="gnav" aria-label="Main"><a href="/report/">Who do I report to?</a><a href="/offices/">Offices</a><a href="/who-to-send-to.html">Ogun offices</a><a href="/how-to/">How-to guides</a><a href="/">Write a letter</a><a href="/letters.html">My letters</a></nav>
 <main class="guide">
   <nav class="crumbs" aria-label="Breadcrumb">${crumbs.map((c, i) => i < crumbs.length - 1 ? `<a href="${c[1]}">${esc(c[0])}</a> › ` : esc(c[0])).join('')}</nav>
   <h1>${esc(h1)}</h1>
@@ -74,7 +74,7 @@ ${body}
   <p class="note"><b>Emergency?</b> A letter is not for emergencies. Call <b>112</b> (free on every network). If it does not connect, go to the nearest police station, fire station or hospital, or call your state's own emergency line.</p>
   <p class="updated">Written by students of the ${esc(SITE.publisher)}. Last updated <time datetime="${TODAY}">${TODAY}</time>. Offices are organised a little differently in each state: confirm the right office locally before you deliver a letter. In an emergency, call 112.</p>
 </main>
-<footer><p><a href="/report/">Who do I report to?</a> · <a href="/offices/">Offices</a> · <a href="/how-to/">How-to guides</a> · <a href="/">Write a letter with AI</a> · <a href="/faq/">FAQ</a> · <a href="/about/">About / who built this</a></p><p>Built by students of the ${esc(SITE.publisher)}</p></footer>
+<footer><p><a href="/report/">Who do I report to?</a> · <a href="/offices/">Offices</a> · <a href="/how-to/">How-to guides</a> · <a href="/">Write a letter with AI</a> · <a href="/faq/">FAQ</a> · <a href="/about/">About / who built this</a> · <a href="/whats-new/">What's new</a></p><p>Built by students of the ${esc(SITE.publisher)}</p></footer>
 <script src="/js/translate.js" defer></script>
 </body>
 </html>
@@ -221,6 +221,7 @@ const SITE_FAQ = [
   [H('get-an-acknowledgement-copy')[1], H('get-an-acknowledgement-copy')[2], '/how-to/get-an-acknowledgement-copy/'],
   [H('follow-up-a-letter')[1], H('follow-up-a-letter')[2] + ' Our letter tracker reminds you after 14 days and drafts the follow-up.', '/how-to/follow-up-a-letter/'],
   [H('write-a-petition')[1], H('write-a-petition')[2], '/how-to/write-a-petition/'],
+  ['Can neighbours sign a petition online without an account?', 'Yes. In My Letters, press "Make it a petition". Neighbours add only a first name and an area, on their own phones with a link or passed around on your phone, and you download a signature list as a PDF to attach to your letter. Rude words and numbers are refused.', '/petition.html'],
   [H('freedom-of-information-request')[1], H('freedom-of-information-request')[2], '/how-to/freedom-of-information-request/'],
   [H('students-speak-up')[1], H('students-speak-up')[2], '/how-to/students-speak-up/'],
   ['Is Community Voice AI free? Is my information safe?', 'Yes, it is free and there is no sign-up. Before anything is sent to the AI, a privacy filter removes phone numbers, emails, long ID or account numbers and names, and letters are signed "A Concerned Resident" unless you change it.', '/how-it-works.html'],
@@ -261,6 +262,26 @@ write('about/index.html', page({
 }));
 pages.push({ loc: '/about/', pri: '0.5' });
 
+// ---------- /whats-new/ : what changed, and who built it ----------
+const NEW = [
+  ['📬 Letter tracker, upgraded', 'Every letter you send now has a status you can change: <b>Sent</b>, <b>Acknowledged</b> or <b>Resolved</b>. Choose when to be reminded (7, 14, 21 or 30 days) and add the reminder to your phone\'s calendar with one tap (an <code>.ics</code> file). A <b>one-tap follow-up draft</b> is written on your phone with no internet and no AI, using the date, office and reference you saved. You can also add letters you wrote on paper or somewhere else.', '/letters.html', 'Saved on your phone only. Nothing is sent to our server.'],
+  ['✍️ Petitions with signatures', 'Turn any saved letter into a petition. Neighbours add only a <b>first name and an area</b>: either on their own phones with a link you share on WhatsApp, or by passing your phone around. Download the signature list as a <b>PDF</b> to attach to your letter, or print it. Rude words, surnames and numbers are refused; an online petition takes at most 500 signatures, one per name and area.', '/petition.html', 'Online petitions store the title, request, letter (phone numbers and emails hidden) and each signer\'s first name and area for 180 days. The person who started it can delete it. "Collect on this phone" stores nothing on our server.'],
+  ['🏛️ Who to send it to (Ogun State)', 'Pick any of the 20 Local Government Areas in Ogun State and see the offices people usually write to: the Local Government Chairman, ward councillor, Ward Development Committee, LGEA, CDA, traditional ruler, state ministries, police (DPO, PCRC) and the electricity company (IBEDC customer care, then the NERC forum office). Each card shows how to address the letter and a <b>verify locally</b> note. We show office titles only and <b>never guess phone numbers, emails or names</b>; you can fill in details you have checked, and share a checked list with your class or CDA.', '/who-to-send-to.html', 'Details you type stay on your phone.']
+];
+write('whats-new/index.html', page({
+  rel: 'whats-new/index.html', title: "What's new in Community Voice AI",
+  description: 'New: letter tracker with calendar reminders and one-tap follow-ups, petitions with a signature list PDF, and who to write to in Ogun State.',
+  h1: "What's new in Community Voice AI", crumbs: [['Home', '/'], ["What's new", '/whats-new/']],
+  body: `
+  <p class="answer-box"><b>Version 4 (November 2026):</b> three new features, added by <b>the ByteBusters team at Yewa College</b>, Ilaro, Ogun State. All of them work on a basic phone, need no account, and collect only what each feature needs.</p>
+  ${NEW.map(([h, what, href, privacy]) => `<h2>${h}</h2>\n  <p>${what}</p>\n  <p class="note"><b>Your data:</b> ${esc(privacy)}</p>\n  <p><a class="btn ghost" href="${href}">Try it</a></p>`).join('\n  ')}
+  <h2>Still the same</h2>
+  <ul class="check"><li>You are always the author of your letter.</li><li>Phone numbers, emails and names are removed before anything reaches the AI.</li><li>Free, no sign-up. In an emergency, call 112.</li></ul>
+  ${cta('')}`,
+  schema: [{ '@type': 'WebPage', name: "What's new in Community Voice AI", url: URL_ + '/whats-new/', datePublished: '2026-11-27', dateModified: TODAY, publisher: { '@id': URL_ + '/#org' }, creator: { '@type': 'Organization', name: 'ByteBusters team at Yewa College, Ilaro' } }]
+}));
+pages.push({ loc: '/whats-new/', pri: '0.5' });
+
 // ---------- 404.html : friendly "page not found" (not in the sitemap) ----------
 write('404.html', page({
   rel: '404.html', title: 'Page not found | Community Voice AI',
@@ -273,9 +294,10 @@ write('404.html', page({
 
 // ---------- sitemap.xml, llms.txt, verification codes ----------
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.map(p => `  <url><loc>${URL_}${p.loc}</loc><lastmod>${TODAY}</lastmod><priority>${p.pri}</priority></url>`).join('\n')}\n</urlset>\n`);
-const llms = fs.readFileSync(path.join(ROOT, 'llms.txt'), 'utf8').split('\n## Who do I report to')[0].trimEnd();
+// keep only the hand-written top of llms.txt; everything from "## Data" down is made again here
+const llms = fs.readFileSync(path.join(ROOT, 'llms.txt'), 'utf8').split(/\n## (?:Data|Who do I report to)/)[0].trimEnd();
 write('llms.txt', llms + `\n\n## Data\n- [Community Issue Map](${URL_}/issues.html): anonymous, opt-in counts of community problems by Nigerian state and type (no letter text, counts under 3 hidden)\n\n## Who do I report to? (one page per problem)\n${L.PROBLEMS.map(p => `- [Who do I report ${p[1]} to in Nigeria?](${URL_}/report/${p[0]}/): ${p[5]}`).join('\n')}\n\n## Offices\n${L.OFFICES.map(o => `- [${cap(o[1])}](${URL_}/offices/${o[0]}/): ${o[2]}`).join('\n')}\n\n## How-to guides\n${L.HOWTO.map(h => `- [${h[1]}](${URL_}/how-to/${h[0]}/): ${h[2]}`).join('\n')}\n`);
-['index.html', 'letters.html', 'sign-language.html', 'how-it-works.html'].forEach(f => {
+['index.html', 'letters.html', 'sign-language.html', 'how-it-works.html', 'who-to-send-to.html', 'petition.html'].forEach(f => {
   let h = fs.readFileSync(path.join(ROOT, f), 'utf8').replace(/\n\s*<meta name="(google-site-verification|msvalidate\.01)"[^>]*>/g, '');
   if (VERIFY) h = h.replace(/(<link rel="canonical"[^>]*>)/, '$1' + VERIFY);
   fs.writeFileSync(path.join(ROOT, f), h);

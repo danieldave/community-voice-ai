@@ -3,6 +3,7 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /letters.html
+Disallow: /petition.html
 
 User-agent: GPTBot
 Allow: /
