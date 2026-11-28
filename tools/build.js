@@ -76,6 +76,7 @@ ${body}
 </main>
 <footer><p><a href="/report/">Who do I report to?</a> · <a href="/offices/">Offices</a> · <a href="/how-to/">How-to guides</a> · <a href="/">Write a letter with AI</a> · <a href="/faq/">FAQ</a> · <a href="/about/">About / who built this</a> · <a href="/whats-new/">What's new</a></p><p>Built by students of the ${esc(SITE.publisher)}</p></footer>
 <script src="/js/translate.js" defer></script>
+<script src="/a11y.js" defer></script>
 </body>
 </html>
 `;

@@ -396,3 +396,9 @@ details.who-edit summary { cursor: pointer; font-weight: 800; color: var(--headi
 .sig-list .small { color: var(--muted); font-size: .82rem; }
 .whats-new-list li b { color: var(--heading); }
 .draft-box .small, .who-card .small, #pet-view .small, #pet-mine .small, .add-letter .small, #who-msg, #add-msg { color: var(--muted); font-size: .88rem; }
+
+/* Reflow (WCAG 1.4.4 / 1.4.10): controls wrap and shrink instead of spilling off small screens
+   or when a visitor enlarges the text. */
+.tools { flex-wrap: wrap; }
+select, input[type="text"], textarea { max-width: 100%; min-width: 0; }
+.field { min-width: 0; }
