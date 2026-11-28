@@ -5,3 +5,7 @@ server.js
 # the owner's offline key maker is not part of the public website
 tools/office-key-maker.html
 tools/key-maker.template.html
+# repo tooling, not part of the website
+scripts/secret-scan.mjs
+scripts/secret-scan.test.mjs
+.github/
